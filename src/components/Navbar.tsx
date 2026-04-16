@@ -49,9 +49,8 @@ export default function Navbar() {
     const handleStorage = () => setAuthVersion((value) => value + 1);
 
     // Dinamik projeleri çek
-    fetch(process.env.NEXT_PUBLIC_API_URL + '/projects')
-      .then(res => res.json())
-      .then(data => setProjects(data.filter((p: any) => p.is_active)))
+    api.get('/projects')
+      .then(res => setProjects(res.data.filter((p: any) => p.is_active)))
       .catch(err => console.error("Projeler yuklenemedi:", err));
 
     window.addEventListener("scroll", handleScroll);
