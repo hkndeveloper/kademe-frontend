@@ -84,13 +84,13 @@ export default function AdminSettings() {
                 title="Başlangıç Kredisi" 
                 desc="Her öğrenci döneme bu kredi ile başlar."
                 value={settings.find(s => s.key === 'initial_credits')?.value || "100"}
-                onChange={(val) => handleChange('initial_credits', val)}
+                onChange={(val: any) => handleChange('initial_credits', val)}
               />
               <SettingInput 
                 title="Uyarı Eşiği" 
                 desc="Kredi bu değerin altına düşerse SMS gönderilir."
                 value={settings.find(s => s.key === 'warning_threshold')?.value || "75"}
-                onChange={(val) => handleChange('warning_threshold', val)}
+                onChange={(val: any) => handleChange('warning_threshold', val)}
               />
            </div>
         </section>
@@ -109,13 +109,13 @@ export default function AdminSettings() {
                 title="Absence Limit" 
                 desc="Üst üste kaç devamsızlık kara listeye sokar?"
                 value={settings.find(s => s.key === 'blacklist_absence_limit')?.value || "3"}
-                onChange={(val) => handleChange('blacklist_absence_limit', val)}
+                onChange={(val: any) => handleChange('blacklist_absence_limit', val)}
               />
               <SettingInput 
                 title="Engelleme Süresi" 
                 desc="Kara listeye alınan aday kaç gün başvuramaz?"
                 value={settings.find(s => s.key === 'blacklist_duration_days')?.value || "365"}
-                onChange={(val) => handleChange('blacklist_duration_days', val)}
+                onChange={(val: any) => handleChange('blacklist_duration_days', val)}
               />
            </div>
         </section>
