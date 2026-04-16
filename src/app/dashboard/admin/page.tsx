@@ -38,9 +38,15 @@ export default function AdminDashboard() {
   });
   const [projects, setProjects] = useState<ProjectSummary[]>([]);
   const [analyticsData, setAnalyticsData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [userName, setUserName] = useState("");
+  const [roleLabel, setRoleLabel] = useState("Admin");
 
   useEffect(() => {
+    const name = localStorage.getItem("user_name") || "Kullanıcı";
+    const roles = JSON.parse(localStorage.getItem("user_roles") || "[]");
+    setUserName(name);
+    setRoleLabel(roles.includes("super-admin") ? "Üst Admin" : "Proje Koordinatörü");
+
     Promise.all([api.get("/projects"), api.get("/admin/stats"), api.get("/admin/visual-analytics")])
       .then(([projRes, statsRes, analyticsRes]) => {
         setProjects(projRes.data);
@@ -54,9 +60,9 @@ export default function AdminDashboard() {
   return (
     <div className="max-w-6xl">
       <div className="mb-10">
-        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Merhaba, Admin</h1>
-        <p className="text-sm text-gray-500 mt-1 font-medium">
-          Sistem geneli ve operasyonel ozetler asagidadir.
+        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Merhaba, {userName}</h1>
+        <p className="text-sm text-gray-500 mt-1 font-medium italic">
+          {roleLabel} | {roleLabel === "Üst Admin" ? "Tüm sistem operasyonel özeti aşağıdadır." : "Sorumlu olduğunuz projelerin özeti aşağıdadır."}
         </p>
       </div>
 
@@ -78,7 +84,9 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 bg-white rounded-[2rem] border border-gray-200 shadow-sm overflow-hidden">
           <div className="flex items-center justify-between p-8 border-b border-gray-100">
-            <h2 className="text-sm font-bold text-gray-900 uppercase tracking-widest">Aktif Programlar</h2>
+            <h2 className="text-sm font-bold text-gray-900 uppercase tracking-widest">
+              {roleLabel === "Üst Admin" ? "Aktif Programlar" : "Sorumlu Olduğunuz Programlar"}
+            </h2>
             <Link href="/dashboard/admin/projects" className="text-[10px] font-bold text-gray-500 hover:text-slate-900 uppercase tracking-widest transition-colors">
               Tumunu Incele
             </Link>

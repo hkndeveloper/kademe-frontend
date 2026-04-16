@@ -40,9 +40,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }, []);
 
   const visibleMenuItems = menuItems.filter(item => {
-    if (item.name === "Sistem Ayarları" && !isSuperAdmin) return false;
-    // Section 11.16: Görsel Analitik ve SMS harcamaları üst admin içindir diyebiliriz
-    // Ama şimdilik koordinatör kendi projelerinin analitiğini görebiliyor (backend kısıtladık)
+    // Üst Admin her şeyi görür
+    if (isSuperAdmin) return true;
+
+    // Koordinatörün (Şartname Madde 5.1 ve 11.16 uyarınca) göremediği menüler:
+    const forbiddenForCoordinator = [
+      "Koordinatörler",  // Diğer koordinatörleri yönetemez
+      "Sistem Ayarları", // Genel sistem ayarları üst admin yetkisindedir
+      "Oyunlaştırma",    // Global oyunlaştırma altyapısı admin içindir
+    ];
+
+    if (forbiddenForCoordinator.includes(item.name)) return false;
+
     return true;
   });
 
