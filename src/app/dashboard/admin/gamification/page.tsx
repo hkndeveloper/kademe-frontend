@@ -128,12 +128,12 @@ export default function GamificationPage() {
             <div key={tier.id} className="bg-white border border-gray-100 rounded-2xl p-6 transition-all hover:border-orange-100 group">
               {editingId === tier.id ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <Input label="Ad" value={editForm.name} onChange={(v) => setEditForm({...editForm, name: v})} />
-                  <Input label="Eşik" type="number" value={editForm.min_badges} onChange={(v) => setEditForm({...editForm, min_badges: v})} />
-                  <Input label="Unvan" value={editForm.title} onChange={(v) => setEditForm({...editForm, title: v})} />
-                  <Input label="Renk" value={editForm.frame_color} onChange={(v) => setEditForm({...editForm, frame_color: v})} />
+                  <Input label="Ad" value={editForm.name} onChange={(v: any) => setEditForm({...editForm, name: v})} />
+                  <Input label="Eşik" type="number" value={editForm.min_badges} onChange={(v: any) => setEditForm({...editForm, min_badges: v})} />
+                  <Input label="Unvan" value={editForm.title} onChange={(v: any) => setEditForm({...editForm, title: v})} />
+                  <Input label="Renk" value={editForm.frame_color} onChange={(v: any) => setEditForm({...editForm, frame_color: v})} />
                   <div className="md:col-span-3">
-                    <Input label="Ödül" value={editForm.reward_description} onChange={(v) => setEditForm({...editForm, reward_description: v})} />
+                    <Input label="Ödül" value={editForm.reward_description} onChange={(v: any) => setEditForm({...editForm, reward_description: v})} />
                   </div>
                   <div className="flex items-end gap-2">
                     <button onClick={handleSave} className="flex-1 bg-green-500 text-white py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-green-600"><Save size={14} /> Kaydet</button>
