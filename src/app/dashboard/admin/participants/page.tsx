@@ -20,6 +20,7 @@ import {
   Trash2,
   Edit2,
   ChevronRight,
+  X,
 } from 'lucide-react';
 import api from '@/lib/api';
 import Link from 'next/link';
@@ -42,7 +43,9 @@ export default function AdminParticipants() {
     department: '',
     class: '',
     hometown: '',
-    period: ''
+    period: '',
+    credits: 100,
+    status: 'active'
   });
 
   useEffect(() => {
@@ -89,8 +92,7 @@ export default function AdminParticipants() {
         await api.post('/participants', formData);
         toast.success('Yeni katılımcı başarıyla eklendi.');
       }
-      setShowModal(false);
-      resetForm();
+      handleClose();
       fetchParticipants();
     } catch (err: any) {
       const msg = err.response?.data?.message || 'İşlem başarısız oldu.';
@@ -101,10 +103,16 @@ export default function AdminParticipants() {
   const resetForm = () => {
     setFormData({
       name: '', email: '', password: '', tc_no: '', phone: '',
-      university: '', department: '', class: '', hometown: '', period: ''
+      university: '', department: '', class: '', hometown: '', period: '',
+      credits: 100, status: 'active'
     });
     setEditingId(null);
   };
+
+  const handleClose = () => {
+    resetForm();
+    setShowModal(false);
+  }
 
   const handleEdit = (p: any) => {
     setEditingId(p.id);
@@ -118,7 +126,9 @@ export default function AdminParticipants() {
       department: p.department || '',
       class: p.class || '',
       hometown: p.hometown || '',
-      period: p.period || ''
+      period: p.period || '',
+      credits: p.credits || 0,
+      status: p.status || 'active'
     });
     setShowModal(true);
   };
@@ -327,43 +337,71 @@ export default function AdminParticipants() {
       <AnimatePresence>
         {showModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={resetForm} className="absolute inset-0 bg-slate-900/60 backdrop-blur-md" />
+             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={handleClose} className="absolute inset-0 bg-slate-900/60 backdrop-blur-md cursor-pointer" />
              <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-[3rem] p-10 overflow-y-auto max-h-[90vh] shadow-2xl">
+                
+                <button 
+                  onClick={handleClose}
+                  className="absolute top-8 right-8 p-2 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-all"
+                >
+                  <X size={20} />
+                </button>
+
                 <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-8">{editingId ? 'Katılımcıyı Düzenle' : 'Yeni Katılımcı Kaydı'}</h2>
                 <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                    <div className="col-span-full">
                       <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Tam İsim</label>
-                      <input value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-gray-50 p-4 rounded-2xl text-sm" placeholder="Örn: Ahmet Yılmaz" required />
+                      <input value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-gray-50 p-4 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-orange-500/10" placeholder="Örn: Ahmet Yılmaz" required />
                    </div>
                    <div>
                       <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">E-posta</label>
-                      <input type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full bg-gray-50 p-4 rounded-2xl text-sm" placeholder="email@example.com" required />
+                      <input type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full bg-gray-50 p-4 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-orange-500/10" placeholder="email@example.com" required />
                    </div>
                    {!editingId && (
                      <div>
                         <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Şifre</label>
-                        <input type="password" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} className="w-full bg-gray-50 p-4 rounded-2xl text-sm" placeholder="********" required />
+                        <input type="password" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} className="w-full bg-gray-50 p-4 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-orange-500/10" placeholder="********" required />
                      </div>
                    )}
                    <div>
                       <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">TC Kimlik No</label>
-                      <input value={formData.tc_no} onChange={e => setFormData({...formData, tc_no: e.target.value})} className="w-full bg-gray-50 p-4 rounded-2xl text-sm" placeholder="11 haneli" maxLength={11} required />
+                      <input value={formData.tc_no} onChange={e => setFormData({...formData, tc_no: e.target.value})} className="w-full bg-gray-50 p-4 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-orange-500/10" placeholder="11 haneli" maxLength={11} required />
                    </div>
                    <div>
                       <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Telefon</label>
-                      <input value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} className="w-full bg-gray-50 p-4 rounded-2xl text-sm" placeholder="05xx..." />
+                      <input value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} className="w-full bg-gray-50 p-4 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-orange-500/10" placeholder="05xx..." />
                    </div>
+                   
+                   {editingId && (
+                    <>
+                      <div>
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Kredi Puanı</label>
+                        <input type="number" value={formData.credits} onChange={e => setFormData({...formData, credits: parseInt(e.target.value)})} className="w-full bg-gray-50 p-4 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-orange-500/10" />
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Üyelik Durumu</label>
+                        <select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})} className="w-full bg-gray-50 p-4 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-orange-500/10 cursor-pointer">
+                          <option value="active">Aktif</option>
+                          <option value="passive">Pasif</option>
+                          <option value="alumni">Mezun</option>
+                          <option value="blacklisted">Kara Liste</option>
+                          <option value="failed">Başarısız</option>
+                        </select>
+                      </div>
+                    </>
+                   )}
+
                    <div>
                       <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Üniversite</label>
-                      <input value={formData.university} onChange={e => setFormData({...formData, university: e.target.value})} className="w-full bg-gray-50 p-4 rounded-2xl text-sm" placeholder="Üniversite adı" />
+                      <input value={formData.university} onChange={e => setFormData({...formData, university: e.target.value})} className="w-full bg-gray-50 p-4 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-orange-500/10" placeholder="Üniversite adı" />
                    </div>
                    <div>
                       <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Bölüm</label>
-                      <input value={formData.department} onChange={e => setFormData({...formData, department: e.target.value})} className="w-full bg-gray-50 p-4 rounded-2xl text-sm" placeholder="Bölüm adı" />
+                      <input value={formData.department} onChange={e => setFormData({...formData, department: e.target.value})} className="w-full bg-gray-50 p-4 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-orange-500/10" placeholder="Bölüm adı" />
                    </div>
                    <div className="col-span-full pt-8 flex gap-4">
-                      <button type="submit" className="flex-1 py-4 bg-gray-900 text-white font-bold rounded-2xl hover:bg-orange-500 transition-all uppercase text-[11px] tracking-widest">KAYDET</button>
-                      <button type="button" onClick={resetForm} className="flex-1 py-4 bg-gray-50 text-gray-400 font-bold rounded-2xl hover:bg-gray-100 transition-all uppercase text-[11px] tracking-widest underline">İPTAL</button>
+                      <button type="submit" className="flex-1 py-4 bg-gray-900 text-white font-bold rounded-2xl hover:bg-orange-500 hover:scale-[1.02] active:scale-[0.98] transition-all uppercase text-[11px] tracking-widest shadow-xl shadow-gray-900/10">KAYDET</button>
+                      <button type="button" onClick={handleClose} className="flex-1 py-4 bg-gray-50 text-gray-400 font-bold rounded-2xl hover:bg-gray-100 transition-all uppercase text-[11px] tracking-widest underline">İPTAL</button>
                    </div>
                 </form>
              </motion.div>
