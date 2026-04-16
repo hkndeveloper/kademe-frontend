@@ -66,32 +66,33 @@ export default function ProjectDetailPage() {
                 {project.status === "active" ? "Aktif Program" : "Arşiv"}
               </span>
               <h1 className="text-4xl font-bold text-gray-900 tracking-tight mb-4">{project.name}</h1>
+              <p className="text-sm font-bold text-orange-600 mb-2 uppercase tracking-widest">{project.sub_description}</p>
               <p className="text-base text-gray-500 leading-relaxed max-w-2xl">
                 {project.description || "KADEME bünyesinde yürütülen bu program, katılımcıların profesyonel ve kişisel gelişimine odaklanan modüler bir ekosistemdir."}
               </p>
-              <div className="flex flex-wrap gap-6 mt-6 text-sm text-gray-400">
-                <span className="flex items-center gap-1.5"><Users size={15} /> 50 katılımcı</span>
-                <span className="flex items-center gap-1.5"><MapPin size={15} /> Konya / Hibrit</span>
-                <span className="flex items-center gap-1.5"><Calendar size={15} /> 2024 Bahar Dönemi</span>
+              <div className="flex flex-wrap gap-6 mt-6 text-sm text-gray-400 font-bold">
+                <span className="flex items-center gap-1.5"><Users size={15} className="text-orange-500" /> {project.stats?.participants_count || 0} katılımcı</span>
+                <span className="flex items-center gap-1.5"><MapPin size={15} className="text-orange-500" /> {project.location || "Konya / Hibrit"}</span>
+                <span className="flex items-center gap-1.5"><Calendar size={15} className="text-orange-500" /> {project.period || "2024 Bahar Dönemi"}</span>
               </div>
             </div>
 
             {/* Apply Card */}
-            <div className="w-full md:w-80 shrink-0 p-6 bg-gray-50 border border-gray-100 rounded-xl">
-              <h3 className="text-sm font-semibold text-gray-900 mb-1">Başvuru Yap</h3>
-              <p className="text-xs text-gray-500 mb-5">KADEME ekosisteminin bir parçası olun.</p>
-              <div className="space-y-3 mb-5">
-                <InfoRow icon={Clock} label="Başvuru Bitiş" value="25 Mart 2026" />
-                <InfoRow icon={Users} label="Kontenjan" value="50 Katılımcı" />
-                <InfoRow icon={MapPin} label="Format" value="Hibrit" />
+            <div className="w-full md:w-80 shrink-0 p-8 bg-white border border-gray-100 rounded-[2rem] shadow-xl shadow-gray-900/5">
+              <h3 className="text-sm font-bold text-gray-900 mb-1">Başvuru Yap</h3>
+              <p className="text-xs text-gray-400 font-medium mb-6">KADEME ekosisteminin bir parçası olun.</p>
+              <div className="space-y-4 mb-8">
+                <InfoRow icon={Clock} label="Başvuru Bitiş" value={project.application_deadline ? new Date(project.application_deadline).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }) : "Belirtilmedi"} />
+                <InfoRow icon={Users} label="Kontenjan" value={`${project.capacity || 50} Katılımcı`} />
+                <InfoRow icon={MapPin} label="Format" value={project.format || "Hibrit"} />
               </div>
               {hasApplied ? (
-                <button disabled className={`w-full py-2.5 text-white text-sm font-semibold rounded-lg cursor-not-allowed ${hasApplied.status === 'accepted' ? 'bg-green-500' : hasApplied.status === 'rejected' ? 'bg-red-500' : 'bg-gray-400'}`}>
+                <button disabled className={`w-full py-4 text-white text-[11px] font-bold rounded-xl cursor-not-allowed uppercase tracking-widest ${hasApplied.status === 'accepted' ? 'bg-emerald-500' : hasApplied.status === 'rejected' ? 'bg-red-500' : 'bg-gray-400'}`}>
                   {hasApplied.status === 'accepted' ? 'Programa Kabul Edildiniz' : hasApplied.status === 'rejected' ? 'Başvuru Reddedildi' : 'Başvurunuz Değerlendiriliyor'}
                 </button>
               ) : (
                 <Link href={`/basvuru?project_id=${project.id}`}>
-                  <button className="w-full py-2.5 bg-orange-500 text-white text-sm font-semibold rounded-lg hover:bg-orange-600 transition-colors">
+                  <button className="w-full py-4 bg-orange-500 text-white text-[11px] font-bold rounded-xl hover:bg-orange-600 transition-all uppercase tracking-widest shadow-lg shadow-orange-500/20 active:scale-[0.98]">
                     Şimdi Başvur
                   </button>
                 </Link>
@@ -102,80 +103,77 @@ export default function ProjectDetailPage() {
       </section>
 
       {/* Content */}
-      <section className="py-16">
+      <section className="py-20 lg:py-24">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            <div className="lg:col-span-2 space-y-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
+            <div className="lg:col-span-2 space-y-16">
               {/* About */}
-              <div>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <BookOpen size={18} className="text-orange-500" /> Proje Hakkında
+              <div className="prose prose-slate max-w-none">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                  <BookOpen size={24} className="text-orange-500" /> Proje Hakkında
                 </h2>
-                <div className="text-sm text-gray-600 leading-relaxed space-y-3">
-                  <p>Bu program kapsamında katılımcıların stratejik düşünme, liderlik ve dijital yetkinlikleri geliştirilmektedir. {project.name} ekosistemi, teorik bilgileri pratiğe dökülen bir network platformudur.</p>
+                <div className="text-base text-gray-600 leading-relaxed space-y-4">
+                  <p>{project.description || "Bu program kapsamında katılımcıların stratejik düşünme, liderlik ve dijital yetkinlikleri geliştirilmektedir."}</p>
                   <p>Program sonunda başarılı olan katılımcılara "KADEME Onaylı Dijital Sertifika" verilmektedir.</p>
                 </div>
               </div>
 
               {/* Timeline */}
-              <div>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <Calendar size={18} className="text-orange-500" /> Program Akışı
-                </h2>
-                <div className="space-y-3">
-                  {[
-                    { label: "Açılış ve Tanışma Lansmanı", date: "Mart 2026" },
-                    { label: "Modüler Eğitim Serisi I", date: "Nisan 2026" },
-                    { label: "Alan Uygulamaları ve Atölye", date: "Mayıs 2026" },
-                    { label: "Sertifika ve Mezuniyet Töreni", date: "Haziran 2026" },
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-center justify-between p-4 bg-white border border-gray-100 rounded-lg hover:border-orange-100 transition-colors">
-                      <div className="flex items-center gap-3">
-                        <div className="w-7 h-7 bg-orange-50 rounded-full flex items-center justify-center">
-                          <span className="text-xs font-bold text-orange-500">{i + 1}</span>
+              {project.timeline && project.timeline.length > 0 && (
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <Calendar size={24} className="text-orange-500" /> Program Akışı
+                  </h2>
+                  <div className="space-y-4">
+                    {project.timeline.map((item: any, i: number) => (
+                      <div key={i} className="flex items-center justify-between p-6 bg-gray-50/50 border border-gray-100 rounded-2xl hover:border-orange-100 hover:bg-white hover:shadow-sm transition-all group">
+                        <div className="flex items-center gap-4">
+                          <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center border border-gray-100 font-bold text-xs text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-all">
+                            {i + 1}
+                          </div>
+                          <span className="text-sm font-bold text-gray-800">{item.label}</span>
                         </div>
-                        <span className="text-sm font-medium text-gray-800">{item.label}</span>
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{item.date}</span>
                       </div>
-                      <span className="text-xs text-gray-400">{item.date}</span>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
-              {/* Participants */}
+              {/* Participants Summary */}
               <div>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <Users size={18} className="text-orange-500" /> Katılımcılar
+                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                  <Users size={24} className="text-orange-500" /> Katılımcı Karakteristiği
                 </h2>
-                <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
-                  {[1, 2, 3, 4, 5, 6].map((i) => (
-                    <div key={i} className="text-center">
-                      <div className="w-14 h-14 bg-gray-100 rounded-xl mx-auto mb-2 hover:bg-orange-50 transition-colors" />
-                      <p className="text-xs font-medium text-gray-700">Katılımcı {i}</p>
-                      <p className="text-xs text-gray-400">Mühendislik</p>
-                    </div>
-                  ))}
+                <div className="p-8 bg-gray-900 rounded-[2.5rem] text-white">
+                  <div className="text-[10px] font-bold text-orange-500 uppercase tracking-[0.2em] mb-2">Istatistiksel Gorunum</div>
+                  <div className="text-3xl font-bold mb-4">{project.stats?.top_info || "Grup Halinde Ogrenme"}</div>
+                  <p className="text-gray-400 text-sm leading-relaxed max-w-md">Bu programda aktif olarak yer alan katılımcıların büyük çoğunluğu {project.stats?.top_info?.split(' • ')[0]} bünyesinde eğitim görmektedir.</p>
                 </div>
               </div>
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-6">
-              <div className="p-5 border border-dashed border-gray-200 rounded-xl">
-                <h4 className="text-sm font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                  <Download size={15} /> Belgeler
-                </h4>
-                <div className="space-y-2">
-                  {["Proje Tanıtım Dosyası.pdf", "Yönetmelik ve Şartlar.pdf"].map((doc) => (
-                    <button
-                      key={doc}
-                      className="w-full text-left px-3 py-2.5 text-xs text-gray-600 bg-gray-50 hover:bg-orange-50 hover:text-orange-600 rounded-lg transition-colors"
-                    >
-                      {doc}
-                    </button>
-                  ))}
+            <div className="space-y-8">
+              {project.documents && project.documents.length > 0 && (
+                <div className="p-8 bg-white border border-gray-100 rounded-[2rem] shadow-xl shadow-gray-900/5">
+                  <h4 className="text-xs font-bold text-gray-900 uppercase tracking-widest mb-6 flex items-center gap-2">
+                    <Download size={14} className="text-orange-500" /> Belgeler & Formlar
+                  </h4>
+                  <div className="space-y-3">
+                    {project.documents.map((doc: any, i: number) => (
+                      <button
+                        key={i}
+                        onClick={() => doc.url && window.open(doc.url, '_blank')}
+                        className="w-full text-left p-4 text-[11px] font-bold text-gray-600 bg-gray-50 hover:bg-orange-50 hover:text-orange-600 rounded-xl transition-all flex items-center justify-between group"
+                      >
+                        <span className="truncate pr-4">{doc.title}</span>
+                        <Download size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
