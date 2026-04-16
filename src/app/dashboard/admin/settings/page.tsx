@@ -134,7 +134,7 @@ export default function AdminSettings() {
                 title="Webasist SMS API Key" 
                 desc="SMS gönderimi için gerekli gizli anahtar."
                 value={settings.find(s => s.key === 'sms_api_key')?.value || ""}
-                onChange={(val) => handleChange('sms_api_key', val)}
+                onChange={(val: any) => handleChange('sms_api_key', val)}
                 fullWidth
               />
            </div>
