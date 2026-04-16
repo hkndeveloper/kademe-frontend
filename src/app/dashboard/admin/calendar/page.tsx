@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, Suspense } from "react";
 import { motion } from "framer-motion";
 import {
   Calendar as CalendarIcon,
@@ -37,7 +37,7 @@ type CalendarStatus = {
   calendar_id?: string;
 };
 
-export default function AdminCalendar() {
+function CalendarContent() {
   const searchParams = useSearchParams();
   const [syncing, setSyncing] = useState(false);
   const [pulling, setPulling] = useState(false);
@@ -398,5 +398,17 @@ export default function AdminCalendar() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AdminCalendar() {
+  return (
+    <Suspense fallback={
+      <div className="p-12 text-center text-gray-400 italic">
+        Takvim yukleniyor...
+      </div>
+    }>
+      <CalendarContent />
+    </Suspense>
   );
 }
