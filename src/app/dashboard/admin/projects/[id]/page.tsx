@@ -94,6 +94,32 @@ export default function ProjectDashboard() {
     }
   };
 
+  const moveWaitlist = async (currentIndex: number, direction: 'up' | 'down') => {
+    const apps = [...(project.applications || [])];
+    const waitlisted = apps.filter((a: any) => a.status === 'waitlisted');
+    const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+    
+    if (targetIndex < 0 || targetIndex >= waitlisted.length) return;
+
+    // Hedef ve mevcut index'in (tüm uygulamalar içindeki asıl id'leri üzerinden) yerlerini değiştir.
+    const currentApp = waitlisted[currentIndex];
+    const targetApp = waitlisted[targetIndex];
+
+    waitlisted[currentIndex] = targetApp;
+    waitlisted[targetIndex] = currentApp;
+
+    // Backend'e sadece waitlisted ID'lerinin yeni düz sıralamasını atıyoruz
+    const newOrderedIds = waitlisted.map(a => a.id);
+    
+    try {
+        await api.put(`/applications/${id}/waitlist-order`, { ordered_ids: newOrderedIds });
+        toast.success("Sıralama güncellendi");
+        fetchData();
+    } catch (err) {
+        toast.error("Sıralama güncellenemedi.");
+    }
+  };
+
   if (loading) return <div className="p-12 text-center animate-pulse text-gray-400 font-medium italic">Veriler yükleniyor...</div>;
   if (!project) return <div className="p-12 text-center font-bold text-red-500 uppercase tracking-widest">PROJE BULUNAMADI</div>;
 
@@ -232,8 +258,8 @@ export default function ProjectDashboard() {
                               <div className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">{app.user?.participant_profile?.university || 'Üniversite Belirtilmedi'}</div>
                            </div>
                            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <button className="p-2 text-gray-300 hover:text-orange-500 transition-colors"><MoveUp size={16}/></button>
-                              <button className="p-2 text-gray-300 hover:text-orange-500 transition-colors"><MoveDown size={16}/></button>
+                              <button onClick={() => moveWaitlist(idx, 'up')} disabled={idx === 0} className="p-2 text-gray-300 hover:text-orange-500 transition-colors disabled:opacity-30 disabled:hover:text-gray-300"><MoveUp size={16}/></button>
+                              <button onClick={() => moveWaitlist(idx, 'down')} disabled={idx === waitlistedApps.length - 1} className="p-2 text-gray-300 hover:text-orange-500 transition-colors disabled:opacity-30 disabled:hover:text-gray-300"><MoveDown size={16}/></button>
                            </div>
                         </div>
                     ))}
