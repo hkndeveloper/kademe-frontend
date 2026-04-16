@@ -188,6 +188,13 @@ export default function ProjectDashboard() {
                                </div>
                             </div>
                             <div className="flex items-center gap-2">
+                                <Link 
+                                    href={`/dashboard/admin/activities/${activity.id}/qr`}
+                                    className="p-3 bg-orange-50 text-orange-600 hover:bg-orange-500 hover:text-white rounded-xl transition-all shadow-sm"
+                                    title="Yoklama Al (QR)"
+                                >
+                                    <Activity size={18} />
+                                </Link>
                                 <button 
                                     onClick={() => { setEditingActivity(activity); setIsNewActivity(false); setIsModalOpen(true); }}
                                     className="p-3 bg-gray-50 text-gray-400 hover:text-orange-500 rounded-xl transition-all"
