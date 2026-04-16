@@ -13,9 +13,9 @@ import {
   ShieldCheck, 
   Settings,
   LogOut,
-  Sparkles,
   Trophy
 } from "lucide-react";
+import Image from "next/image";
 
 const menuItems = [
   { name: "Dashboard", href: "/dashboard/admin", icon: LayoutDashboard },
@@ -36,11 +36,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-gray-100 flex flex-col sticky top-0 h-screen hidden lg:flex">
-        <div className="p-6 border-b border-gray-50 flex items-center gap-3">
-          <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-            <Sparkles size={16} className="text-white" fill="currentColor" />
-          </div>
-          <span className="text-base font-bold text-gray-900 tracking-tight">KADEME Admin</span>
+        <div className="p-6 border-b border-gray-50">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="relative h-10 w-40">
+              <Image
+                src="/images/logo/logo-orange.svg"
+                alt="KADEME Logo"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+          </Link>
         </div>
 
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
@@ -74,12 +81,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Mobile Header */}
         <header className="lg:hidden bg-white border-b border-gray-100 p-4 flex items-center justify-between sticky top-0 z-30">
-            <div className="flex items-center gap-2">
-                <div className="w-7 h-7 bg-orange-500 rounded-lg flex items-center justify-center">
-                    <Sparkles size={14} className="text-white" fill="currentColor" />
+            <Link href="/" className="flex items-center gap-2">
+                <div className="relative h-7 w-28">
+                    <Image
+                        src="/images/logo/logo-orange.svg"
+                        alt="KADEME Logo"
+                        fill
+                        className="object-contain"
+                        priority
+                    />
                 </div>
-                <span className="text-sm font-bold text-gray-900">KADEME</span>
-            </div>
+            </Link>
             {/* Mobile menu toggle button could be added here if needed */}
         </header>
 

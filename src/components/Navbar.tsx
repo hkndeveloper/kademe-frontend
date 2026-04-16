@@ -4,7 +4,8 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X, ChevronDown, Sparkles } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
+import Image from "next/image";
 
 const navLinks = [
   { name: "Anasayfa", href: "/" },
@@ -76,11 +77,16 @@ export default function Navbar() {
     <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-sm shadow-sm border-b border-gray-100" : "bg-white"}`}>
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-slate-900 rounded-xl flex items-center justify-center">
-              <Sparkles size={16} className="text-white" fill="currentColor" />
+          <Link href="/" className="flex items-center gap-3">
+            <div className="relative h-8 w-32">
+              <Image
+                src="/images/logo/logo-orange.svg"
+                alt="KADEME Logo"
+                fill
+                className="object-contain"
+                priority
+              />
             </div>
-            <span className="text-base font-bold text-gray-900 tracking-tight">KADEME</span>
           </Link>
 
           <div className="hidden lg:flex items-center gap-8">

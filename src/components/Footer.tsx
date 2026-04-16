@@ -2,7 +2,8 @@
 
 import React from "react";
 import Link from "next/link";
-import { Send, Camera, Share2, Video, Sparkles } from "lucide-react";
+import { Send, Camera, Share2, Video } from "lucide-react";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -12,10 +13,14 @@ export default function Footer() {
           {/* Brand */}
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-                <Sparkles size={16} className="text-white" fill="currentColor" />
+              <div className="relative h-8 w-32">
+                <Image
+                  src="/images/logo/logo-orange.svg"
+                  alt="KADEME Logo"
+                  fill
+                  className="object-contain"
+                />
               </div>
-              <span className="text-base font-bold text-gray-900">KADEME</span>
             </Link>
             <p className="text-sm text-gray-500 leading-relaxed mb-6">
               Gençlerin potansiyelini açığa çıkaran kurumsal eğitim ve gelişim ekosistemi.

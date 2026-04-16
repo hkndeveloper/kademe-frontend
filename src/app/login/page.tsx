@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mail, Lock, ArrowRight, Loader2, Sparkles, ShieldCheck } from "lucide-react";
+import { Mail, Lock, ArrowRight, Loader2, ShieldCheck } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import api from "@/lib/api";
 import { toast } from "sonner";
@@ -80,8 +81,14 @@ export default function LoginPage() {
         className="w-full max-w-sm"
       >
         <div className="text-center mb-8">
-          <div className="w-12 h-12 bg-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl shadow-orange-500/20">
-            <Sparkles size={24} className="text-white" fill="currentColor" />
+          <div className="relative h-16 w-48 mx-auto mb-4">
+            <Image
+              src="/images/logo/logo-orange.svg"
+              alt="KADEME Logo"
+              fill
+              className="object-contain"
+              priority
+            />
           </div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">KADEME Sistemi</h1>
           <p className="text-xs font-bold text-slate-400 mt-1 uppercase tracking-widest">
