@@ -28,8 +28,8 @@ export default function AdminProjects() {
     format: 'Hibrit',
     period: '',
     sub_description: '',
-    timeline: [] as any[],
-    documents: [] as any[]
+    timeline: [] as any | string,
+    documents: [] as any | string
   });
   const [editingId, setEditingId] = useState<number | null>(null);
 
@@ -91,8 +91,8 @@ export default function AdminProjects() {
       format: p.format || 'Hibrit',
       period: p.period || '',
       sub_description: p.sub_description || '',
-      timeline: p.timeline || [],
-      documents: p.documents || []
+      timeline: p.timeline ? JSON.stringify(p.timeline, null, 2) : '[]',
+      documents: p.documents ? JSON.stringify(p.documents, null, 2) : '[]'
     });
     setShowModal(true);
   };
@@ -200,11 +200,11 @@ export default function AdminProjects() {
                 </div>
                 <div className="space-y-2 md:col-span-2">
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Program Akışı (JSON Format)</label>
-                  <textarea rows={4} value={typeof formData.timeline === 'string' ? formData.timeline : JSON.stringify(formData.timeline, null, 2)} onChange={(e) => setFormData({...formData, timeline: e.target.value})} className="w-full bg-slate-900 text-emerald-400 font-mono text-xs rounded-2xl py-4 px-6 outline-none outline-none" placeholder='[{"label": "Açılış", "date": "Mart 2026"}]'></textarea>
+                  <textarea rows={4} value={formData.timeline} onChange={(e) => setFormData({...formData, timeline: e.target.value})} className="w-full bg-slate-900 text-emerald-400 font-mono text-xs rounded-2xl py-4 px-6 outline-none" placeholder='[{"label": "Açılış", "date": "Mart 2026"}]'></textarea>
                 </div>
                 <div className="space-y-2 md:col-span-2">
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Belgeler (JSON Format)</label>
-                  <textarea rows={4} value={typeof formData.documents === 'string' ? formData.documents : JSON.stringify(formData.documents, null, 2)} onChange={(e) => setFormData({...formData, documents: e.target.value})} className="w-full bg-slate-900 text-emerald-400 font-mono text-xs rounded-2xl py-4 px-6 outline-none" placeholder='[{"title": "Kılavuz", "url": "..."}]'></textarea>
+                  <textarea rows={4} value={formData.documents} onChange={(e) => setFormData({...formData, documents: e.target.value})} className="w-full bg-slate-900 text-emerald-400 font-mono text-xs rounded-2xl py-4 px-6 outline-none" placeholder='[{"title": "Kılavuz", "url": "..."}]'></textarea>
                 </div>
                 <div className="flex gap-4 pt-4 md:col-span-2">
                   <button type="button" onClick={() => setShowModal(false)} className="flex-1 py-4 bg-slate-100 text-slate-600 font-bold rounded-2xl hover:bg-slate-200 transition-all">İptal</button>
