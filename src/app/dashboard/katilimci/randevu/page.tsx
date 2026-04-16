@@ -7,6 +7,7 @@ import {
   Clock, 
   MapPin, 
   User, 
+  Globe,
   MessageSquare,
   CheckCircle,
   ChevronRight,
@@ -76,7 +77,7 @@ export default function AppointmentPage() {
                       className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl py-4 px-6 outline-none"
                       placeholder="Kariyer planlama, mülakat teknikleri vb."
                       value={formData.topic}
-                      onChange={(e) => setFormData({...formData, topic: e.target.value})}
+                      onChange={(e: any) => setFormData({...formData, topic: e.target.value})}
                     ></textarea>
                   </div>
                   <button onClick={() => setStep(2)} className="w-full py-5 bg-slate-900 text-white font-bold rounded-2xl">
@@ -93,7 +94,7 @@ export default function AppointmentPage() {
                   <input 
                     type="date" 
                     className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl py-4 px-6 font-bold"
-                    onChange={(e) => setFormData({...formData, date: e.target.value})}
+                    onChange={(e: any) => setFormData({...formData, date: e.target.value})}
                   />
                   <div>
                     <div className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Uygun Saatler</div>
