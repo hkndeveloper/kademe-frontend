@@ -45,7 +45,7 @@ export default function ApplicationsManagement() {
       await api.put(`/applications/${id}/status`, { status });
       fetchApplications();
     } catch (err) {
-      alert('Hata: Durum güncellenemedi.');
+      toast.error('Hata: Durum güncellenemedi.');
     }
   };
 

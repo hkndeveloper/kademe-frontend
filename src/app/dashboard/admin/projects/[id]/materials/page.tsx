@@ -12,7 +12,9 @@ import {
   AlertCircle,
   Clock,
   HardDrive
+  HardDrive
 } from 'lucide-react';
+import { toast } from 'sonner';
 import api from '@/lib/api';
 
 export default function MaterialsManagement() {
@@ -73,12 +75,11 @@ export default function MaterialsManagement() {
   const handleDelete = async (matId: number) => {
     if (!confirm('Bu materyali silmek istediğinize emin misiniz?')) return;
     try {
-      // Backend'de delete metodu eksikse eklenebilir, şimdilik UI'da simüle edelim veya API'ye atalım
-      // await api.delete(`/materials/${matId}`); (Backend'e eklenmeli)
+      await api.delete(`/materials/${matId}`);
       setMaterials(materials.filter((m: any) => m.id !== matId));
-      alert('Materyal silindi (Simülasyon - Backend delete yolu eklenmeli)');
+      toast.success('Materyal başarıyla silindi.');
     } catch (err) {
-      alert('Silme hatası.');
+      toast.error('Materyal silinirken bir hata oluştu.');
     }
   };
 

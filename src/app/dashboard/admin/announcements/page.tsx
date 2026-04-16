@@ -61,13 +61,13 @@ export default function AdminAnnouncements() {
         subject,
         content
       });
-      alert('Duyuru başarıyla gönderildi!');
+      toast.success('Duyuru başarıyla gönderildi!');
       setContent('');
       setSubject('');
       setSelectedUsers([]);
       fetchLogs();
     } catch (err) {
-      alert('Gönderim sırasında bir hata oluştu.');
+      toast.error('Gönderim sırasında bir hata oluştu.');
     } finally {
       setLoading(false);
     }

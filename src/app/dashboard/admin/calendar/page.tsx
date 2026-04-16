@@ -80,7 +80,7 @@ function CalendarContent() {
     try {
       await api.post("/calendar/google/sync-all");
       await fetchCalendarData();
-      alert("Google Takvim senkronizasyonu tamamlandi.");
+      toast.success("Google Takvim senkronizasyonu tamamlandı.");
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
         const authRes = await api.get("/calendar/google/auth-url");
@@ -88,7 +88,7 @@ function CalendarContent() {
         return;
       }
 
-      alert("Google Takvim senkronizasyonu sirasinda bir hata olustu.");
+      toast.error("Google Takvim senkronizasyonu sırasında bir hata oluştu.");
     } finally {
       setSyncing(false);
     }
@@ -100,9 +100,9 @@ function CalendarContent() {
     try {
       const res = await api.post("/calendar/google/sync-from-google");
       await fetchCalendarData();
-      alert(`Google'dan guncelleme tamamlandi. ${res.data.updated_count} faaliyet guncellendi.`);
+      toast.success(`Google'dan güncelleme tamamlandı. ${res.data.updated_count} faaliyet güncellendi.`);
     } catch (error) {
-      alert("Google'dan veri cekilirken bir hata olustu.");
+      toast.error("Google'dan veri çekilirken bir hata oluştu.");
     } finally {
       setPulling(false);
     }

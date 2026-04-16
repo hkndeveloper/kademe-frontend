@@ -45,9 +45,9 @@ export default function DigitalCVPage() {
     try {
       await api.put('/student/cv', { bio, public_cv: isPublic });
       setEditingBio(false);
-      alert('CV bilgileriniz güncellendi.');
+      toast.success('CV bilgileriniz güncellendi.');
     } catch (err) {
-      alert('Güncelleme sırasında hata oluştu.');
+      toast.error('Güncelleme sırasında hata oluştu.');
     }
   };
 
@@ -56,7 +56,7 @@ export default function DigitalCVPage() {
     if (!uuid) return alert('Önce mezun olmanız veya CV kodunuzun oluşturulması gerekir.');
     const url = `${window.location.origin}/cv/${uuid}`;
     navigator.clipboard.writeText(url);
-    alert('Kamuya açık CV linki kopyalandı!');
+    toast.success('Kamuya açık CV linki kopyalandı!');
   };
 
   if (loading) return <div className="p-20 text-center">Dijital CV Hazırlanıyor...</div>;
