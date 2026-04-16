@@ -17,6 +17,7 @@ export default function AdminMaterials() {
   const [showUpload, setShowUpload] = useState(false);
   const [uploadLoading, setUploadLoading] = useState(false);
   const [search, setSearch] = useState("");
+  const [stats, setStats] = useState<any>(null);
   
   // Upload Form State
   const [formData, setFormData] = useState({
@@ -32,12 +33,14 @@ export default function AdminMaterials() {
 
   const fetchData = async () => {
     try {
-      const [reportsRes, participantsRes] = await Promise.all([
+      const [reportsRes, participantsRes, statsRes] = await Promise.all([
         api.get("/admin/kpd-reports"),
-        api.get("/participants") // Tüm kullanıcıları seçebilmek için
+        api.get("/participants"), // Tüm kullanıcıları seçebilmek için
+        api.get("/admin/stats")
       ]);
       setReports(reportsRes.data);
       setParticipants(participantsRes.data.data || []);
+      setStats(statsRes.data);
     } catch (err) {
       console.error("Veriler alınamadı:", err);
       toast.error("Veriler yüklenirken bir hata oluştu.");
@@ -135,7 +138,7 @@ export default function AdminMaterials() {
           </div>
           <div>
             <div className="text-xs font-bold text-gray-400 uppercase tracking-widest">Eğitim Materyali</div>
-            <div className="text-xl font-bold text-gray-900">0</div>
+            <div className="text-xl font-bold text-gray-900">{stats?.totalMaterials || 0}</div>
           </div>
         </div>
       </div>

@@ -72,12 +72,12 @@ export default function ProjectsPage() {
                       <div className="flex items-center justify-between mb-4">
                         <span
                           className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                            project.status === "active"
+                            project.is_active
                               ? "text-green-600 bg-green-50"
                               : "text-gray-500 bg-gray-100"
                           }`}
                         >
-                          {project.status === "active" ? "Aktif" : "Arşiv"}
+                          {project.is_active ? "Aktif" : "Arşiv"}
                         </span>
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-orange-500 transition-colors">
@@ -88,9 +88,13 @@ export default function ProjectsPage() {
                           "KADEME bünyesinde yürütülen bu program, katılımcıların profesyonel gelişimine katkı sağlar."}
                       </p>
                       <div className="flex items-center justify-between pt-4 border-t border-gray-50">
-                        <div className="flex items-center gap-3 text-xs text-gray-400">
-                          <span className="flex items-center gap-1"><Users size={12} /> 50+ katılımcı</span>
-                          <span className="flex items-center gap-1"><MapPin size={12} /> Konya</span>
+                        <div className="flex items-center gap-3 text-xs text-gray-400 font-bold">
+                          <span className="flex items-center gap-1">
+                            <Users size={12} /> {project.applications_count || 0} Katılımcı
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <MapPin size={12} /> {project.location || "Konya"}
+                          </span>
                         </div>
                         <ArrowRight size={16} className="text-gray-300 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" />
                       </div>
