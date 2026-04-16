@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Scanner } from '@yudiel/react-qr-scanner';
 import { 
@@ -15,7 +15,7 @@ import {
 import { useRouter, useSearchParams } from 'next/navigation';
 import api from '@/lib/api';
 
-export default function AttendancePage() {
+function AttendanceContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const activityId = searchParams.get('activity');
@@ -89,7 +89,7 @@ export default function AttendancePage() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center p-4">
-      <div className="w-full max-w-md mt-8">
+      <div className="w-full max-md mt-8">
         <button 
           onClick={() => router.back()}
           className="flex items-center text-slate-500 font-bold mb-8 hover:text-slate-900 transition-colors"
@@ -176,5 +176,17 @@ export default function AttendancePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AttendancePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
+        <Loader2 className="animate-spin text-yellow-500" size={32} />
+      </div>
+    }>
+      <AttendanceContent />
+    </Suspense>
   );
 }

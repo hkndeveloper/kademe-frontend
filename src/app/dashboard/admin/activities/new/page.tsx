@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import {
   ArrowLeft,
   MapPin,
@@ -19,7 +19,7 @@ type Project = {
   name: string;
 };
 
-export default function NewActivityPage() {
+function ActivityForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const projectId = searchParams.get("project_id");
@@ -103,7 +103,7 @@ export default function NewActivityPage() {
               <label className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-3 block">Ilgili Proje</label>
               <select
                 value={formData.project_id}
-                onChange={(e) => setFormData({ ...formData, project_id: e.target.value })}
+                onChange={(e: any) => setFormData({ ...formData, project_id: e.target.value })}
                 className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-sm font-medium"
               >
                 <option value="">Proje Secin</option>
@@ -120,7 +120,7 @@ export default function NewActivityPage() {
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e: any) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="Orn: Hafta 4 Diplomasi Semineri"
                 className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-sm font-medium"
               />
@@ -130,7 +130,7 @@ export default function NewActivityPage() {
               <label className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-3 block">Aciklama</label>
               <textarea
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                onChange={(e: any) => setFormData({ ...formData, description: e.target.value })}
                 placeholder="Faaliyet detaylari, konusmaci ve notlar"
                 className="w-full min-h-28 bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-sm font-medium"
               />
@@ -140,7 +140,7 @@ export default function NewActivityPage() {
               <label className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-3 block">Tur</label>
               <select
                 value={formData.type}
-                onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                onChange={(e: any) => setFormData({ ...formData, type: e.target.value })}
                 className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-sm font-medium"
               >
                 <option value="event">Etkinlik</option>
@@ -154,7 +154,7 @@ export default function NewActivityPage() {
               <input
                 type="number"
                 value={formData.credit_loss_amount}
-                onChange={(e) => setFormData({ ...formData, credit_loss_amount: parseInt(e.target.value || "0", 10) })}
+                onChange={(e: any) => setFormData({ ...formData, credit_loss_amount: parseInt(e.target.value || "0", 10) })}
                 className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-sm font-medium"
               />
             </div>
@@ -164,7 +164,7 @@ export default function NewActivityPage() {
               <input
                 type="datetime-local"
                 value={formData.start_time}
-                onChange={(e) => setFormData({ ...formData, start_time: e.target.value })}
+                onChange={(e: any) => setFormData({ ...formData, start_time: e.target.value })}
                 className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-sm font-medium"
               />
             </div>
@@ -174,7 +174,7 @@ export default function NewActivityPage() {
               <input
                 type="datetime-local"
                 value={formData.end_time}
-                onChange={(e) => setFormData({ ...formData, end_time: e.target.value })}
+                onChange={(e: any) => setFormData({ ...formData, end_time: e.target.value })}
                 className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-sm font-medium"
               />
             </div>
@@ -187,7 +187,7 @@ export default function NewActivityPage() {
                 <input
                   type="text"
                   value={formData.latitude}
-                  onChange={(e) => setFormData({ ...formData, latitude: e.target.value })}
+                  onChange={(e: any) => setFormData({ ...formData, latitude: e.target.value })}
                   className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium"
                 />
               </div>
@@ -198,7 +198,7 @@ export default function NewActivityPage() {
                 <input
                   type="text"
                   value={formData.longitude}
-                  onChange={(e) => setFormData({ ...formData, longitude: e.target.value })}
+                  onChange={(e: any) => setFormData({ ...formData, longitude: e.target.value })}
                   className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium"
                 />
               </div>
@@ -209,7 +209,7 @@ export default function NewActivityPage() {
                 <input
                   type="number"
                   value={formData.radius}
-                  onChange={(e) => setFormData({ ...formData, radius: parseInt(e.target.value || "0", 10) })}
+                  onChange={(e: any) => setFormData({ ...formData, radius: parseInt(e.target.value || "0", 10) })}
                   className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium"
                 />
               </div>
@@ -233,5 +233,13 @@ export default function NewActivityPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function NewActivityPage() {
+  return (
+    <Suspense fallback={<div className="p-12 text-center text-slate-400">Yukleniyor...</div>}>
+      <ActivityForm />
+    </Suspense>
   );
 }
