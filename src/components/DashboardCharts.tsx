@@ -96,7 +96,7 @@ export default function DashboardCharts() {
           Aylik Iletisim Giderleri
         </h3>
         <div className="h-[240px] w-full min-w-0">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height={240}>
             <LineChart data={smsData} margin={{ left: 0, right: 8, top: 4, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
               <XAxis
