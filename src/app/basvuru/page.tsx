@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { motion } from "framer-motion";
 import { User, Mail, Lock, Book, School, Phone, FileText, ArrowRight, Loader2, Sparkles } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import api from "@/lib/api";
 import { toast } from "sonner";
 
-export default function ApplicationPage() {
+function ApplicationForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [projects, setProjects] = useState<any[]>([]);
@@ -206,6 +206,18 @@ export default function ApplicationPage() {
   );
 }
 
+export default function ApplicationPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="animate-spin text-orange-500" size={32} />
+      </div>
+    }>
+      <ApplicationForm />
+    </Suspense>
+  );
+}
+
 interface InputFieldProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {
   label: string;
   icon: React.ComponentType<any>;
@@ -221,7 +233,7 @@ function InputField({ label, icon: Icon, type = "text", onChange, ...props }: In
         <input 
           type={type}
           className="w-full bg-gray-50 border-none rounded-2xl py-4 pl-12 pr-4 text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-orange-500/10 transition-all placeholder:text-gray-300"
-          onChange={(e) => onChange?.(e.target.value)}
+          onChange={(e: any) => onChange?.(e.target.value)}
           {...props}
         />
       </div>
