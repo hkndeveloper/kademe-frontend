@@ -12,6 +12,7 @@ import {
   Clock,
   Layout
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import api from '@/lib/api';
 
 export default function DigitalBundlePage() {
@@ -58,13 +59,13 @@ export default function DigitalBundlePage() {
               type="text" 
               placeholder="İçerik ara..." 
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e: any) => setSearch(e.target.value)}
               className="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl outline-none focus:ring-2 focus:ring-yellow-500/20"
             />
           </div>
           <select 
             value={filter}
-            onChange={(e) => setFilter(e.target.value)}
+            onChange={(e: any) => setFilter(e.target.value)}
             className="px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl outline-none"
           >
             <option value="all">Tümü</option>
