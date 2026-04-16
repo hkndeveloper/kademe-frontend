@@ -40,7 +40,7 @@ export default function ApplicationsManagement() {
     fetchApplications();
   }, []);
 
-  const handleStatusUpdate = async (id, status) => {
+  const handleStatusUpdate = async (id: number, status: string) => {
     try {
       await api.put(`/applications/${id}/status`, { status });
       fetchApplications();
