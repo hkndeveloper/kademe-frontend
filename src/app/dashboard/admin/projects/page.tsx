@@ -26,6 +26,21 @@ export default function AdminProjects() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [formData, setFormData] = useState({ 
+    name: '', 
+    description: '',
+    location: '',
+    capacity: 50,
+    application_deadline: '',
+    format: 'Hibrit',
+    period: '',
+    sub_description: '',
+    timeline: [] as any[],
+    documents: [] as any[],
+    coordinator_ids: [] as number[]
+  });
+
   const [timelineItems, setTimelineItems] = useState([{ label: '', date: '' }]);
   const [selectedFiles, setSelectedFiles] = useState<{file: File, title: string}[]>([]);
   const [submitting, setSubmitting] = useState(false);
@@ -36,6 +51,26 @@ export default function AdminProjects() {
     fetchProjects();
     fetchCoordinators();
   }, []);
+
+  const fetchProjects = async () => {
+    try {
+      const res = await api.get('/projects');
+      setProjects(res.data);
+    } catch (err) {
+      console.error('Projeler çekilemedi:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchCoordinators = async () => {
+    try {
+      const res = await api.get('/admin/coordinators');
+      setCoordinators(res.data);
+    } catch (err) {
+      console.error('Koordinatörler çekilemedi:', err);
+    }
+  };
 
   const addTimelineItem = () => setTimelineItems([...timelineItems, { label: '', date: '' }]);
   const removeTimelineItem = (index: number) => setTimelineItems(timelineItems.filter((_, i) => i !== index));
