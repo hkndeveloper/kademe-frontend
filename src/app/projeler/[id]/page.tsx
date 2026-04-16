@@ -61,9 +61,9 @@ export default function ProjectDetailPage() {
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
             <div className="flex-1">
               <span className={`inline-flex text-xs font-medium px-2.5 py-1 rounded-full mb-4 ${
-                project.status === "active" ? "text-green-600 bg-green-50" : "text-gray-500 bg-gray-100"
+                project.is_active ? "text-green-600 bg-green-50" : "text-gray-500 bg-gray-100"
               }`}>
-                {project.status === "active" ? "Aktif Program" : "Arşiv"}
+                {project.is_active ? "Aktif Program" : "Arşiv"}
               </span>
               <h1 className="text-4xl font-bold text-gray-900 tracking-tight mb-4">{project.name}</h1>
               <p className="text-sm font-bold text-orange-600 mb-2 uppercase tracking-widest">{project.sub_description}</p>
