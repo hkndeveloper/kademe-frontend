@@ -13,12 +13,12 @@ export default function Footer() {
           {/* Brand */}
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="relative h-8 w-32">
+              <div className="relative h-14 w-52">
                 <Image
                   src="/images/logo/logo-orange.svg"
                   alt="KADEME Logo"
                   fill
-                  className="object-contain"
+                  className="object-contain object-left"
                 />
               </div>
             </Link>

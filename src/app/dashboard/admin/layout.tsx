@@ -51,12 +51,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <aside className="w-64 bg-white border-r border-gray-100 flex flex-col sticky top-0 h-screen hidden lg:flex">
         <div className="p-6 border-b border-gray-50">
           <Link href="/" className="flex items-center gap-3">
-            <div className="relative h-10 w-40">
+            <div className="relative h-14 w-48">
               <Image
                 src="/images/logo/logo-orange.svg"
                 alt="KADEME Logo"
                 fill
-                className="object-contain"
+                className="object-contain object-left"
                 priority
               />
             </div>
@@ -99,7 +99,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Mobile Header */}
         <header className="lg:hidden bg-white border-b border-gray-100 p-4 flex items-center justify-between sticky top-0 z-30">
             <Link href="/" className="flex items-center gap-2">
-                <div className="relative h-7 w-28">
+                <div className="relative h-10 w-36">
                     <Image
                         src="/images/logo/logo-orange.svg"
                         alt="KADEME Logo"

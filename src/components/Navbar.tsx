@@ -76,9 +76,9 @@ export default function Navbar() {
   return (
     <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-sm shadow-sm border-b border-gray-100" : "bg-white"}`}>
       <div className="max-w-6xl mx-auto px-6">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           <Link href="/" className="flex items-center gap-3">
-            <div className="relative h-8 w-32">
+            <div className="relative h-10 w-44">
               <Image
                 src="/images/logo/logo-orange.svg"
                 alt="KADEME Logo"

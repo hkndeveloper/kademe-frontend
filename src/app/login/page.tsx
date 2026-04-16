@@ -81,7 +81,7 @@ export default function LoginPage() {
         className="w-full max-w-sm"
       >
         <div className="text-center mb-8">
-          <div className="relative h-16 w-48 mx-auto mb-4">
+          <div className="relative h-20 w-60 mx-auto mb-4">
             <Image
               src="/images/logo/logo-orange.svg"
               alt="KADEME Logo"
