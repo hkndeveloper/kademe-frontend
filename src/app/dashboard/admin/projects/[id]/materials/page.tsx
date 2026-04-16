@@ -42,11 +42,11 @@ export default function MaterialsManagement() {
     fetchData();
   }, [id]);
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e: any) => {
     setFormData({ ...formData, file: e.target.files[0] });
   };
 
-  const handleUpload = async (e) => {
+  const handleUpload = async (e: any) => {
     e.preventDefault();
     if (!formData.file) return alert('Lütfen bir dosya seçin');
 
@@ -70,7 +70,7 @@ export default function MaterialsManagement() {
     }
   };
 
-  const handleDelete = async (matId) => {
+  const handleDelete = async (matId: number) => {
     if (!confirm('Bu materyali silmek istediğinize emin misiniz?')) return;
     try {
       // Backend'de delete metodu eksikse eklenebilir, şimdilik UI'da simüle edelim veya API'ye atalım
@@ -118,7 +118,7 @@ export default function MaterialsManagement() {
                 <input 
                   type="text" 
                   value={formData.title}
-                  onChange={(e) => setFormData({...formData, title: e.target.value})}
+                  onChange={(e: any) => setFormData({...formData, title: e.target.value})}
                   required
                   className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl focus:ring-2 focus:ring-yellow-500 outline-none" 
                   placeholder="Örn: Hafta 1 Sunumu"
@@ -128,7 +128,7 @@ export default function MaterialsManagement() {
                 <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 ml-1">Açıklama (Opsiyonel)</label>
                 <textarea 
                   value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                  onChange={(e: any) => setFormData({...formData, description: e.target.value})}
                   className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl focus:ring-2 focus:ring-yellow-500 outline-none h-24 resize-none" 
                   placeholder="İçerik hakkında kısa bilgi..."
                 ></textarea>
