@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
 import Image from "next/image";
+import api from "@/lib/api";
 
 const navLinks = [
   { name: "Anasayfa", href: "/" },
@@ -50,8 +51,8 @@ export default function Navbar() {
 
     // Dinamik projeleri çek
     api.get('/projects')
-      .then(res => setProjects(res.data.filter((p: any) => p.is_active)))
-      .catch(err => console.error("Projeler yuklenemedi:", err));
+      .then((res: any) => setProjects(res.data.filter((p: any) => p.is_active)))
+      .catch((err: any) => console.error("Projeler yuklenemedi:", err));
 
     window.addEventListener("scroll", handleScroll);
     window.addEventListener("storage", handleStorage);
