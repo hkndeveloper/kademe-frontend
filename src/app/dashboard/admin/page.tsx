@@ -38,6 +38,7 @@ export default function AdminDashboard() {
   });
   const [projects, setProjects] = useState<ProjectSummary[]>([]);
   const [analyticsData, setAnalyticsData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const [userName, setUserName] = useState("");
   const [roleLabel, setRoleLabel] = useState("Admin");
 
