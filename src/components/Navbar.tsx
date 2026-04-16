@@ -38,6 +38,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [projects, setProjects] = useState<any[]>([]);
   const [, setAuthVersion] = useState(0);
   const pathname = usePathname();
   const router = useRouter();
@@ -46,6 +47,12 @@ export default function Navbar() {
     setMounted(true);
     const handleScroll = () => setScrolled(window.scrollY > 10);
     const handleStorage = () => setAuthVersion((value) => value + 1);
+
+    // Dinamik projeleri çek
+    fetch(process.env.NEXT_PUBLIC_API_URL + '/projects')
+      .then(res => res.json())
+      .then(data => setProjects(data.filter((p: any) => p.is_active)))
+      .catch(err => console.error("Projeler yuklenemedi:", err));
 
     window.addEventListener("scroll", handleScroll);
     window.addEventListener("storage", handleStorage);
@@ -90,34 +97,42 @@ export default function Navbar() {
           </Link>
 
           <div className="hidden lg:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <div key={link.name} className="relative group">
-                <Link
-                  href={link.href}
-                  className={`flex items-center gap-1 text-sm font-medium transition-colors ${
-                    pathname === link.href ? "text-slate-900" : "text-gray-600 hover:text-gray-900"
-                  }`}
-                >
-                  {link.name}
-                  {link.submenu && <ChevronDown size={14} className="opacity-50 group-hover:rotate-180 transition-transform duration-200" />}
-                </Link>
-                {link.submenu && (
-                  <div className="absolute top-full left-0 pt-4 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200">
-                    <div className="bg-white rounded-xl shadow-lg border border-gray-100 py-2 w-60">
-                      {link.submenu.map((sub) => (
-                        <Link
-                          key={sub.name}
-                          href={sub.href}
-                          className="block px-4 py-2.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors"
-                        >
-                          {sub.name}
-                        </Link>
-                      ))}
+            {navLinks.map((link) => {
+              const isFaaliyetler = link.name === "Faaliyetler";
+              const currentSubmenu = isFaaliyetler 
+                ? projects.map(p => ({ name: p.name, href: `/projeler/${p.id}` }))
+                : link.submenu;
+
+              return (
+                <div key={link.name} className="relative group">
+                  <Link
+                    href={link.href}
+                    className={`flex items-center gap-1 text-sm font-medium transition-colors ${
+                      pathname === link.href ? "text-slate-900" : "text-gray-600 hover:text-gray-900"
+                    }`}
+                  >
+                    {link.name}
+                    {currentSubmenu && currentSubmenu.length > 0 && <ChevronDown size={14} className="opacity-50 group-hover:rotate-180 transition-transform duration-200" />}
+                  </Link>
+
+                  {currentSubmenu && currentSubmenu.length > 0 && (
+                    <div className="absolute top-full left-0 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                      <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-2 min-w-[240px]">
+                        {currentSubmenu.map((sub) => (
+                          <Link
+                            key={sub.name}
+                            href={sub.href}
+                            className="block px-4 py-2.5 text-sm font-medium text-gray-600 hover:text-slate-900 hover:bg-gray-50 rounded-xl transition-all"
+                          >
+                            {sub.name}
+                          </Link>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            ))}
+                  )}
+                </div>
+              );
+            })}
           </div>
 
           <div className="hidden lg:flex items-center gap-3">
