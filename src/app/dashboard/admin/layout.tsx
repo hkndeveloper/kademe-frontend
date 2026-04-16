@@ -56,10 +56,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-transparent flex relative z-10">
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-gray-100 flex flex-col sticky top-0 h-screen hidden lg:flex">
-        <div className="p-6 border-b border-gray-50">
+      <aside className="w-64 bg-white/70 backdrop-blur-3xl border-r border-slate-200/50 flex flex-col sticky top-0 h-screen hidden lg:flex">
+        <div className="p-6 border-b border-slate-200/50">
           <Link href="/" className="flex items-center gap-3">
             <div className="relative h-14 w-48">
               <Image
@@ -90,7 +90,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           ))}
         </nav>
 
-        <div className="p-4 border-t border-gray-50">
+        <div className="p-4 border-t border-slate-200/50">
           <button 
             onClick={() => {
               localStorage.clear();
@@ -107,7 +107,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Mobile Header */}
-        <header className="lg:hidden bg-white border-b border-gray-100 p-4 flex items-center justify-between sticky top-0 z-30">
+        <header className="lg:hidden bg-white/80 backdrop-blur-2xl border-b border-slate-200/50 p-4 flex items-center justify-between sticky top-0 z-30">
             <Link href="/" className="flex items-center gap-2">
                 <div className="relative h-10 w-36">
                     <Image

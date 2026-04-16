@@ -32,10 +32,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="tr">
-      <body className={inter.className}>
+      <body className={`${inter.className} relative bg-transparent text-slate-900`}>
+        {/* Subtle Corporate Glow Background */}
+        <div className="fixed inset-0 -z-50 pointer-events-none overflow-hidden bg-[#fafafa]">
+          <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-orange-500/10 blur-[120px] rounded-full" />
+          <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-yellow-400/10 blur-[120px] rounded-full" />
+          <div className="absolute top-[30%] left-[20%] w-[800px] h-[800px] bg-orange-300/5 blur-[150px] rounded-full" />
+        </div>
+        
         <Navbar />
         <ToastContainer />
-        <main className="min-h-screen pt-20">
+        <main className="min-h-screen pt-20 relative z-10">
           {children}
         </main>
         <Footer />
