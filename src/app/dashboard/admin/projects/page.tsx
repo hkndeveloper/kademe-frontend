@@ -273,25 +273,43 @@ export default function AdminProjects() {
                 </div>
 
                 {isSuperAdmin && (
-                  <div className="space-y-2 md:col-span-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Proje Koordinatörleri (Çoklu Seçim)</label>
-                    <div className="relative group">
-                      <select 
-                        multiple 
-                        className="w-full bg-slate-50 border-none rounded-[1.5rem] py-4 px-6 outline-none focus:ring-2 focus:ring-orange-500/10 font-bold min-h-[120px] scrollbar-hide"
-                        value={formData.coordinator_ids.map(id => String(id))}
-                        onChange={(e) => {
-                          const values = Array.from(e.target.selectedOptions, option => Number(option.value));
-                          setFormData({...formData, coordinator_ids: values});
-                        }}
-                      >
-                        {coordinators.map((c: any) => (
-                          <option key={c.id} value={c.id} className="py-2 px-1 rounded-lg checked:bg-orange-500 checked:text-white mb-1 uppercase tracking-tighter">
-                            👤 {c.name} ({c.email})
-                          </option>
-                        ))}
-                      </select>
+                  <div className="space-y-3 md:col-span-2">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Proje Koordinatörleri</label>
+                    <div className="flex flex-wrap gap-2 mb-2 p-4 bg-slate-50 border border-slate-100 rounded-[1.5rem] min-h-[70px] items-center">
+                      {formData.coordinator_ids.length === 0 && (
+                        <span className="text-[10px] font-bold text-slate-400 opacity-50 px-2 uppercase tracking-widest">Henüz Koordinatör Atanmadı</span>
+                      )}
+                      {formData.coordinator_ids.map(id => {
+                        const c = coordinators.find((coord: any) => coord.id === id) as any;
+                        if (!c) return null;
+                        return (
+                          <div key={id} className="flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest shadow-sm">
+                            👤 {c.name}
+                            <button type="button" onClick={() => setFormData({...formData, coordinator_ids: formData.coordinator_ids.filter(cid => cid !== id)})} className="hover:text-red-400 transition-colors ml-1 bg-white/10 rounded-full p-0.5">
+                              <XCircle size={14} />
+                            </button>
+                          </div>
+                        );
+                      })}
                     </div>
+                    
+                    <select 
+                      className="w-full bg-slate-50 border border-slate-100 rounded-[1.5rem] py-4 px-6 outline-none focus:ring-2 focus:ring-orange-500/10 font-bold uppercase tracking-wide text-xs text-slate-500 cursor-pointer"
+                      value=""
+                      onChange={(e) => {
+                        const val = Number(e.target.value);
+                        if(val && !formData.coordinator_ids.includes(val)){
+                          setFormData({...formData, coordinator_ids: [...formData.coordinator_ids, val]});
+                        }
+                      }}
+                    >
+                      <option value="">+ LİSTEYE KOORDİNATÖR EKLE (Seçiniz)</option>
+                      {coordinators.filter((c: any) => !formData.coordinator_ids.includes(c.id)).map((c: any) => (
+                        <option key={c.id} value={c.id}>
+                          {c.name} - {c.email}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 )}
 
