@@ -201,23 +201,46 @@ export default function AdminProjects() {
                   <input type="text" value={formData.sub_description} onChange={(e) => setFormData({...formData, sub_description: e.target.value})} className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 outline-none focus:ring-2 focus:ring-orange-500/10 font-bold" />
                 </div>
                 {isSuperAdmin && (
-                  <div className="space-y-2 md:col-span-2">
-                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Proje Koordinatörleri (Çoklu Seçim)</label>
-                    <select 
-                      multiple 
-                      className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 outline-none focus:ring-2 focus:ring-orange-500/10 font-bold h-32"
-                      value={formData.coordinator_ids.map(id => String(id))}
-                      onChange={(e) => {
-                        const values = Array.from(e.target.selectedOptions, option => Number(option.value));
-                        setFormData({...formData, coordinator_ids: values});
-                      }}
-                    >
-                      {coordinators.map((c: any) => (
-                        <option key={c.id} value={c.id}>{c.name} ({c.email})</option>
-                      ))}
-                    </select>
-                    <p className="text-[10px] text-slate-400 font-bold">CTRL tuşuna basılı tutarak birden fazla seçim yapabilirsiniz.</p>
-                  </div>
+                  <>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Uygulama Formatı</label>
+                      <select 
+                        value={formData.format} 
+                        onChange={(e) => setFormData({...formData, format: e.target.value})} 
+                        className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 outline-none focus:ring-2 focus:ring-orange-500/10 font-bold"
+                      >
+                        <option value="Hibrit">Hibrit</option>
+                        <option value="Online">Online</option>
+                        <option value="Yüz Yüze">Yüz Yüze</option>
+                      </select>
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Proje Koordinatörleri (Çoklu Seçim)</label>
+                      <div className="relative group">
+                        <select 
+                          multiple 
+                          className="w-full bg-slate-50 border-none rounded-[1.5rem] py-4 px-6 outline-none focus:ring-2 focus:ring-orange-500/10 font-bold min-h-[120px] scrollbar-hide"
+                          value={formData.coordinator_ids.map(id => String(id))}
+                          onChange={(e) => {
+                            const values = Array.from(e.target.selectedOptions, option => Number(option.value));
+                            setFormData({...formData, coordinator_ids: values});
+                          }}
+                        >
+                          {coordinators.map((c: any) => (
+                            <option key={c.id} value={c.id} className="py-2 px-1 rounded-lg checked:bg-orange-500 checked:text-white mb-1">
+                              👤 {c.name} ({c.email})
+                            </option>
+                          ))}
+                        </select>
+                        <div className="absolute right-4 bottom-4 pointer-events-none opacity-20 group-hover:opacity-100 transition-opacity">
+                           <ShieldCheck size={20} className="text-orange-500" />
+                        </div>
+                      </div>
+                      <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-2 px-1">
+                        Birden fazla seçmek için <kbd className="bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">CTRL</kbd> tuşuna basılı tutun.
+                      </p>
+                    </div>
+                  </>
                 )}
                 <div className="space-y-2">
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Lokasyon</label>

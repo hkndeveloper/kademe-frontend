@@ -24,6 +24,7 @@ const menuItems = [
   { name: "Başvurular", href: "/dashboard/admin/applications", icon: ClipboardCheck },
   { name: "Duyurular", href: "/dashboard/admin/announcements", icon: Bell },
   { name: "Takvim", href: "/dashboard/admin/calendar", icon: Calendar },
+  { name: "Koordinatörler", href: "/dashboard/admin/coordinators", icon: ShieldCheck },
   { name: "Oyunlaştırma", href: "/dashboard/admin/gamification", icon: Trophy },
   { name: "KPD Sistemi", href: "/dashboard/admin/materials", icon: ShieldCheck },
   { name: "Sistem Ayarları", href: "/dashboard/admin/settings", icon: Settings },
