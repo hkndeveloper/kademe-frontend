@@ -31,6 +31,19 @@ const menuItems = [
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [isSuperAdmin, setIsSuperAdmin] = React.useState(false);
+
+  React.useEffect(() => {
+    const roles = JSON.parse(localStorage.getItem("user_roles") || "[]");
+    setIsSuperAdmin(roles.includes("super-admin"));
+  }, []);
+
+  const visibleMenuItems = menuItems.filter(item => {
+    if (item.name === "Sistem Ayarları" && !isSuperAdmin) return false;
+    // Section 11.16: Görsel Analitik ve SMS harcamaları üst admin içindir diyebiliriz
+    // Ama şimdilik koordinatör kendi projelerinin analitiğini görebiliyor (backend kısıtladık)
+    return true;
+  });
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -51,7 +64,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
 
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          {menuItems.map((item) => (
+          {visibleMenuItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -68,12 +81,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
 
         <div className="p-4 border-t border-gray-50">
-          <Link href="/">
-            <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all">
-              <LogOut size={18} />
-              Çıkış Yap
-            </button>
-          </Link>
+          <button 
+            onClick={() => {
+              localStorage.clear();
+              window.location.href = "/login";
+            }}
+            className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
+          >
+            <LogOut size={18} />
+            Çıkış Yap
+          </button>
         </div>
       </aside>
 

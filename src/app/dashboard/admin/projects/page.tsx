@@ -17,8 +17,10 @@ import Link from 'next/link';
 
 export default function AdminProjects() {
   const [projects, setProjects] = useState([]);
+  const [coordinators, setCoordinators] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [formData, setFormData] = useState({ 
     name: '', 
     description: '',
@@ -29,12 +31,16 @@ export default function AdminProjects() {
     period: '',
     sub_description: '',
     timeline: [] as any | string,
-    documents: [] as any | string
+    documents: [] as any | string,
+    coordinator_ids: [] as number[]
   });
   const [editingId, setEditingId] = useState<number | null>(null);
 
   useEffect(() => {
+    const roles = JSON.parse(localStorage.getItem("user_roles") || "[]");
+    setIsSuperAdmin(roles.includes("super-admin"));
     fetchProjects();
+    fetchCoordinators();
   }, []);
 
   const fetchProjects = async () => {
@@ -45,6 +51,15 @@ export default function AdminProjects() {
       console.error('Projeler çekilemedi:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchCoordinators = async () => {
+    try {
+      const res = await api.get('/admin/coordinators');
+      setCoordinators(res.data);
+    } catch (err) {
+      console.error('Koordinatörler çekilemedi:', err);
     }
   };
 
@@ -75,7 +90,8 @@ export default function AdminProjects() {
     setFormData({ 
       name: '', description: '', location: '', capacity: 50, 
       application_deadline: '', format: 'Hibrit', period: '', 
-      sub_description: '', timeline: [], documents: [] 
+      sub_description: '', timeline: [], documents: [],
+      coordinator_ids: []
     });
     setEditingId(null);
   };
@@ -92,7 +108,8 @@ export default function AdminProjects() {
       period: p.period || '',
       sub_description: p.sub_description || '',
       timeline: p.timeline ? JSON.stringify(p.timeline, null, 2) : '[]',
-      documents: p.documents ? JSON.stringify(p.documents, null, 2) : '[]'
+      documents: p.documents ? JSON.stringify(p.documents, null, 2) : '[]',
+      coordinator_ids: p.coordinators ? p.coordinators.map((c: any) => c.id) : []
     });
     setShowModal(true);
   };
@@ -114,13 +131,15 @@ export default function AdminProjects() {
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Proje Yönetimi</h1>
           <p className="text-sm text-gray-400 mt-1 font-medium">Tüm kurumsal projeleri buradan dinamik olarak yönetebilirsiniz.</p>
         </div>
-        <button 
-          onClick={() => { resetForm(); setShowModal(true); }}
-          className="flex items-center gap-2 px-6 py-3 bg-orange-500 text-white text-xs font-bold rounded-xl hover:bg-orange-600 transition-all shadow-sm uppercase tracking-widest"
-        >
-          <Plus size={16} />
-          Yeni Proje Ekle
-        </button>
+        {isSuperAdmin && (
+          <button 
+            onClick={() => { resetForm(); setShowModal(true); }}
+            className="flex items-center gap-2 px-6 py-3 bg-orange-500 text-white text-xs font-bold rounded-xl hover:bg-orange-600 transition-all shadow-sm uppercase tracking-widest"
+          >
+            <Plus size={16} />
+            Yeni Proje Ekle
+          </button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -136,13 +155,20 @@ export default function AdminProjects() {
                  <button onClick={() => handleEdit(project)} className="p-2.5 bg-gray-50 text-gray-400 rounded-xl hover:bg-orange-500 hover:text-white transition-all">
                   <Edit2 size={16} />
                 </button>
-                 <button onClick={() => handleDelete(project.id)} className="p-2.5 bg-gray-50 text-gray-400 rounded-xl hover:bg-red-500 hover:text-white transition-all">
-                  <Trash2 size={16} />
-                </button>
+                 {isSuperAdmin && (
+                   <button onClick={() => handleDelete(project.id)} className="p-2.5 bg-gray-50 text-gray-400 rounded-xl hover:bg-red-500 hover:text-white transition-all">
+                    <Trash2 size={16} />
+                   </button>
+                 )}
               </div>
             </div>
             <h3 className="text-lg font-bold text-gray-900 mb-2 truncate">{project.name}</h3>
             <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest mb-4">{project.period || 'DÖNEM BELİRTİLMEDİ'}</p>
+            <div className="flex flex-wrap gap-1 mb-4">
+               {project.coordinators?.map((c: any) => (
+                 <span key={c.id} className="text-[9px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-bold truncate max-w-[100px]">{c.name}</span>
+               ))}
+            </div>
             <div className="pt-6 border-t border-gray-50 flex items-center justify-between">
                 {project.is_active ? (
                   <span className="flex items-center text-[10px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full uppercase tracking-widest">
@@ -174,6 +200,25 @@ export default function AdminProjects() {
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Sayfa Sloganı / Alt Başlık</label>
                   <input type="text" value={formData.sub_description} onChange={(e) => setFormData({...formData, sub_description: e.target.value})} className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 outline-none focus:ring-2 focus:ring-orange-500/10 font-bold" />
                 </div>
+                {isSuperAdmin && (
+                  <div className="space-y-2 md:col-span-2">
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Proje Koordinatörleri (Çoklu Seçim)</label>
+                    <select 
+                      multiple 
+                      className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 outline-none focus:ring-2 focus:ring-orange-500/10 font-bold h-32"
+                      value={formData.coordinator_ids.map(id => String(id))}
+                      onChange={(e) => {
+                        const values = Array.from(e.target.selectedOptions, option => Number(option.value));
+                        setFormData({...formData, coordinator_ids: values});
+                      }}
+                    >
+                      {coordinators.map((c: any) => (
+                        <option key={c.id} value={c.id}>{c.name} ({c.email})</option>
+                      ))}
+                    </select>
+                    <p className="text-[10px] text-slate-400 font-bold">CTRL tuşuna basılı tutarak birden fazla seçim yapabilirsiniz.</p>
+                  </div>
+                )}
                 <div className="space-y-2">
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Lokasyon</label>
                   <input type="text" value={formData.location} onChange={(e) => setFormData({...formData, location: e.target.value})} className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 outline-none focus:ring-2 focus:ring-orange-500/10 font-bold" />
