@@ -78,25 +78,31 @@ export default function ParticipantDashboard() {
       )}
 
       {/* Welcome Header */}
-      <div className="bg-slate-900 rounded-[3rem] p-10 text-white mb-10 relative overflow-hidden">
+      <div className="bg-slate-900 rounded-[3rem] p-10 text-white mb-10 relative overflow-hidden shadow-2xl shadow-slate-900/40">
         <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center">
           <div>
-            <h1 className="text-4xl font-bold mb-2">Merhaba, {profile?.name}!</h1>
-            <p className="text-slate-400">KADEME yolculuğunda bugün neler var?</p>
+            <div className="flex items-center space-x-3 mb-4">
+              <span className="px-3 py-1 bg-yellow-500 text-black text-[10px] font-black rounded-lg uppercase tracking-widest">Sistem Aktif</span>
+              <span className="text-slate-500 text-[10px] font-mono tracking-widest">
+                {currentTime.toLocaleTimeString('tr-TR')}
+              </span>
+            </div>
+            <h1 className="text-4xl font-black mb-2 tracking-tight">Merhaba, {profile?.name}!</h1>
+            <p className="text-slate-400 font-medium">KADEME Dijital Yonetim Sistemi'ne hos geldiniz.</p>
           </div>
           <div className="mt-6 md:mt-0 flex items-center space-x-6">
             <div className="text-center px-6 border-r border-slate-800">
-              <div className="text-3xl font-bold text-slate-300">{profile?.participant_profile?.credits || 100}</div>
-              <div className="text-xs text-slate-500 uppercase tracking-widest">Mevcut Kredi</div>
+              <div className="text-3xl font-black text-slate-100">{profile?.participant_profile?.credits || 100}</div>
+              <div className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Mevcut Kredi</div>
             </div>
             <div className="text-center px-6">
-              <div className="text-3xl font-bold text-slate-300">{badges.length}</div>
-              <div className="text-xs text-slate-500 uppercase tracking-widest">Rozet</div>
+              <div className="text-3xl font-black text-slate-100">{badges.length}</div>
+              <div className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Rozet</div>
             </div>
           </div>
         </div>
         {/* Decorative background element */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-slate-700/10 rounded-full -translate-y-32 translate-x-32 blur-3xl"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-500/5 rounded-full -translate-y-48 translate-x-48 blur-3xl"></div>
       </div>
 
       {/* Main Grid */}
