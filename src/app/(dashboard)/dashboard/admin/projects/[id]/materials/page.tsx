@@ -12,7 +12,6 @@ import {
   AlertCircle,
   Clock,
   HardDrive
-  HardDrive
 } from 'lucide-react';
 import { toast } from 'sonner';
 import api from '@/lib/api';

@@ -13,6 +13,7 @@ import {
   GraduationCap,
   History
 } from 'lucide-react';
+import { toast } from 'sonner';
 import api from '@/lib/api';
 
 export default function DigitalCVPage() {
