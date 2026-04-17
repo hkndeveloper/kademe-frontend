@@ -180,7 +180,17 @@ export default function ProjectDashboard() {
                       <button 
                         onClick={() => {
                           setIsNewActivity(true);
-                          setEditingActivity({ name: '', latitude: 39.9334, longitude: 32.8597, radius: 100, credit_loss_amount: 10, project_id: id, start_time: new Date().toISOString() });
+                          setEditingActivity({ 
+                            name: '', 
+                            latitude: 39.9334, 
+                            longitude: 32.8597, 
+                            radius: 100, 
+                            credit_loss_amount: 10, 
+                            project_id: id, 
+                            type: 'event',
+                            start_time: new Date().toISOString().slice(0, 16),
+                            end_time: new Date(Date.now() + 7200000).toISOString().slice(0, 16) 
+                          });
                           setIsModalOpen(true);
                         }}
                         className="flex items-center gap-2 px-5 py-2.5 bg-orange-500 text-white text-[11px] font-bold rounded-xl hover:bg-orange-600 transition-all uppercase tracking-widest shadow-sm"
@@ -342,13 +352,39 @@ export default function ProjectDashboard() {
                     <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block ml-1">Başlangıç Zamanı</label>
                     <input 
                       type="datetime-local"
-                      value={editingActivity.start_time ? new Date(editingActivity.start_time).toISOString().slice(0, 16) : ''}
-                      onChange={(e) => setEditingActivity({...editingActivity, start_time: e.target.value})}
+                      value={editingActivity.start_time ? (editingActivity.start_time.includes('T') ? editingActivity.start_time.slice(0, 16) : new Date(editingActivity.start_time).toISOString().slice(0, 16)) : ''}
+                      onChange={(e) => {
+                        const newStart = e.target.value;
+                        const newEnd = new Date(new Date(newStart).getTime() + 7200000).toISOString().slice(0, 16);
+                        setEditingActivity({...editingActivity, start_time: newStart, end_time: newEnd});
+                      }}
+                      className="w-full bg-gray-50 border-none rounded-2xl py-4 px-6 text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-orange-500/10"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block ml-1">Bitiş Zamanı</label>
+                    <input 
+                      type="datetime-local"
+                      value={editingActivity.end_time ? (editingActivity.end_time.includes('T') ? editingActivity.end_time.slice(0, 16) : new Date(editingActivity.end_time).toISOString().slice(0, 16)) : ''}
+                      onChange={(e) => setEditingActivity({...editingActivity, end_time: e.target.value})}
                       className="w-full bg-gray-50 border-none rounded-2xl py-4 px-6 text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-orange-500/10"
                     />
                   </div>
                 </div>
 
+                <div>
+                   <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block ml-1">Faaliyet Türü</label>
+                   <select 
+                     value={editingActivity.type || 'event'}
+                     onChange={(e) => setEditingActivity({...editingActivity, type: e.target.value})}
+                     className="w-full bg-gray-50 border-none rounded-2xl py-4 px-6 text-sm font-bold text-gray-900 outline-none focus:ring-2 focus:ring-orange-500/10 appearance-none"
+                   >
+                     <option value="event">Etkinlik (Açık Katılım)</option>
+                     <option value="training">Eğitim (Sertifikalı)</option>
+                     <option value="program">Program (Müfredat Dahili)</option>
+                   </select>
+                </div>
+                
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block ml-1">Lat (Enlem)</label>
