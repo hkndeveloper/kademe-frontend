@@ -44,6 +44,18 @@ export default function ParticipantDashboard() {
   }, []);
 
   if (loading) return <ParticipantSkeleton />;
+  
+  const now = new Date();
+  const liveActivities = activities.filter((a: any) => {
+    const start = new Date(a.start_time);
+    const end = new Date(a.end_time);
+    return now >= start && now <= end && a.is_accessible !== false;
+  });
+
+  const upcomingActivities = activities.filter((a: any) => {
+    const start = new Date(a.start_time);
+    return start > now && a.is_accessible !== false;
+  });
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
