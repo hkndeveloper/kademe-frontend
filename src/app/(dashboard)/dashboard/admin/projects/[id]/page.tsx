@@ -20,10 +20,10 @@ import { useParams } from 'next/navigation';
 import { toast } from "sonner";
 
 // Merkezi Bileşenler
-import ActivityModal from './components/ActivityModal';
-import ProjectEditModal from './components/ProjectEditModal';
-import AttendeeListModal from './components/AttendeeListModal';
-import WaitlistSection from './components/WaitlistSection';
+import ActivityModal from './_modals/ActivityModal';
+import ProjectEditModal from './_modals/ProjectEditModal';
+import AttendeeListModal from './_modals/AttendeeListModal';
+import WaitlistSection from './_modals/WaitlistSection';
 
 // UI Core Bileşenleri
 import PageHeader from '@/components/dashboard/PageHeader';
@@ -279,27 +279,27 @@ export default function ProjectDashboard() {
       </div>
 
       {/* Modallar */}
-      <ActivityModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        onSave={handleSaveActivity} 
-        editingActivity={editingActivity} 
-        setEditingActivity={setEditingActivity} 
-        isNewActivity={isNewActivity} 
+      <ActivityModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleSaveActivity}
+        editingActivity={editingActivity}
+        setEditingActivity={setEditingActivity}
+        isNewActivity={isNewActivity}
       />
 
-      <ProjectEditModal 
-        isOpen={isProjectModalOpen} 
-        onClose={() => setIsProjectModalOpen(false)} 
-        onUpdate={handleUpdateProject} 
-        project={project} 
-        setProject={setProject} 
+      <ProjectEditModal
+        isOpen={isProjectModalOpen}
+        onClose={() => setIsProjectModalOpen(false)}
+        onUpdate={handleUpdateProject}
+        project={project}
+        setProject={setProject}
       />
 
-      <AttendeeListModal 
-        isOpen={showAttendees} 
-        onClose={() => setShowAttendees(false)} 
-        detailedActivity={detailedActivity} 
+      <AttendeeListModal
+        isOpen={showAttendees}
+        onClose={() => setShowAttendees(false)}
+        detailedActivity={detailedActivity}
       />
     </div >
   );
