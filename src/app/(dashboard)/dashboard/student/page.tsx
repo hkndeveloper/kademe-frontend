@@ -271,10 +271,10 @@ export default function ParticipantDashboard() {
                 color={profile?.participant_profile?.credits < 75 ? 'text-red-500' : 'text-blue-500'} 
               />
             </div>
-            <button className="w-full mt-8 py-4 bg-slate-900 text-white rounded-2xl font-bold flex items-center justify-center group">
+            <Link href="/dashboard/student/dijital-cv" className="w-full mt-8 py-4 bg-slate-900 text-white rounded-2xl font-bold flex items-center justify-center group">
               Profilimi Düzenle
               <ExternalLink size={18} className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
-            </button>
+            </Link>
           </div>
 
           {/* Recent Badges */}
@@ -289,7 +289,7 @@ export default function ParticipantDashboard() {
                 <p className="text-xs text-slate-400">Henüz rozet kazanılmadı.</p>
               )}
             </div>
-            <Link href="/dashboard/katilimci/rozetler" className="block text-center mt-6 text-sm font-bold text-yellow-600">Tüm Rozetleri Gör</Link>
+            <Link href="/dashboard/student/rozetler" className="block text-center mt-6 text-sm font-bold text-yellow-600">Tüm Rozetleri Gör</Link>
           </div>
         </div>
       </div>
