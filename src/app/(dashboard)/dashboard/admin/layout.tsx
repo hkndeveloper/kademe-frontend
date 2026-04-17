@@ -22,12 +22,13 @@ const menuItems = [
   { name: "Dashboard",       href: "/dashboard/admin",               icon: LayoutDashboard },
   { name: "Projeler",        href: "/dashboard/admin/projects",       icon: Briefcase },
   { name: "Katılımcılar",   href: "/dashboard/admin/participants",   icon: Users },
+  { name: "Kara Liste",     href: "/dashboard/admin/blacklist",      icon: ShieldAlert },
   { name: "Başvurular",     href: "/dashboard/admin/applications",   icon: ClipboardCheck },
   { name: "Duyurular",      href: "/dashboard/admin/announcements",  icon: Bell },
   { name: "Takvim",         href: "/dashboard/admin/calendar",       icon: Calendar },
   { name: "Koordinatörler", href: "/dashboard/admin/coordinators",   icon: ShieldCheck },
   { name: "Oyunlaştırma",   href: "/dashboard/admin/gamification",   icon: Trophy },
-  { name: "KPD Sistemi",    href: "/dashboard/admin/kpd-reports",    icon: ShieldAlert },
+  { name: "KPD Sistemi",    href: "/dashboard/admin/kpd",            icon: ClipboardCheck },
   { name: "Sistem Ayarları",href: "/dashboard/admin/settings",       icon: Settings },
 ];
 
