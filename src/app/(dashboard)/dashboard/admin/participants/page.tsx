@@ -405,10 +405,3 @@ export default function AdminParticipants() {
     </div>
   );
 }
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
