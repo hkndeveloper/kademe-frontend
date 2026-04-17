@@ -7,12 +7,23 @@ import api from "@/lib/api";
 
 export default function AlumniDashboard() {
   const [profile, setProfile] = useState<any>(null);
+  const [alumniNetwork, setAlumniNetwork] = useState<any[]>([]);
+  const [certificates, setCertificates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get("/user")
-      .then((res) => setProfile(res.data.user))
-      .catch((err) => console.error("Kullanıcı bilgisi alınamadı", err))
+    Promise.all([
+      api.get("/user"),
+      api.get("/participants/alumni").catch(() => ({ data: { data: [] } })), // in case of auth restriction
+      api.get("/student/certificates").catch(() => ({ data: [] }))
+    ])
+      .then(([resUser, resAlumni, resCerts]) => {
+        setProfile(resUser.data.user);
+        const fetchedAlumni = Array.isArray(resAlumni.data) ? resAlumni.data : (resAlumni.data?.data || []);
+        setAlumniNetwork(fetchedAlumni.slice(0, 5)); // show top 5
+        setCertificates(resCerts.data || []);
+      })
+      .catch((err) => console.error("Mezun verileri alınamadı", err))
       .finally(() => setLoading(false));
   }, []);
 
@@ -35,10 +46,6 @@ export default function AlumniDashboard() {
               <h1 className="text-2xl font-bold text-gray-900">Hoş Geldiniz, {profile?.name}</h1>
               <p className="text-sm text-gray-400 mt-1">KADEME Ailesinin Seçkin Mezunu</p>
             </div>
-            <div className="ml-auto hidden sm:block text-right">
-              <div className="text-sm font-semibold text-gray-900">12 Aktif İlan</div>
-              <div className="text-xs text-green-500">Kariyer Fırsatları Açık</div>
-            </div>
           </div>
         </div>
 
@@ -49,33 +56,41 @@ export default function AlumniDashboard() {
               <h2 className="text-sm font-semibold text-gray-900 mb-5 flex items-center gap-2">
                 <Briefcase size={16} className="text-orange-500" /> Özel Staj & Kariyer İlanları
               </h2>
-              <div className="space-y-4">
-                <JobCard 
-                  title="Diplomasi Koordinatörü" 
-                  company="Diplomasi360"
-                  type="Tam Zamanlı"
-                  location="Ankara"
-                  tags={["Diplomasi360", "Global"]}
-                />
-                <JobCard 
-                  title="Proje Asistanı" 
-                  company="KADEME Yönetim Merkezi"
-                  type="Yarı Zamanlı"
-                  location="İstanbul"
-                  tags={["KADEME+"]}
-                />
+              <div className="relative">
+                <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] z-10 flex items-center justify-center rounded-xl">
+                  <span className="px-4 py-2 bg-slate-900 text-white rounded-full text-xs font-bold uppercase tracking-widest shadow-xl">ÇOK YAKINDA</span>
+                </div>
+                <div className="space-y-4 opacity-50 select-none">
+                  <JobCard 
+                    title="Diplomasi Koordinatörü" 
+                    company="Diplomasi360"
+                    type="Tam Zamanlı"
+                    location="Ankara"
+                    tags={["Diplomasi360", "Global"]}
+                  />
+                  <JobCard 
+                    title="Proje Asistanı" 
+                    company="KADEME Yönetim Merkezi"
+                    type="Yarı Zamanlı"
+                    location="İstanbul"
+                    tags={["KADEME+"]}
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
+            <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm relative">
               <h2 className="text-sm font-semibold text-gray-900 mb-5 flex items-center gap-2">
                 <Users size={16} className="text-orange-500" /> Yaklaşan Mezun Buluşmaları
               </h2>
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-100 gap-4">
+              <div className="absolute inset-x-0 bottom-0 top-14 bg-white/60 backdrop-blur-[2px] z-10 flex items-center justify-center rounded-b-xl">
+                 <span className="px-4 py-2 bg-slate-900 text-white rounded-full text-xs font-bold uppercase tracking-widest shadow-xl">YAKINDA AKTİF</span>
+              </div>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-100 gap-4 opacity-50 select-none">
                 <div>
                   <h3 className="text-sm font-medium text-gray-800">Bahar Kahvaltısı & Networking</h3>
                   <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-1.5">
-                    <MapPin size={12} /> 18 Mayıs 2024 - KADEME Merkezi
+                    <MapPin size={12} /> Yakında Belli Olacak
                   </p>
                 </div>
                 <button className="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg hover:bg-gray-50 transition min-w-[100px]">
@@ -93,11 +108,11 @@ export default function AlumniDashboard() {
                 <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2"><Award size={16} className="text-orange-500" /> Sertifikalarım</h3>
               </div>
               <p className="text-xs text-gray-400 leading-relaxed mb-4">
-                Tamamladığınız programlara ait karekodlu, doğrulanabilir dijital mezuniyet belgeleriniz.
+                Sistemde kayıtlı doğrulanabilir <b>{certificates.length}</b> adet sertifikanız bulunuyor.
               </p>
-              <button className="w-full flex items-center justify-center gap-2 py-2 text-xs font-semibold text-gray-700 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors">
-                <Download size={13} /> Belgelerimi İndir (.ZIP)
-              </button>
+              <Link href="/dashboard/student/sertifikalar" className="w-full flex items-center justify-center gap-2 py-2 text-xs font-semibold text-gray-700 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors">
+                <Download size={13} /> Sertifikalarımı Görüntüle
+              </Link>
             </div>
 
             <div className="bg-orange-500 rounded-xl p-6 text-white shadow-sm flex flex-col justify-between h-[180px]">
@@ -113,10 +128,18 @@ export default function AlumniDashboard() {
             </div>
             
              <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
-              <h3 className="text-sm font-semibold text-gray-900 mb-4">Sektörel Network</h3>
+              <h3 className="text-sm font-semibold text-gray-900 mb-4">Sektörel Network (Yakın Dönem Mezunları)</h3>
               <div className="space-y-4">
-                <AlumniContact name="Ahmet S." role="CEO @ TechBase" year="2021 Mezunu" />
-                <AlumniContact name="Zeynep Y." role="Lawyer @ GlobalJurist" year="2022 Mezunu" />
+                {alumniNetwork.length > 0 ? alumniNetwork.map((alumni: any) => (
+                  <AlumniContact 
+                    key={alumni.id} 
+                    name={alumni.user?.name || alumni.name || "İsimsiz Mezun"} 
+                    role={alumni.university || "KADEME Mezunu"} 
+                    year={alumni.created_at ? new Date(alumni.created_at).getFullYear() + " Mezunu" : "Mezun"} 
+                  />
+                )) : (
+                  <p className="text-xs text-gray-400">Şu an aktif bir network bulunamadı.</p>
+                )}
               </div>
             </div>
           </div>

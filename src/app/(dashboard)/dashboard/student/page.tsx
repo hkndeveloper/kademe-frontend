@@ -20,21 +20,35 @@ import Link from 'next/link';
 export default function ParticipantDashboard() {
   const [profile, setProfile] = useState<any>(null);
   const [activities, setActivities] = useState([]);
-  const [badges, setBadges] = useState([]);
+  const [badges, setBadges] = useState<any[]>([]);
+  const [bundleStats, setBundleStats] = useState({
+    materials: 0,
+    certificates: 0,
+    reports: 0,
+  });
   const [loading, setLoading] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [profileRes, activityRes, badgeRes] = await Promise.all([
+        const [profileRes, activityRes, badgeRes, materialsRes, certsRes, reportsRes] = await Promise.all([
           api.get('/user'),
           api.get('/activities'),
-          api.get('/student/badges')
+          api.get('/student/badges'),
+          api.get('/student/bundle'),
+          api.get('/student/certificates'),
+          api.get('/student/reports')
         ]);
         setProfile(profileRes.data.user);
         setActivities(activityRes.data);
         setBadges(badgeRes.data);
+        
+        setBundleStats({
+          materials: materialsRes.data?.length || 0,
+          certificates: certsRes.data?.length || 0,
+          reports: reportsRes.data?.length || 0,
+        });
       } catch (err) {
         console.error('Veri çekilemedi:', err);
       } finally {
@@ -222,10 +236,10 @@ export default function ParticipantDashboard() {
               Dijital Bohça
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Link href="/dashboard/student/bohca"><BundleItem label="Eğitim Materyalleri" count="+" /></Link>
-              <Link href="/dashboard/student/sertifikalar"><BundleItem label="Sertifikalar" count="İndir" /></Link>
-              <Link href="/dashboard/student/mesajlar"><BundleItem label="Mesajlar" count="0" /></Link>
-              <Link href="/dashboard/student/raporlar"><BundleItem label="KPD Raporlarım" count="Görüntüle" /></Link>
+              <Link href="/dashboard/student/bohca"><BundleItem label="Eğitim Materyali" count={bundleStats.materials} /></Link>
+              <Link href="/dashboard/student/sertifikalar"><BundleItem label="Sertifikalar" count={bundleStats.certificates} /></Link>
+              <Link href="/dashboard/student/mesajlar"><BundleItem label="Mesajlar" count={0} /></Link>
+              <Link href="/dashboard/student/raporlar"><BundleItem label="KPD Raporları" count={bundleStats.reports} /></Link>
             </div>
           </section>
         </div>
@@ -244,8 +258,18 @@ export default function ParticipantDashboard() {
               </div>
             </div>
             <div className="space-y-4 pt-4 border-t border-slate-50 dark:border-slate-800">
-              <ProfileInfoItem icon={CheckCircle} label="Durum" value="Aktif Katılımcı" color="text-emerald-500" />
-              <ProfileInfoItem icon={CreditCard} label="Kredi Durumu" value="Kritik Değil" color="text-blue-500" />
+              <ProfileInfoItem 
+                icon={CheckCircle} 
+                label="Durum" 
+                value={profile?.participant_profile?.status === 'active' ? 'Aktif Katılımcı' : (profile?.participant_profile?.status || 'Bilinmiyor')} 
+                color="text-emerald-500" 
+              />
+              <ProfileInfoItem 
+                icon={CreditCard} 
+                label="Kredi Durumu" 
+                value={profile?.participant_profile?.credits < 75 ? 'Riskli Seviye' : 'Yeterli (Güvenli)'} 
+                color={profile?.participant_profile?.credits < 75 ? 'text-red-500' : 'text-blue-500'} 
+              />
             </div>
             <button className="w-full mt-8 py-4 bg-slate-900 text-white rounded-2xl font-bold flex items-center justify-center group">
               Profilimi Düzenle
