@@ -13,6 +13,7 @@ import {
   Edit2,
   QrCode,
   User,
+  ShieldAlert
 } from "lucide-react";
 import Link from "next/link";
 import axios from "axios";
@@ -209,6 +210,17 @@ export default function AdminActivities() {
     }
   };
 
+  const handleProcessAbsences = async (id: number) => {
+    if (!confirm('Yoklamayi kapatmak ve gelmeyenlerin kredisini dusurup kara liste kontrolu yapmak istediginize emin misiniz?')) return;
+    try {
+      await api.post(`/activities/${id}/process-absences`);
+      toast.success("Devamsizliklar islendi, krediler guncellendi.");
+      fetchData();
+    } catch {
+      toast.error("Islem sirasinda bir hata olustu.");
+    }
+  };
+
   const handleManualAttendance = async (userId: number) => {
     if (!selectedActivity) return;
 
@@ -325,6 +337,13 @@ export default function AdminActivities() {
                   className="p-4 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-2xl hover:bg-yellow-500 hover:text-white transition-all shadow-sm"
                 >
                   <RefreshCw size={20} />
+                </button>
+                <button
+                  onClick={() => handleProcessAbsences(activity.id)}
+                  title="Devamsizliklari Isle & Yoklamayi Kapat"
+                  className="p-4 bg-red-50 text-red-600 rounded-2xl hover:bg-red-600 hover:text-white transition-all shadow-sm"
+                >
+                  <ShieldAlert size={20} />
                 </button>
                 <button
                   onClick={() => openAttendeeList(activity)}

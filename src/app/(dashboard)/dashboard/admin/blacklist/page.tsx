@@ -83,12 +83,12 @@ export default function BlacklistPage() {
         </div>
         <div className="flex-1">
            <h4 className="font-black text-amber-900 mb-1">Otomasyon Kuralları (Section 14.1)</h4>
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2 text-xs font-bold text-amber-800/70 uppercase tracking-widest">
-              <p>• 3 mazeretsiz devamsızlık -> Otomatik kara liste</p>
-              <p>• Kredi eşiği (75) altı -> SMS uyarısı</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2 text-xs font-bold text-amber-800/70 uppercase tracking-widest">
+              <p>• 3 mazeretsiz devamsızlık &rarr; Otomatik kara liste</p>
+              <p>• Kredi eşiği (75) altı &rarr; SMS uyarısı</p>
               <p>• Kara listedekiler yeni projeye başvuramaz</p>
               <p>• Tüm mevcut başvurular otomatik iptal edilir</p>
-           </div>
+            </div>
         </div>
       </div>
 

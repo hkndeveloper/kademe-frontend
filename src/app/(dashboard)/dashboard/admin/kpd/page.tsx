@@ -42,7 +42,8 @@ export default function AdminKpdPage() {
         setReports(res.data);
       } else if (activeTab === 'upload-report') {
         const res = await api.get('/participants');
-        setParticipants(res.data);
+        const data = Array.isArray(res.data) ? res.data : (res.data.data || []);
+        setParticipants(data);
       }
     } catch (err) {
       toast.error("Veriler yüklenemedi.");
