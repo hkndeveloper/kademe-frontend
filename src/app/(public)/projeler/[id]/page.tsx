@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Calendar, Users, BookOpen, MapPin, Clock, Download, ArrowLeft } from "lucide-react";
+import { Calendar, Users, BookOpen, MapPin, Clock, Download, ArrowLeft, FileText } from "lucide-react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import api from "@/lib/api";
@@ -212,6 +212,7 @@ export default function ProjectDetailPage() {
                   </div>
                 </div>
               )}
+            </div>
           </div>
         </div>
       </section>
