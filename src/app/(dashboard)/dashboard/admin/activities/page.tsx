@@ -12,10 +12,12 @@ import {
   Search,
   Edit2,
   QrCode,
+  User,
 } from "lucide-react";
 import Link from "next/link";
 import axios from "axios";
 import api from "@/lib/api";
+import { toast } from "sonner";
 
 type Project = {
   id: number;
@@ -60,6 +62,8 @@ export default function AdminActivities() {
   const [userSearch, setUserSearch] = useState("");
   const [foundUsers, setFoundUsers] = useState<ParticipantSearchResult[]>([]);
   const [markingId, setMarkingId] = useState<number | null>(null);
+  const [showAttendees, setShowAttendees] = useState(false);
+  const [detailedActivity, setDetailedActivity] = useState<Activity | null>(null);
   const [formData, setFormData] = useState({
     project_id: "",
     name: "",
@@ -175,6 +179,17 @@ export default function AdminActivities() {
     setShowManualModal(true);
     setFoundUsers([]);
     setUserSearch("");
+  };
+
+  const openAttendeeList = async (activity: Activity) => {
+    setSelectedActivity(activity);
+    try {
+      const res = await api.get(`/activities/${activity.id}`);
+      setDetailedActivity(res.data);
+      setShowAttendees(true);
+    } catch {
+      toast.error("Katilimci listesi yuklenemedi.");
+    }
   };
 
   const searchUsers = async (query: string) => {
@@ -311,7 +326,15 @@ export default function AdminActivities() {
                   <RefreshCw size={20} />
                 </button>
                 <button
+                  onClick={() => openAttendeeList(activity)}
+                  title="Katilanlar Listesi"
+                  className="p-4 bg-emerald-50 text-emerald-600 rounded-2xl hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
+                >
+                  <Users size={20} />
+                </button>
+                <button
                   onClick={() => openManualAttendance(activity)}
+                  title="Manuel Yoklama Al"
                   className="p-4 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-2xl hover:bg-slate-900 hover:text-white transition-all shadow-sm"
                 >
                   <Users size={20} />
@@ -537,6 +560,67 @@ export default function AdminActivities() {
               <button
                 onClick={() => setShowManualModal(false)}
                 className="w-full mt-6 py-4 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-white font-bold rounded-2xl hover:bg-slate-200 transition-all underline"
+              >
+                Kapat
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {showAttendees && detailedActivity && (
+          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowAttendees(false)}
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
+            />
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-[3rem] p-8 shadow-2xl"
+            >
+              <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-2">
+                Katilimci Listesi
+              </h2>
+              <p className="text-sm text-slate-500 mb-6">{detailedActivity.name}</p>
+
+              <div className="max-h-96 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
+                {(detailedActivity as any).attendances?.length === 0 ? (
+                  <p className="text-center py-8 text-slate-400 italic">Henuz yoklama kaydi bulunmuyor.</p>
+                ) : (
+                  (detailedActivity as any).attendances?.map((att: any) => (
+                    <div
+                      key={att.id}
+                      className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-white dark:bg-slate-700 rounded-xl flex items-center justify-center text-slate-400">
+                           <User size={20} />
+                        </div>
+                        <div>
+                          <div className="font-bold text-slate-900 dark:text-white">
+                            {att.user?.name || "Isimsiz"}
+                          </div>
+                          <div className="text-[10px] text-slate-400 font-mono">
+                            {new Date(att.created_at).toLocaleTimeString("tr-TR")}
+                          </div>
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-black bg-emerald-100 text-emerald-600 px-2 py-1 rounded">
+                        KATILDI
+                      </span>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              <button
+                onClick={() => setShowAttendees(false)}
+                className="w-full mt-6 py-4 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-all uppercase text-[11px] tracking-widest"
               >
                 Kapat
               </button>

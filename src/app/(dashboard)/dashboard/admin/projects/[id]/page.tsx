@@ -15,9 +15,8 @@ import {
   MapPin,
   ChevronRight,
   Clock,
-  MoveUp,
-  MoveDown,
-  Trash2
+  Trash2,
+  User,
 } from 'lucide-react';
 import Link from 'next/link';
 import api from '@/lib/api';
@@ -35,6 +34,9 @@ export default function ProjectDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [isNewActivity, setIsNewActivity] = useState(false);
+  
+  const [showAttendees, setShowAttendees] = useState(false);
+  const [detailedActivity, setDetailedActivity] = useState<any>(null);
 
   useEffect(() => {
     fetchData();
@@ -117,6 +119,16 @@ export default function ProjectDashboard() {
         fetchData();
     } catch (err) {
         toast.error("Sıralama güncellenemedi.");
+    }
+  };
+
+  const openAttendeeList = async (activity: any) => {
+    try {
+      const res = await api.get(`/activities/${activity.id}`);
+      setDetailedActivity(res.data);
+      setShowAttendees(true);
+    } catch {
+      toast.error("Katılımcı listesi yüklenemedi.");
     }
   };
 
@@ -231,6 +243,13 @@ export default function ProjectDashboard() {
                                 >
                                     <Activity size={18} />
                                 </Link>
+                                <button
+                                    onClick={() => openAttendeeList(activity)}
+                                    title="Katılanlar Listesi"
+                                    className="p-3 bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white rounded-xl transition-all shadow-sm"
+                                >
+                                    <Users size={18} />
+                                </button>
                                 <button 
                                     onClick={() => { setEditingActivity(activity); setIsNewActivity(false); setIsModalOpen(true); }}
                                     className="p-3 bg-gray-50 text-gray-400 hover:text-orange-500 rounded-xl transition-all"
@@ -482,6 +501,69 @@ export default function ProjectDashboard() {
                    <button type="submit" className="flex-1 py-4 bg-orange-500 text-white text-xs font-bold rounded-2xl shadow-lg shadow-orange-500/20">GÜNCELLE</button>
                 </div>
               </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Attendee List Modal */}
+      <AnimatePresence>
+        {showAttendees && detailedActivity && (
+          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowAttendees(false)}
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
+            />
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative w-full max-w-lg bg-white rounded-[3rem] p-8 shadow-2xl"
+            >
+              <h2 className="text-2xl font-black text-slate-900 mb-2">
+                Katılımcı Listesi
+              </h2>
+              <p className="text-sm text-gray-500 mb-6">{detailedActivity.name}</p>
+
+              <div className="max-h-96 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
+                {detailedActivity.attendances?.length === 0 ? (
+                  <p className="text-center py-8 text-gray-400 italic">Henüz yoklama kaydı bulunmuyor.</p>
+                ) : (
+                  detailedActivity.attendances?.map((att: any) => (
+                    <div
+                      key={att.id}
+                      className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-gray-400 shadow-sm">
+                           <User size={20} />
+                        </div>
+                        <div>
+                          <div className="font-bold text-gray-900">
+                            {att.user?.name || "İsimsiz"}
+                          </div>
+                          <div className="text-[10px] text-gray-400 font-mono">
+                            {new Date(att.created_at).toLocaleTimeString("tr-TR")}
+                          </div>
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-black bg-emerald-100 text-emerald-600 px-2 py-1 rounded">
+                        KATILDI
+                      </span>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              <button
+                onClick={() => setShowAttendees(false)}
+                className="w-full mt-6 py-4 bg-gray-900 text-white font-bold rounded-2xl hover:bg-gray-800 transition-all uppercase text-[11px] tracking-widest shadow-lg"
+              >
+                Kapat
+              </button>
             </motion.div>
           </div>
         )}
