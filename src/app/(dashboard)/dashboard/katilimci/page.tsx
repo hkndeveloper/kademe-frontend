@@ -22,6 +22,7 @@ export default function ParticipantDashboard() {
   const [activities, setActivities] = useState([]);
   const [badges, setBadges] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,20 +42,23 @@ export default function ParticipantDashboard() {
       }
     };
     fetchData();
+
+    // Zamanı her 10 saniyede bir güncelle (Live geçişleri için)
+    const timer = setInterval(() => setCurrentTime(new Date()), 10000);
+    return () => clearInterval(timer);
   }, []);
 
   if (loading) return <ParticipantSkeleton />;
   
-  const now = new Date();
   const liveActivities = activities.filter((a: any) => {
     const start = new Date(a.start_time);
     const end = new Date(a.end_time);
-    return now >= start && now <= end && a.is_accessible !== false;
+    return currentTime >= start && currentTime <= end && a.is_accessible !== false;
   });
 
   const upcomingActivities = activities.filter((a: any) => {
     const start = new Date(a.start_time);
-    return start > now && a.is_accessible !== false;
+    return start > currentTime && a.is_accessible !== false;
   });
 
   return (

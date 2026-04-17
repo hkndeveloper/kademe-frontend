@@ -24,11 +24,16 @@ function AttendanceContent() {
   const [status, setStatus] = useState<'idle' | 'scanning' | 'verifying' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
   const [loadingLocation, setLoadingLocation] = useState(false);
+  const [activity, setActivity] = useState<any>(null);
 
   useEffect(() => {
+    // Etkinlik bilgisini cek
+    if (activityId) {
+      api.get(`/activities/${activityId}`).then(res => setActivity(res.data)).catch(() => {});
+    }
     // Sayfa acildiginda konumu iste
     getLocation();
-  }, []);
+  }, [activityId]);
 
   const getLocation = () => {
     setLoadingLocation(true);
@@ -98,8 +103,12 @@ function AttendanceContent() {
         </button>
 
         <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 shadow-2xl border border-slate-100 dark:border-slate-800 text-center">
-          <h1 className="text-2xl font-black text-slate-900 dark:text-white mb-2">QR Yoklama</h1>
-          <p className="text-slate-500 text-sm mb-10">Lütfen ekrandaki QR kodu taratın.</p>
+          <h1 className="text-2xl font-black text-slate-900 dark:text-white mb-2">
+            {activity?.name || 'QR Yoklama'}
+          </h1>
+          <p className="text-slate-500 text-sm mb-10">
+            {activity?.project?.name ? `${activity.project.name} kapsamında yoklama alınıyor.` : 'Lütfen ekrandaki QR kodu taratın.'}
+          </p>
 
           <AnimatePresence mode="wait">
             {status === 'error' && (
