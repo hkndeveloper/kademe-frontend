@@ -38,7 +38,7 @@ export default function PageHeader({
                 <div className="flex items-center gap-6">
                     {icon && (
                         <div className="w-20 h-20 bg-white border border-gray-100 rounded-[2.5rem] flex items-center justify-center shadow-sm">
-                            {React.cloneElement(icon as React.ReactElement, { size: 32, className: "text-orange-500" })}
+                            {React.cloneElement(icon as any, { size: 32, className: "text-orange-500" })}
                         </div>
                     )}
                     <div>
