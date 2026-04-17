@@ -83,47 +83,111 @@ export default function ParticipantDashboard() {
         <div className="absolute top-0 right-0 w-64 h-64 bg-slate-700/10 rounded-full -translate-y-32 translate-x-32 blur-3xl"></div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main Content: Activities */}
-        <div className="lg:col-span-2 space-y-8">
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <div className="lg:col-span-2 space-y-12">
+          
+          {/* 1. SECTION: CANLI ETKINLIKLER (LIVE) */}
           <section>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Yaklaşan Faaliyetler</h2>
-              <button className="text-slate-600 font-bold flex items-center text-sm">
-                Tümünü Gör <ChevronRight size={16} />
-              </button>
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">KADEME Canli Akis</h2>
+                <p className="text-slate-400 text-sm font-medium">Su an gerceklesen aktif kullanim alanlari.</p>
+              </div>
+              <div className="flex items-center space-x-2 bg-emerald-50 text-emerald-600 px-4 py-2 rounded-full border border-emerald-100">
+                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-ping" />
+                <span className="text-[10px] font-black uppercase tracking-widest">Canli</span>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {activities.length > 0 ? activities.slice(0, 4).map((activity: any) => (
-                <div key={activity.id} className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="flex justify-between mb-4">
-                    <span className="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-bold rounded-full">{activity.type.toUpperCase()}</span>
-                    <span className="text-slate-400"><Clock size={16} /></span>
-                  </div>
-                  <h3 className="font-bold text-slate-900 dark:text-white mb-2">{activity.name}</h3>
-                  <div className="flex items-center text-sm text-slate-500 mb-4">
-                    <MapPin size={14} className="mr-1" />
-                    {activity.project?.name || 'KADEME'}
-                  </div>
-                  {activity.is_accessible === false ? (
-                    <div className="w-full flex items-center justify-center space-x-2 py-3 bg-gray-100 dark:bg-slate-800/50 rounded-2xl text-gray-400 font-bold cursor-not-allowed">
-                      <AlertTriangle size={18} />
-                      <span>Bu Programa Kayıtlı Değilsiniz</span>
+            <div className="grid grid-cols-1 gap-6">
+              {liveActivities.length > 0 ? liveActivities.map((activity: any) => (
+                <motion.div 
+                  layout
+                  key={activity.id} 
+                  className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/40 relative overflow-hidden group"
+                >
+                  <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-2 mb-4">
+                        <span className="px-3 py-1 bg-yellow-500 text-white text-[10px] font-black rounded-lg uppercase tracking-widest">{activity.type}</span>
+                        <span className="px-3 py-1 bg-slate-100 text-slate-500 text-[10px] font-black rounded-lg uppercase tracking-widest">Simdi</span>
+                      </div>
+                      <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-3">{activity.name}</h3>
+                      <div className="flex items-center space-x-6 text-sm text-slate-400 font-bold">
+                        <span className="flex items-center"><MapPin size={16} className="mr-2 text-yellow-500" /> {activity.room_name || 'Ana Salon'}</span>
+                        <span className="flex items-center"><Clock size={16} className="mr-2 text-yellow-500" /> Bitis: {new Date(activity.end_time).toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'})}</span>
+                      </div>
                     </div>
-                  ) : (
-                    <Link 
-                      href={`/dashboard/katilimci/yoklama?activity=${activity.id}`}
-                      className="w-full flex items-center justify-center space-x-2 py-3 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-2xl transition-colors text-slate-900 dark:text-white font-bold"
-                    >
-                      <Smartphone size={18} />
-                      <span>QR Yoklama Ver</span>
-                    </Link>
-                  )}
+                    
+                    {activity.has_attended ? (
+                      <div className="w-full md:w-auto px-10 py-5 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center space-x-3 shadow-lg shadow-emerald-500/10">
+                        <CheckCircle size={22} />
+                        <span className="font-black text-sm uppercase tracking-widest">Yoklama Verildi</span>
+                      </div>
+                    ) : (
+                      <Link 
+                        href={`/dashboard/katilimci/yoklama?activity=${activity.id}`}
+                        className="w-full md:w-auto px-10 py-5 bg-slate-900 text-white rounded-2xl flex items-center justify-center space-x-3 hover:bg-black transition-all shadow-xl shadow-slate-900/30 active:scale-95 group-hover:scale-105"
+                      >
+                        <Smartphone size={22} />
+                        <span className="font-black text-sm uppercase tracking-widest">QR OKUT</span>
+                      </Link>
+                    )}
+                  </div>
+                  {/* Background Accents */}
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/5 rounded-full -translate-y-16 translate-x-16 blur-2xl" />
+                </motion.div>
+              )) : (
+                <div className="py-16 text-center bg-white rounded-[2.5rem] border-2 border-dashed border-slate-100">
+                  <Clock size={48} className="mx-auto text-slate-100 mb-4" />
+                  <p className="text-slate-400 font-bold">Su an devam eden bir faaliyet bulunmuyor.</p>
+                </div>
+              )}
+            </div>
+          </section>
+
+          {/* 2. SECTION: YAKLASANLAR (AGENDA) */}
+          <section>
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">KADEME Ajandasi</h2>
+                <p className="text-slate-400 text-sm font-medium">Onumuzdeki gunlerin faaliyet plani.</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {upcomingActivities.length > 0 ? upcomingActivities.slice(0, 6).map((activity: any) => (
+                <div key={activity.id} className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-sm hover:border-yellow-200 transition-all">
+                  <div className="flex justify-between items-start mb-6">
+                    <div className="w-12 h-12 bg-slate-50 rounded-2xl flex flex-col items-center justify-center text-slate-400 font-black">
+                      <span className="text-[10px] leading-none uppercase">
+                        {new Date(activity.start_time).toLocaleDateString('tr-TR', {month: 'short'})}
+                      </span>
+                      <span className="text-lg leading-tight">
+                        {new Date(activity.start_time).getDate()}
+                      </span>
+                    </div>
+                    <span className="px-3 py-1 bg-slate-50 text-slate-400 text-[9px] font-black rounded-lg uppercase tracking-widest">YAKLASAN</span>
+                  </div>
+                  <h3 className="font-black text-slate-900 dark:text-white mb-2 leading-tight">{activity.name}</h3>
+                  <div className="flex flex-col space-y-2 mb-6">
+                    <div className="flex items-center text-xs font-bold text-slate-400">
+                      <MapPin size={14} className="mr-2 text-slate-200" />
+                      {activity.project?.name || 'KADEME'}
+                    </div>
+                    <div className="flex items-center text-xs font-bold text-slate-400">
+                      <Clock size={14} className="mr-2 text-slate-200" />
+                      Baslangic: {new Date(activity.start_time).toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'})}
+                    </div>
+                  </div>
+                  <div className="w-full py-3 bg-slate-50 text-slate-300 text-[10px] font-black rounded-xl text-center uppercase tracking-widest border border-slate-100">
+                     Hunuz Baslamadi
+                  </div>
                 </div>
               )) : (
-                <div className="col-span-2 text-center py-10 bg-slate-50 rounded-3xl text-slate-400">
-                  Henüz bir faaliyet bulunamadı.
+                <div className="col-span-2 py-10 text-center text-slate-300 italic font-medium">
+                  Kayitli programlarinizda yaklasan etkinlik bulunamadi.
                 </div>
               )}
             </div>
