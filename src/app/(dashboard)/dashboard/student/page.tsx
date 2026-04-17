@@ -33,7 +33,7 @@ export default function ParticipantDashboard() {
           api.get('/student/badges')
         ]);
         setProfile(profileRes.data.user);
-        setActivities(activityRes.data.data || activityRes.data);
+        setActivities(activityRes.data);
         setBadges(badgeRes.data);
       } catch (err) {
         console.error('Veri çekilemedi:', err);

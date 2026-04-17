@@ -34,8 +34,9 @@ export default function ApplicationDetailPage() {
 
   const fetchApplication = async () => {
     try {
-      const res = await api.get(`/applications/${params.id}`);
-      setApplication(res.data);
+      const res = await api.get('/applications');
+      const app = res.data.find((a: any) => a.id === parseInt(params.id as string));
+      setApplication(app);
     } catch (err) {
       toast.error('Başvuru bilgileri yüklenemedi.');
     } finally {
