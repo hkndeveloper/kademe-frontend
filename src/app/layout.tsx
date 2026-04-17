@@ -31,7 +31,6 @@ export default function RootLayout({
   return (
     <html lang="tr">
       <body className={`${inter.className} relative bg-transparent text-slate-900`}>
-        <div className="fixed top-0 left-0 z-[9999] bg-red-600 text-white text-[8px] px-2 py-0.5 font-bold">KADEME_PROD_SYNC_TEST_V2</div>
         <ToastContainer />
         {children}
       </body>
