@@ -29,7 +29,7 @@ export default function ProjectEditModal({ isOpen, onClose, onUpdate, project, s
         initial={{ scale: 0.9, opacity: 0 }} 
         animate={{ scale: 1, opacity: 1 }} 
         exit={{ scale: 0.9, opacity: 0 }} 
-        className="relative w-full max-w-2xl bg-white rounded-[3rem] p-10 overflow-y-auto max-h-[90vh] shadow-2xl"
+        className="relative w-full max-w-2xl bg-white rounded-[3rem] p-10 shadow-2xl overflow-y-auto max-h-[90vh]"
       >
         <button 
           onClick={onClose}
@@ -44,7 +44,7 @@ export default function ProjectEditModal({ isOpen, onClose, onUpdate, project, s
           <div>
             <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Proje Adı</label>
             <input 
-              value={project.name} 
+              value={project.name || ''} 
               onChange={e => setProject({...project, name: e.target.value})} 
               className="w-full bg-gray-50 p-4 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-orange-500/10 transition-all font-medium" 
               placeholder="Örn: Kademe Programı 2024"

@@ -18,7 +18,6 @@ import Link from "next/link";
 import axios from "axios";
 import api from "@/lib/api";
 import { toast } from "sonner";
-import Pagination from "@/components/dashboard/Pagination";
 
 type Project = {
   id: number;
@@ -79,25 +78,19 @@ export default function AdminActivities() {
     credit_loss_amount: "10",
   });
   const [editingId, setEditingId] = useState<number | null>(null);
-  
-  // Pagination State
-  const [currentPage, setCurrentPage] = useState(1);
-  const [lastPage, setLastPage] = useState(1);
 
   useEffect(() => {
-    void fetchData(currentPage);
-  }, [currentPage]);
+    void fetchData();
+  }, []);
 
-  const fetchData = async (page = 1) => {
+  const fetchData = async () => {
     setLoading(true);
     try {
       const [actRes, projRes] = await Promise.all([
-        api.get(`/activities?page=${page}`),
+        api.get("/activities"),
         api.get("/projects"),
       ]);
-      setActivities(actRes.data.data);
-      setCurrentPage(actRes.data.current_page);
-      setLastPage(actRes.data.last_page);
+      setActivities(actRes.data);
       setProjects(projRes.data);
     } catch (error) {
       console.error("Veriler cekilemedi:", error);
@@ -364,11 +357,6 @@ export default function AdminActivities() {
           ))
         )}
 
-        <Pagination 
-          currentPage={currentPage}
-          lastPage={lastPage}
-          onPageChange={setCurrentPage}
-        />
       </div>
 
       <AnimatePresence>

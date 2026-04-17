@@ -22,26 +22,18 @@ import Link from 'next/link';
 import PageHeader from '@/components/dashboard/PageHeader';
 import DashboardCard from '@/components/dashboard/DashboardCard';
 import StatusBadge from '@/components/dashboard/StatusBadge';
-import Pagination from '@/components/dashboard/Pagination';
 
 export default function ApplicationsManagement() {
   const [applications, setApplications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
-  
-  // Pagination State
-  const [currentPage, setCurrentPage] = useState(1);
-  const [lastPage, setLastPage] = useState(1);
 
-  const fetchApplications = async (page = 1) => {
+  const fetchApplications = async () => {
     setLoading(true);
     try {
-      const res = await api.get(`/applications?page=${page}`);
-      // Laravel pagination yapısına göre data ve meta bilgileri ayrılır
-      setApplications(res.data.data);
-      setCurrentPage(res.data.current_page);
-      setLastPage(res.data.last_page);
+      const res = await api.get('/applications');
+      setApplications(res.data);
     } catch (err) {
       toast.error('Gelen başvurular yüklenemedi.');
     } finally {
@@ -50,8 +42,8 @@ export default function ApplicationsManagement() {
   };
 
   useEffect(() => {
-    fetchApplications(currentPage);
-  }, [currentPage]);
+    fetchApplications();
+  }, []);
 
   const handleStatusUpdate = async (id: number, status: string) => {
     // Optimistic UI Update: UI'ı anında güncelle
@@ -212,12 +204,6 @@ export default function ApplicationsManagement() {
               <p className="text-gray-400 font-black text-xs uppercase tracking-widest">Eşleşen başvuru bulunamadı.</p>
             </DashboardCard>
           )}
-
-          <Pagination 
-            currentPage={currentPage} 
-            lastPage={lastPage} 
-            onPageChange={setCurrentPage} 
-          />
         </div>
       )}
     </div>
