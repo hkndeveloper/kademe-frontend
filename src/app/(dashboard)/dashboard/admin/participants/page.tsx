@@ -7,11 +7,7 @@ import {
   Search, 
   Filter, 
   UserCheck, 
-  UserX, 
   GraduationCap, 
-  Mail, 
-  Phone,
-  ShieldAlert,
   User,
   Download,
   FileBox,
@@ -25,6 +21,7 @@ import {
 import api from '@/lib/api';
 import Link from 'next/link';
 import { toast } from "sonner";
+import StatusBadge from '@/components/dashboard/StatusBadge';
 
 export default function AdminParticipants() {
   const [participants, setParticipants] = useState([]);
@@ -43,7 +40,9 @@ export default function AdminParticipants() {
     setLoading(true);
     try {
       const res = await api.get('/participants', { params: { ...filter, search } });
-      setParticipants(res.data.data || []);
+      // Hem paginated (res.data.data) hem de flat array response'u destekle
+      const data = Array.isArray(res.data) ? res.data : (res.data.data || []);
+      setParticipants(data);
     } catch (err) {
       console.error('Katılımcılar çekilemedi:', err);
       toast.error('Katılımcı listesi yüklenemedi.');
@@ -122,13 +121,21 @@ export default function AdminParticipants() {
   };
 
   const handleDelete = async (id: number) => {
-     if (!confirm('Bu katılımcıyı tamamen silmek istediğinize emin misiniz? Kullanıcı hesabı da silinecek.')) return;
-     try {
-       await api.delete(`/participants/${id}`);
-       fetchParticipants();
-     } catch {
-       alert('Silme işlemi başarısız.');
-     }
+    toast('Bu katılımcıyı silmek istediğinize emin misiniz?', {
+      action: {
+        label: 'Evet, Sil',
+        onClick: async () => {
+          try {
+            await api.delete(`/participants/${id}`);
+            toast.success('Katılımcı başarıyla silindi.');
+            fetchParticipants();
+          } catch {
+            toast.error('Silme işlemi başarısız.');
+          }
+        },
+      },
+      cancel: { label: 'İptal', onClick: () => {} },
+    });
   };
 
   const downloadFile = async (url: string, filename: string) => {
@@ -154,20 +161,6 @@ export default function AdminParticipants() {
     downloadFile('/participants/export/csv', `kademe_katilimci_listesi_${new Date().toISOString().slice(0,10)}.csv`);
   };
 
-  const getStatusBadge = (status: string) => {
-    const styles: any = {
-      active: 'bg-emerald-50 text-emerald-600',
-      passive: 'bg-gray-100 text-gray-400',
-      alumni: 'bg-blue-50 text-blue-600',
-      blacklisted: 'bg-red-50 text-red-600',
-      failed: 'bg-orange-50 text-orange-600',
-    };
-    return (
-      <span className={`px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest ${styles[status]}`}>
-        {status}
-      </span>
-    );
-  };
 
   return (
     <div className="max-w-6xl">
@@ -279,7 +272,7 @@ export default function AdminParticipants() {
               </div>
               <div className="w-24">
                 <div className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-1">DURUM</div>
-                {getStatusBadge(p.status)}
+                <StatusBadge status={p.status} />
               </div>
               <div className="w-24">
                   {p.status !== 'alumni' ? (

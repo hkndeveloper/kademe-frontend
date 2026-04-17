@@ -11,6 +11,7 @@ import {
   Bell, 
   Calendar, 
   ShieldCheck, 
+  ShieldAlert,
   Settings,
   LogOut,
   Trophy
@@ -18,16 +19,16 @@ import {
 import Image from "next/image";
 
 const menuItems = [
-  { name: "Dashboard", href: "/dashboard/admin", icon: LayoutDashboard },
-  { name: "Projeler", href: "/dashboard/admin/projects", icon: Briefcase },
-  { name: "Katılımcılar", href: "/dashboard/admin/participants", icon: Users },
-  { name: "Başvurular", href: "/dashboard/admin/applications", icon: ClipboardCheck },
-  { name: "Duyurular", href: "/dashboard/admin/announcements", icon: Bell },
-  { name: "Takvim", href: "/dashboard/admin/calendar", icon: Calendar },
-  { name: "Koordinatörler", href: "/dashboard/admin/coordinators", icon: ShieldCheck },
-  { name: "Oyunlaştırma", href: "/dashboard/admin/gamification", icon: Trophy },
-  { name: "KPD Sistemi", href: "/dashboard/admin/materials", icon: ShieldCheck },
-  { name: "Sistem Ayarları", href: "/dashboard/admin/settings", icon: Settings },
+  { name: "Dashboard",       href: "/dashboard/admin",               icon: LayoutDashboard },
+  { name: "Projeler",        href: "/dashboard/admin/projects",       icon: Briefcase },
+  { name: "Katılımcılar",   href: "/dashboard/admin/participants",   icon: Users },
+  { name: "Başvurular",     href: "/dashboard/admin/applications",   icon: ClipboardCheck },
+  { name: "Duyurular",      href: "/dashboard/admin/announcements",  icon: Bell },
+  { name: "Takvim",         href: "/dashboard/admin/calendar",       icon: Calendar },
+  { name: "Koordinatörler", href: "/dashboard/admin/coordinators",   icon: ShieldCheck },
+  { name: "Oyunlaştırma",   href: "/dashboard/admin/gamification",   icon: Trophy },
+  { name: "KPD Sistemi",    href: "/dashboard/admin/kpd-reports",    icon: ShieldAlert },
+  { name: "Sistem Ayarları",href: "/dashboard/admin/settings",       icon: Settings },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

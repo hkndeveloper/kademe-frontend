@@ -54,7 +54,11 @@ export default function AdminDashboard() {
     setUserName(name);
     setRoleLabel(roles.includes("super-admin") ? "Üst Admin" : "Proje Koordinatörü");
 
-    Promise.all([api.get("/projects"), api.get("/admin/stats"), api.get("/admin/visual-analytics")])
+    Promise.all([
+      api.get("/projects"),
+      api.get("/admin/stats"),
+      api.get("/admin/visual-analytics"),
+    ])
       .then(([projRes, statsRes, analyticsRes]) => {
         setProjects(projRes.data);
         setStats(statsRes.data);
@@ -161,11 +165,23 @@ export default function AdminDashboard() {
           </div>
 
           <DashboardCard className="p-10">
-            <h3 className="text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-10">Sistem Logları</h3>
+            <h3 className="text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-10">Sistem Özeti</h3>
             <div className="space-y-8">
-              <ActivityLine label="Yeni katılım başvurusu" time="15:30" />
-              <ActivityLine label="Yoklama raporu çıktı" time="12:00" />
-              <ActivityLine label="KVKK unutulma talebi" time="Dün" />
+              <ActivityLine
+                label={`${stats.pendingApplications} bekleyen başvuru var`}
+                sub={stats.pendingApplications > 0 ? 'Onay gerekiyor' : 'Temiz'}
+                dot={stats.pendingApplications > 0 ? 'bg-orange-500' : 'bg-emerald-500'}
+              />
+              <ActivityLine
+                label={`${stats.upcomingActivities} faaliyet planlandı`}
+                sub="Yakında başlıyor"
+                dot="bg-blue-500"
+              />
+              <ActivityLine
+                label={`Katılım ortalaması: ${stats.avgAttendance}`}
+                sub="Geçmiş faaliyetler"
+                dot="bg-purple-500"
+              />
             </div>
           </DashboardCard>
         </div>
@@ -174,13 +190,13 @@ export default function AdminDashboard() {
   );
 }
 
-function ActivityLine({ label, time }: { label: string; time: string }) {
+function ActivityLine({ label, sub, dot = "bg-orange-500" }: { label: string; sub: string; dot?: string }) {
   return (
     <div className="flex items-start gap-4 group">
-      <div className="w-2 h-2 rounded-full bg-orange-500 mt-1.5 shrink-0 group-hover:scale-150 transition-transform shadow-sm shadow-orange-500/50" />
+      <div className={`w-2 h-2 rounded-full ${dot} mt-1.5 shrink-0 group-hover:scale-150 transition-transform shadow-sm`} />
       <div>
         <p className="text-xs font-bold text-gray-800 group-hover:text-gray-900">{label}</p>
-        <p className="text-[10px] text-gray-400 mt-1 font-bold uppercase tracking-tight">{time}</p>
+        <p className="text-[10px] text-gray-400 mt-1 font-bold uppercase tracking-tight">{sub}</p>
       </div>
     </div>
   );
