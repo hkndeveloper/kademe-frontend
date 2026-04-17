@@ -69,7 +69,7 @@ export default function LoginPage() {
     } else if (roles.includes("alumni")) {
       router.push("/dashboard/alumni");
     } else {
-      router.push("/dashboard/katilimci");
+      router.push("/dashboard/student");
     }
   };
 

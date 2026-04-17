@@ -16,16 +16,16 @@ import {
 import Image from "next/image";
 
 const menuItems = [
-  { name: "Pano (Özet)", href: "/dashboard/katilimci", icon: LayoutDashboard },
-  { name: "QR Okut", href: "/dashboard/katilimci/yoklama", icon: QrCode },
-  { name: "Dijital Bohça", href: "/dashboard/katilimci/bohca", icon: Briefcase },
-  { name: "KPD Raporlarım", href: "/dashboard/katilimci/raporlarim", icon: FileText },
-  { name: "Dijital CV", href: "/dashboard/katilimci/dijital-cv", icon: Star },
-  { name: "Ödül ve Rozetler", href: "/dashboard/katilimci/rozetler", icon: Award },
-  { name: "Sertifikalar", href: "/dashboard/katilimci/sertifikalar", icon: Medal },
+  { name: "Pano (Özet)", href: "/dashboard/student", icon: LayoutDashboard },
+  { name: "QR Okut", href: "/dashboard/student/yoklama", icon: QrCode },
+  { name: "Dijital Bohça", href: "/dashboard/student/bohca", icon: Briefcase },
+  { name: "KPD Raporlarım", href: "/dashboard/student/raporlarim", icon: FileText },
+  { name: "Dijital CV", href: "/dashboard/student/dijital-cv", icon: Star },
+  { name: "Ödül ve Rozetler", href: "/dashboard/student/rozetler", icon: Award },
+  { name: "Sertifikalar", href: "/dashboard/student/sertifikalar", icon: Medal },
 ];
 
-export default function KatilimciLayout({ children }: { children: React.ReactNode }) {
+export default function StudentLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   return (

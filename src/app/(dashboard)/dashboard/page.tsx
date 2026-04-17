@@ -15,7 +15,7 @@ export default function DashboardRedirect() {
     } else if (roles.includes('alumni')) {
       router.push('/dashboard/alumni');
     } else if (roles.includes('student') || roles.length > 0) {
-      router.push('/dashboard/katilimci');
+      router.push('/dashboard/student');
     } else {
       router.push('/login');
     }

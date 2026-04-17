@@ -68,7 +68,7 @@ function ApplicationForm() {
           motivation_letter: formData.motivation_letter
         });
         toast.success("Başvurunuz başarıyla sisteme eklendi!");
-        router.push("/dashboard/katilimci");
+        router.push("/dashboard/student");
       } else {
         // Sıfırdan yeni kayıt ve başvuru
         const res = await api.post("/register", formData);
@@ -79,7 +79,7 @@ function ApplicationForm() {
         localStorage.setItem("user_name", user.name);
 
         toast.success("Hesabınız oluşturuldu ve başvurunuz alındı!");
-        router.push("/dashboard/katilimci");
+        router.push("/dashboard/student");
       }
     } catch (err: any) {
       const msg = err.response?.data?.message || "Başvuru sırasında bir hata oluştu.";

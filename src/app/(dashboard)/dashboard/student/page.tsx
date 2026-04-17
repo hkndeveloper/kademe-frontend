@@ -149,7 +149,7 @@ export default function ParticipantDashboard() {
                       </div>
                     ) : (
                       <Link 
-                        href={`/dashboard/katilimci/yoklama?activity=${activity.id}`}
+                        href={`/dashboard/student/yoklama?activity=${activity.id}`}
                         className="w-full md:w-auto px-10 py-5 bg-slate-900 text-white rounded-2xl flex items-center justify-center space-x-3 hover:bg-black transition-all shadow-xl shadow-slate-900/30 active:scale-95 group-hover:scale-105"
                       >
                         <Smartphone size={22} />
@@ -222,10 +222,10 @@ export default function ParticipantDashboard() {
               Dijital Bohça
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Link href="/dashboard/katilimci/bohca"><BundleItem label="Eğitim Materyalleri" count="+" /></Link>
-              <Link href="/dashboard/katilimci/sertifikalar"><BundleItem label="Sertifikalar" count="İndir" /></Link>
-              <Link href="/dashboard/katilimci/mesajlar"><BundleItem label="Mesajlar" count="0" /></Link>
-              <Link href="/dashboard/katilimci/raporlar"><BundleItem label="KPD Raporlarım" count="Görüntüle" /></Link>
+              <Link href="/dashboard/student/bohca"><BundleItem label="Eğitim Materyalleri" count="+" /></Link>
+              <Link href="/dashboard/student/sertifikalar"><BundleItem label="Sertifikalar" count="İndir" /></Link>
+              <Link href="/dashboard/student/mesajlar"><BundleItem label="Mesajlar" count="0" /></Link>
+              <Link href="/dashboard/student/raporlar"><BundleItem label="KPD Raporlarım" count="Görüntüle" /></Link>
             </div>
           </section>
         </div>
