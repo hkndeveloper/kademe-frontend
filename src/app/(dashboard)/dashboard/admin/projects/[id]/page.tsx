@@ -1,16 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
-  ArrowLeft, 
   Plus, 
   Users, 
   Calendar, 
   FileBox, 
   Settings, 
   Activity,
-  UserCheck,
   Briefcase,
   MapPin,
   Clock,
@@ -26,6 +24,12 @@ import ActivityModal from './components/ActivityModal';
 import ProjectEditModal from './components/ProjectEditModal';
 import AttendeeListModal from './components/AttendeeListModal';
 import WaitlistSection from './components/WaitlistSection';
+
+// UI Core Bileşenleri
+import PageHeader from '@/components/dashboard/PageHeader';
+import StatCard from '@/components/dashboard/StatCard';
+import StatusBadge from '@/components/dashboard/StatusBadge';
+import DashboardCard from '@/components/dashboard/DashboardCard';
 
 export default function ProjectDashboard() {
   const { id } = useParams();
@@ -138,30 +142,30 @@ export default function ProjectDashboard() {
 
   return (
     <div className="max-w-6xl mx-auto pb-20">
-      <Link href="/dashboard/admin/projects" className="inline-flex items-center text-xs font-bold text-gray-400 hover:text-orange-500 mb-8 transition-colors uppercase tracking-widest">
-        <ArrowLeft size={16} className="mr-2" /> Projelere Dön
-      </Link>
-
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-8">
-         <div className="flex items-center gap-6">
-            <div className="w-20 h-20 bg-white border border-gray-100 rounded-[2.5rem] flex items-center justify-center shadow-sm">
-               <Briefcase size={32} className="text-orange-500" />
-            </div>
-            <div>
-               <div className="flex items-center gap-3 mb-2">
-                  <h1 className="text-3xl font-black text-gray-900 tracking-tight">{project.name}</h1>
-                  <span className={`px-3 py-1 text-[10px] font-black rounded-lg uppercase tracking-widest ${project.is_active ? 'bg-emerald-100 text-emerald-600' : 'bg-gray-100 text-gray-400'}`}>
-                    {project.is_active ? 'AKTİF' : 'PASİF'}
-                  </span>
-               </div>
-               <p className="text-gray-400 font-medium text-sm max-w-xl line-clamp-2">{project.description}</p>
-            </div>
-         </div>
-         <div className="flex bg-white border border-gray-100 p-1 rounded-2xl shadow-sm">
-            <button onClick={() => setActiveTab('flow')} className={`px-6 py-2.5 rounded-xl text-xs font-bold transition-all uppercase tracking-widest ${activeTab === 'flow' ? 'bg-gray-900 text-white shadow-lg' : 'text-gray-400 hover:text-gray-600'}`}>PROGRAM AKIŞI</button>
-            <button onClick={() => setActiveTab('waitlist')} className={`px-6 py-2.5 rounded-xl text-xs font-bold transition-all uppercase tracking-widest ${activeTab === 'waitlist' ? 'bg-gray-900 text-white shadow-lg' : 'text-gray-400 hover:text-gray-600'}`}>YEDEK LİSTESİ</button>
-         </div>
-      </div>
+      <PageHeader
+        title={project.name}
+        description={project.description}
+        backLink="/dashboard/admin/projects"
+        backText="Projelere Dön"
+        icon={<Briefcase />}
+        badge={<StatusBadge status={project.is_active ? 'active' : 'passive'} />}
+        actions={
+          <div className="flex bg-white border border-gray-100 p-1 rounded-2xl shadow-sm">
+            <button 
+              onClick={() => setActiveTab('flow')} 
+              className={`px-6 py-2.5 rounded-xl text-xs font-bold transition-all uppercase tracking-widest ${activeTab === 'flow' ? 'bg-gray-900 text-white shadow-lg' : 'text-gray-400 hover:text-gray-600'}`}
+            >
+              PROGRAM AKIŞI
+            </button>
+            <button 
+              onClick={() => setActiveTab('waitlist')} 
+              className={`px-6 py-2.5 rounded-xl text-xs font-bold transition-all uppercase tracking-widest ${activeTab === 'waitlist' ? 'bg-gray-900 text-white shadow-lg' : 'text-gray-400 hover:text-gray-600'}`}
+            >
+              YEDEK LİSTESİ
+            </button>
+          </div>
+        }
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div className="lg:col-span-2 space-y-8">
@@ -194,7 +198,9 @@ export default function ProjectDashboard() {
 
                 <div className="space-y-4">
                    {project.activities?.length === 0 ? (
-                      <div className="py-20 text-center bg-white rounded-[2.5rem] border border-gray-100 text-gray-300 text-sm font-medium italic">Bu proje için henüz bir faaliyet planlanmadı.</div>
+                      <DashboardCard className="py-20 text-center text-gray-300 text-sm font-medium italic">
+                        Bu proje için henüz bir faaliyet planlanmadı.
+                      </DashboardCard>
                    ) : (
                       project.activities?.map((activity: any) => (
                          <motion.div whileHover={{ y: -4 }} key={activity.id} className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center justify-between group transition-all">
@@ -235,14 +241,15 @@ export default function ProjectDashboard() {
          </div>
 
         <div className="space-y-6">
-            <div className="bg-gray-900 rounded-[2.5rem] p-10 text-white relative overflow-hidden shadow-2xl">
-               <h3 className="text-sm font-bold mb-6 text-gray-400 uppercase tracking-widest relative z-10">Kayıtlı Katılımcı</h3>
-               <div className="text-6xl font-black mb-2 relative z-10">{project.stats?.participants_count || 0}</div>
-               <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest relative z-10">{project.stats?.top_info}</p>
-               <Users size={140} className="absolute -bottom-8 -right-8 text-white/5" />
-            </div>
+            <StatCard 
+              variant="dark"
+              icon={Users}
+              label="Kayıtlı Katılımcı"
+              value={project.stats?.participants_count || 0}
+              subValue={project.stats?.top_info}
+            />
 
-           <div className="bg-white rounded-[2.5rem] p-10 border border-gray-100 shadow-sm">
+           <DashboardCard className="p-10">
               <h3 className="text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-8">YÖNETİM ARAÇLARI</h3>
               <div className="space-y-3">
                  <button 
@@ -267,7 +274,7 @@ export default function ProjectDashboard() {
                     <span>Proje Detaylarını Düzenle</span>
                  </button>
               </div>
-           </div>
+           </DashboardCard>
         </div>
       </div>
 

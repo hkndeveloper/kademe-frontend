@@ -14,6 +14,12 @@ import api from "@/lib/api";
 import Link from "next/link";
 import DashboardCharts from "@/components/DashboardCharts";
 
+// UI Core Bileşenleri
+import StatCard from "@/components/dashboard/StatCard";
+import DashboardCard from "@/components/dashboard/DashboardCard";
+import StatusBadge from "@/components/dashboard/StatusBadge";
+import PageHeader from "@/components/dashboard/PageHeader";
+
 type AdminStats = {
   totalUsers: number;
   activeProjects: number;
@@ -60,45 +66,49 @@ export default function AdminDashboard() {
 
   return (
     <div className="max-w-6xl">
-      <div className="mb-10">
-        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Merhaba, {userName}</h1>
-        <p className="text-sm text-gray-500 mt-1 font-medium italic">
-          {roleLabel} | {roleLabel === "Üst Admin" ? "Tüm sistem operasyonel özeti aşağıdadır." : "Sorumlu olduğunuz projelerin özeti aşağıdadır."}
-        </p>
+      <PageHeader 
+        title={`Merhaba, ${userName}`}
+        description={roleLabel === "Üst Admin" ? "Tüm sistem operasyonel özeti aşağıdadır." : "Sorumlu olduğunuz projelerin özeti aşağıdadır."}
+        badge={<StatusBadge status={roleLabel} />}
+      />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <StatCard icon={Users} label="Toplam Katılımcı" value={stats.totalUsers} />
+        <StatCard icon={Briefcase} label="Aktif Projeler" value={stats.activeProjects} />
+        <StatCard icon={Calendar} label="Gelecek Faaliyetler" value={stats.upcomingActivities} />
+        <StatCard 
+          icon={TrendingUp} 
+          label="Bekleyen Başvuru" 
+          value={stats.pendingApplications} 
+          variant="dark"
+        />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <StatCard icon={Users} label="Toplam Katilimci" value={stats.totalUsers.toString()} />
-        <StatCard icon={Briefcase} label="Aktif Projeler" value={stats.activeProjects.toString()} />
-        <StatCard icon={Calendar} label="Gelecek Faaliyetler" value={stats.upcomingActivities.toString()} />
-        <StatCard icon={TrendingUp} label="Bekleyen Basvuru" value={stats.pendingApplications.toString()} highlight />
-      </div>
-
-      <div className="bg-white p-6 rounded-[2rem] border border-gray-200 shadow-sm mb-8">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-sm font-bold text-gray-900 uppercase tracking-widest">Katilim ve Buyume Analitigi</h2>
-          <button className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Detayli Rapor</button>
+      <DashboardCard className="p-8 mb-12">
+        <div className="flex items-center justify-between mb-10">
+          <h2 className="text-sm font-black text-gray-900 uppercase tracking-widest">Katılım ve Büyüme Analitiği</h2>
+          <button className="text-[10px] font-bold text-slate-400 hover:text-orange-500 transition-colors uppercase tracking-widest">Detaylı Rapor</button>
         </div>
         <DashboardCharts />
-      </div>
+      </DashboardCard>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white rounded-[2rem] border border-gray-200 shadow-sm overflow-hidden">
-          <div className="flex items-center justify-between p-8 border-b border-gray-100">
-            <h2 className="text-sm font-bold text-gray-900 uppercase tracking-widest">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <DashboardCard className="lg:col-span-2">
+          <div className="flex items-center justify-between p-10 border-b border-gray-50">
+            <h2 className="text-sm font-black text-gray-900 uppercase tracking-widest">
               {roleLabel === "Üst Admin" ? "Aktif Programlar" : "Sorumlu Olduğunuz Programlar"}
             </h2>
-            <Link href="/dashboard/admin/projects" className="text-[10px] font-bold text-gray-500 hover:text-slate-900 uppercase tracking-widest transition-colors">
-              Tumunu Incele
+            <Link href="/dashboard/admin/projects" className="text-[10px] font-bold text-gray-400 hover:text-orange-500 uppercase tracking-widest transition-colors">
+              Tümünü İncele
             </Link>
           </div>
-          <div className="p-4">
+          <div className="p-6">
             {loading ? (
-              <div className="py-12 text-center text-xs text-gray-400 animate-pulse font-medium">Veriler yukleniyor...</div>
+              <div className="py-20 text-center text-xs text-gray-400 animate-pulse font-medium italic">Veriler yükleniyor...</div>
             ) : projects.length === 0 ? (
-              <div className="py-12 text-center text-xs text-gray-400">Yonetilecek aktif proje bulunmuyor.</div>
+              <div className="py-20 text-center text-xs text-gray-300 italic">Yönetilecek aktif proje bulunmuyor.</div>
             ) : (
-              <div className="space-y-1">
+              <div className="space-y-2">
                 {projects.slice(0, 4).map((project) => {
                   const analytics = analyticsData?.occupancy_rates?.find((rate: any) => rate.project_name === project.name);
                   const occupancy = analytics ? analytics.occupancy_rate : 0;
@@ -107,23 +117,23 @@ export default function AdminDashboard() {
                     <Link
                       key={project.id}
                       href={`/dashboard/admin/projects/${project.id}`}
-                      className="flex items-center justify-between p-5 rounded-2xl hover:bg-gray-50 transition-all group"
+                      className="flex items-center justify-between p-6 rounded-[2rem] hover:bg-gray-50 transition-all group"
                     >
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center border border-slate-200 group-hover:bg-white transition-all">
-                          <ActivityIcon size={16} className="text-slate-500 transition-colors" />
+                      <div className="flex items-center gap-6">
+                        <div className="w-12 h-12 bg-white border border-gray-100 rounded-2xl flex items-center justify-center group-hover:bg-orange-500 group-hover:border-transparent transition-all shadow-sm">
+                          <ActivityIcon size={20} className="text-gray-400 group-hover:text-white transition-colors" />
                         </div>
                         <div>
                           <p className="text-sm font-bold text-gray-800 group-hover:text-gray-900">{project.name}</p>
-                          <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">{project.project_code || "PRJ-X"}</p>
+                          <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">{project.project_code || "KDM-2024"}</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-6">
+                      <div className="flex items-center gap-8">
                         <div className="text-right hidden sm:block">
-                          <div className="text-[10px] font-bold text-gray-400 uppercase">Kontenjan</div>
-                          <div className="text-xs font-bold text-gray-800 uppercase tracking-wider">Doluluk %{occupancy}</div>
+                          <div className="text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-1">Kontenjan</div>
+                          <div className="text-xs font-black text-gray-900 uppercase">Doluluk %{occupancy}</div>
                         </div>
-                        <ChevronRight size={16} className="text-gray-300 group-hover:text-gray-600 transition-colors" />
+                        <ChevronRight size={18} className="text-gray-200 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" />
                       </div>
                     </Link>
                   );
@@ -131,65 +141,46 @@ export default function AdminDashboard() {
               </div>
             )}
           </div>
-        </div>
+        </DashboardCard>
 
-        <div className="space-y-6">
-          <div className="bg-slate-900 rounded-[2rem] p-8 text-white shadow-sm">
-            <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center mb-6">
-              <Bell size={20} className="text-white" />
+        <div className="space-y-8">
+          <div className="bg-gray-900 rounded-[2.5rem] p-10 text-white shadow-2xl relative overflow-hidden group">
+            <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+              <Bell size={28} className="text-white" />
             </div>
-            <h3 className="text-lg font-bold mb-2">Hizli Duyuru</h3>
-            <p className="text-xs text-slate-300 mb-8 leading-relaxed font-medium">
-              Tum aktif katilimcilara tek tikla onemli duyuru gonderin.
+            <h3 className="text-xl font-black mb-3">Hızlı Duyuru</h3>
+            <p className="text-sm text-gray-400 mb-10 leading-relaxed font-medium">
+              Tüm aktif katılımcılara tek tıkla önemli duyuru gönderin.
             </p>
-            <button className="w-full py-3 bg-white text-slate-900 text-[11px] font-bold rounded-xl hover:bg-slate-100 transition-all uppercase tracking-widest">
-              Yonetimi Baslat
-            </button>
+            <Link href="/dashboard/admin/announcements">
+              <button className="w-full py-4 bg-white text-gray-900 text-xs font-extrabold rounded-2xl hover:bg-orange-500 hover:text-white transition-all uppercase tracking-[0.2em] shadow-lg">
+                Yönetimi Başlat
+              </button>
+            </Link>
+            <Bell size={180} className="absolute -bottom-12 -right-12 text-white/5 rotate-12" />
           </div>
 
-          <div className="bg-white rounded-[2rem] p-8 border border-gray-200 shadow-sm">
-            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Sistem Loglari</h3>
-            <div className="space-y-6">
-              <ActivityLine label="Yeni katilim basvurusu" time="15:30" />
-              <ActivityLine label="Yoklama raporu cikti" time="12:00" />
-              <ActivityLine label="KVKK unutulma talebi" time="Dun" />
+          <DashboardCard className="p-10">
+            <h3 className="text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-10">Sistem Logları</h3>
+            <div className="space-y-8">
+              <ActivityLine label="Yeni katılım başvurusu" time="15:30" />
+              <ActivityLine label="Yoklama raporu çıktı" time="12:00" />
+              <ActivityLine label="KVKK unutulma talebi" time="Dün" />
             </div>
-          </div>
+          </DashboardCard>
         </div>
       </div>
-    </div>
-  );
-}
-
-function StatCard({
-  icon: Icon,
-  label,
-  value,
-  highlight,
-}: {
-  icon: React.ComponentType<{ size?: number }>;
-  label: string;
-  value: string;
-  highlight?: boolean;
-}) {
-  return (
-    <div className="bg-white p-6 rounded-[2rem] border border-gray-200 shadow-sm hover:border-slate-300 transition-all group">
-      <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-6 ${highlight ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-500"}`}>
-        <Icon size={20} />
-      </div>
-      <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{label}</div>
-      <div className="text-2xl font-bold text-gray-900">{value}</div>
     </div>
   );
 }
 
 function ActivityLine({ label, time }: { label: string; time: string }) {
   return (
-    <div className="flex items-start gap-4">
-      <div className="w-1.5 h-1.5 rounded-full bg-slate-900 mt-1.5 shrink-0" />
+    <div className="flex items-start gap-4 group">
+      <div className="w-2 h-2 rounded-full bg-orange-500 mt-1.5 shrink-0 group-hover:scale-150 transition-transform shadow-sm shadow-orange-500/50" />
       <div>
-        <p className="text-xs font-bold text-gray-800">{label}</p>
-        <p className="text-[10px] text-gray-400 mt-0.5">{time}</p>
+        <p className="text-xs font-bold text-gray-800 group-hover:text-gray-900">{label}</p>
+        <p className="text-[10px] text-gray-400 mt-1 font-bold uppercase tracking-tight">{time}</p>
       </div>
     </div>
   );
