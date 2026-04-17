@@ -17,6 +17,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import api from '@/lib/api';
+import { toast } from "sonner";
 import Link from 'next/link';
 
 export default function ApplicationsManagement() {

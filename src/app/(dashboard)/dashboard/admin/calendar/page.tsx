@@ -18,6 +18,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
 import api from "@/lib/api";
+import { toast } from "sonner";
 
 type Activity = {
   id: number;
