@@ -251,35 +251,34 @@ export default function ProjectDashboard() {
 
           <DashboardCard className="p-10">
             <h3 className="text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-8">YÖNETİM ARAÇLARI</h3>
-tracking-widest mb-8">YÖNETİM ARAÇLARI</h3>
-          <div className="space-y-3">
-            <button
-              onClick={async () => {
-                if (confirm('Kayıtlı tüm katılımcılar için toplu yoklama alınacak. Emin misiniz?')) {
-                  try {
-                    await api.post(`/projects/${id}/bulk-attendance`);
-                    toast.success('Toplu yoklama başarıyla alındı.');
-                    fetchData();
-                  } catch (err) {
-                    toast.error('Hata oluştu.');
+            <div className="space-y-3">
+              <button
+                onClick={async () => {
+                  if (confirm('Kayıtlı tüm katılımcılar için toplu yoklama alınacak. Emin misiniz?')) {
+                    try {
+                      await api.post(`/projects/${id}/bulk-attendance`);
+                      toast.success('Toplu yoklama başarıyla alındı.');
+                      fetchData();
+                    } catch (err) {
+                      toast.error('Hata oluştu.');
+                    }
                   }
-                }
-              }}
-              className="w-full flex items-center gap-3 p-4 bg-gray-50 text-gray-600 font-bold text-xs rounded-2xl hover:bg-orange-500 hover:text-white transition-all hover:shadow-lg hover:shadow-orange-500/20 group"
-            >
-              <Settings size={18} className="text-gray-400 group-hover:text-white" />
-              <span>Toplu Yoklama Al</span>
-            </button>
-            <button onClick={() => setIsProjectModalOpen(true)} className="w-full flex items-center gap-3 p-4 bg-gray-50 text-gray-600 font-bold text-xs rounded-2xl hover:bg-gray-900 hover:text-white transition-all group">
-              <Settings size={18} className="text-gray-400 group-hover:text-white" />
-              <span>Proje Detaylarını Düzenle</span>
-            </button>
-          </div>
+                }}
+                className="w-full flex items-center gap-3 p-4 bg-gray-50 text-gray-600 font-bold text-xs rounded-2xl hover:bg-orange-500 hover:text-white transition-all hover:shadow-lg hover:shadow-orange-500/20 group"
+              >
+                <Settings size={18} className="text-gray-400 group-hover:text-white" />
+                <span>Toplu Yoklama Al</span>
+              </button>
+              <button onClick={() => setIsProjectModalOpen(true)} className="w-full flex items-center gap-3 p-4 bg-gray-50 text-gray-600 font-bold text-xs rounded-2xl hover:bg-gray-900 hover:text-white transition-all group">
+                <Settings size={18} className="text-gray-400 group-hover:text-white" />
+                <span>Proje Detaylarını Düzenle</span>
+              </button>
+            </div>
+          </DashboardCard>
         </div>
       </div>
-    </div>
 
-      {/* Modallar */ }
+      {/* Modallar */}
       <ActivityModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
