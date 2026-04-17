@@ -29,8 +29,8 @@ export default function EtkinliklerPage() {
   const [calDate, setCalDate] = useState(new Date());
 
   useEffect(() => {
-    api.get("/activities")
-      .then(res => setActivities(res.data))
+    api.get("/activities?all=1")
+      .then(res => setActivities(res.data.data || res.data))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);

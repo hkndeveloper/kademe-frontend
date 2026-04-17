@@ -24,13 +24,14 @@ export default function Home() {
     
     Promise.all([
       api.get("/projects"),
-      api.get("/activities"),
+      api.get("/activities?all=1"),
       api.get("/public-stats").catch(() => ({ data: { alumni_count: 500, active_projects: 4, total_activities: 12, satisfaction_rate: 94 } }))
     ]).then(([projRes, actRes, statsRes]) => {
       setProjects(projRes.data.slice(0, 4));
       // Sadece gelecek tarihli etkinlikleri al, tarihe göre sırala, max 5
       const now = new Date();
-      const upcoming = actRes.data
+      const rawActivities = actRes.data.data || actRes.data;
+      const upcoming = rawActivities
         .filter((a: any) => new Date(a.start_time) >= now)
         .sort((a: any, b: any) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())
         .slice(0, 5);

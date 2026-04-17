@@ -34,8 +34,8 @@ export default function AdminAnnouncements() {
 
   const fetchParticipants = async () => {
     try {
-      const res = await api.get('/participants');
-      setParticipants(res.data.data || []);
+      const res = await api.get('/participants?all=1');
+      setParticipants(res.data);
     } catch (err) {
       console.error('Katılımcılar çekilemedi', err);
     }
