@@ -14,12 +14,7 @@ const navLinks = [
   {
     name: "Faaliyetler",
     href: "/projeler",
-    submenu: [
-      { name: "Pergel Fellowship", href: "/projeler/pergel" },
-      { name: "Kariyer Psikolojik Danismanlik", href: "/projeler/kpd" },
-      { name: "KADEME+", href: "/projeler/kademe-plus" },
-      { name: "Eurodesk", href: "/projeler/eurodesk" },
-    ],
+    submenu: [], // Dinamik olarak asagida dolacak
   },
   { name: "SSS", href: "/sss" },
   { name: "Iletisim", href: "/iletisim" },

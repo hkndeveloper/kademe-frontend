@@ -1,11 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Send, Camera, Share2, Video } from "lucide-react";
 import Image from "next/image";
+import api from "@/lib/api";
 
 export default function Footer() {
+  const [projects, setProjects] = useState<any[]>([]);
+
+  useEffect(() => {
+    api.get("/projects")
+      .then((res) => setProjects(res.data.filter((p: any) => p.is_active).slice(0, 4)))
+      .catch(() => {});
+  }, []);
   return (
     <footer className="bg-gray-50 border-t border-gray-100">
       <div className="max-w-6xl mx-auto px-6 py-16">
@@ -52,14 +60,9 @@ export default function Footer() {
           <div>
             <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Projeler</h4>
             <ul className="space-y-3">
-              {[
-                { name: "Pergel Fellowship", href: "/projeler/pergel" },
-                { name: "KPD", href: "/projeler/kpd" },
-                { name: "KADEME+", href: "/projeler/kademe-plus" },
-                { name: "Eurodesk", href: "/projeler/eurodesk" }
-              ].map((item) => (
-                <li key={item.name}>
-                  <Link href={item.href} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{item.name}</Link>
+              {projects.map((item) => (
+                <li key={item.id}>
+                  <Link href={`/projeler/${item.id}`} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{item.name}</Link>
                 </li>
               ))}
             </ul>
