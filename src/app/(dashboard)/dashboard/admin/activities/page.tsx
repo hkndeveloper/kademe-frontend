@@ -187,7 +187,7 @@ export default function AdminActivities() {
 
     try {
       const res = await api.get(`/participants?search=${encodeURIComponent(query)}`);
-      setFoundUsers(res.data);
+      setFoundUsers(res.data.data || res.data); // Handle both paginated and non-paginated responses
     } catch {
       console.error("Kullanici arama hatasi");
     }
