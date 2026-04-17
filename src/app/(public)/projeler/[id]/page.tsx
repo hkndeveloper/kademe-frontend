@@ -170,6 +170,29 @@ export default function ProjectDetailPage() {
               </div>
             </div>
 
+            {/* Sidebar */}
+            <div className="space-y-8">
+              {project.public_materials && project.public_materials.length > 0 && (
+                <div className="p-8 bg-amber-50 border border-amber-100 rounded-[2rem] shadow-sm">
+                  <h4 className="text-xs font-black text-amber-900 uppercase tracking-widest mb-6 flex items-center gap-2">
+                    <FileText size={14} className="text-amber-600" /> Boş Materyalleri
+                  </h4>
+                  <p className="text-[10px] text-amber-800/60 font-medium mb-4 uppercase tracking-wider">Başvuru öncesi incelemeniz gereken dosyalar</p>
+                  <div className="space-y-3">
+                    {project.public_materials.map((doc: any, i: number) => (
+                      <button
+                        key={i}
+                        onClick={() => window.open(`${process.env.NEXT_PUBLIC_API_URL}/materials/${doc.id}/download`, '_blank')}
+                        className="w-full text-left p-4 text-[11px] font-bold text-amber-900 bg-white hover:bg-amber-100 rounded-xl transition-all flex items-center justify-between group border border-amber-100 shadow-sm"
+                      >
+                        <span className="truncate pr-4">{doc.title}</span>
+                        <Download size={12} className="opacity-40 group-hover:opacity-100 transition-opacity" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {(project.project?.documents || project.documents) && (project.project?.documents || project.documents).length > 0 && (
                 <div className="p-8 bg-white border border-gray-100 rounded-[2rem] shadow-xl shadow-gray-900/5">
                   <h4 className="text-xs font-bold text-gray-900 uppercase tracking-widest mb-6 flex items-center gap-2">
