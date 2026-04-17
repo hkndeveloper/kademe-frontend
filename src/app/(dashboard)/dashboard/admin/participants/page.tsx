@@ -25,7 +25,6 @@ import {
 import api from '@/lib/api';
 import Link from 'next/link';
 import { toast } from "sonner";
-import Pagination from '@/components/dashboard/Pagination';
 
 export default function AdminParticipants() {
   const [participants, setParticipants] = useState([]);
@@ -40,17 +39,11 @@ export default function AdminParticipants() {
     credits: 100, status: 'active'
   });
 
-  // Pagination State
-  const [currentPage, setCurrentPage] = useState(1);
-  const [lastPage, setLastPage] = useState(1);
-
-  const fetchParticipants = async (page = 1) => {
+  const fetchParticipants = async () => {
     setLoading(true);
     try {
-      const res = await api.get('/participants', { params: { ...filter, search, page } });
+      const res = await api.get('/participants', { params: { ...filter, search } });
       setParticipants(res.data.data || []);
-      setCurrentPage(res.data.current_page || 1);
-      setLastPage(res.data.last_page || 1);
     } catch (err) {
       console.error('Katılımcılar çekilemedi:', err);
       toast.error('Katılımcı listesi yüklenemedi.');
@@ -61,10 +54,10 @@ export default function AdminParticipants() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-        fetchParticipants(currentPage);
+        fetchParticipants();
     }, 500);
     return () => clearTimeout(timer);
-  }, [search, filter, currentPage]);
+  }, [search, filter]);
 
   const handleMakeAlumni = async (userId: number) => {
     if (!confirm('Bu öğrenciyi mezun etmek istediğinize emin misiniz? Rolü Alumni olarak güncellenecek.')) return;
@@ -326,12 +319,6 @@ export default function AdminParticipants() {
             </div>
           </motion.div>
         ))}
-        
-        <Pagination 
-          currentPage={currentPage}
-          lastPage={lastPage}
-          onPageChange={setCurrentPage}
-        />
       </div>
 
       {/* New/Edit Participant Modal */}
