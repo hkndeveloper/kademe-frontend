@@ -72,7 +72,7 @@ export default function Navbar() {
   const getDashboardHref = () => {
     if (auth.roles.includes("super-admin") || auth.roles.includes("coordinator")) return "/dashboard/admin";
     if (auth.roles.includes("alumni")) return "/dashboard/alumni";
-    return "/dashboard/student";
+    return "/dashboard/katilimci";
   };
 
   return (
