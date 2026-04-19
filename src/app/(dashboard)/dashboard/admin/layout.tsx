@@ -57,61 +57,67 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return true;
   });
 
-  return (
-    <div className="min-h-screen bg-transparent flex relative z-10">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white/70 backdrop-blur-3xl border-r border-slate-200/50 flex flex-col sticky top-0 h-screen hidden lg:flex">
-        <div className="p-6 border-b border-slate-200/50">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="relative h-14 w-48">
+    return (
+    <div className="min-h-screen bg-slate-50 flex relative z-10">
+      {/* Sidebar - Premium Corporate Dark */}
+      <aside className="w-68 bg-slate-950 border-r border-white/5 flex flex-col sticky top-0 h-screen hidden lg:flex">
+        <div className="p-8 mb-4">
+          <Link href="/" className="flex items-center">
+            <div className="relative h-10 w-40">
               <Image
                 src="/images/logo/logo-orange.svg"
                 alt="KADEME Logo"
                 fill
-                className="object-contain object-left"
+                className="object-contain object-left brightness-0 invert"
                 priority
               />
             </div>
           </Link>
         </div>
 
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          {visibleMenuItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-xl transition-all ${
-                pathname === item.href
-                  ? "bg-orange-50 text-orange-600"
-                  : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
-              }`}
-            >
-              <item.icon size={18} strokeWidth={pathname === item.href ? 2.5 : 2} />
-              {item.name}
-            </Link>
-          ))}
+        <nav className="flex-1 px-4 space-y-1 overflow-y-auto custom-scrollbar">
+          <div className="px-4 mb-4">
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Yönetim Paneli</span>
+          </div>
+          {visibleMenuItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200 group ${
+                  isActive
+                    ? "bg-orange-500 text-white shadow-lg shadow-orange-500/20"
+                    : "text-slate-400 hover:bg-white/5 hover:text-white"
+                }`}
+              >
+                <item.icon size={18} strokeWidth={isActive ? 2.5 : 2} className={isActive ? "text-white" : "text-slate-500 group-hover:text-slate-300"} />
+                {item.name}
+              </Link>
+            )
+          })}
         </nav>
 
-        <div className="p-4 border-t border-slate-200/50">
+        <div className="p-4 mt-auto border-t border-white/5">
           <button 
             onClick={() => {
               localStorage.clear();
               window.location.href = "/login";
             }}
-            className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
+            className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-400 hover:text-red-400 hover:bg-white/5 rounded-xl transition-all"
           >
             <LogOut size={18} />
-            Çıkış Yap
+            Güvenli Çıkış
           </button>
         </div>
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <main className="flex-1 flex flex-col min-w-0">
         {/* Mobile Header */}
-        <header className="lg:hidden bg-white/80 backdrop-blur-2xl border-b border-slate-200/50 p-4 flex items-center justify-between sticky top-0 z-30">
+        <header className="lg:hidden bg-white border-b border-slate-200 p-4 flex items-center justify-between sticky top-0 z-30 shadow-sm">
             <Link href="/" className="flex items-center gap-2">
-                <div className="relative h-10 w-36">
+                <div className="relative h-8 w-32">
                     <Image
                         src="/images/logo/logo-orange.svg"
                         alt="KADEME Logo"
@@ -121,13 +127,28 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     />
                 </div>
             </Link>
-            {/* Mobile menu toggle button could be added here if needed */}
         </header>
 
-        <div className="flex-1 p-4 md:p-8">
+        <div className="flex-1 p-6 lg:p-10 max-w-[1600px] mx-auto w-full">
           {children}
         </div>
       </main>
+
+      <style jsx global>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.2);
+        }
+      `}</style>
     </div>
   );
 }

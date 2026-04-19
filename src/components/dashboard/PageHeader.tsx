@@ -24,37 +24,37 @@ export default function PageHeader({
     badge
 }: PageHeaderProps) {
     return (
-        <div className="mb-12">
+        <div className="mb-10">
             {backLink && (
                 <Link 
                     href={backLink} 
-                    className="inline-flex items-center text-xs font-bold text-gray-400 hover:text-orange-500 mb-8 transition-colors uppercase tracking-widest"
+                    className="inline-flex items-center text-[10px] font-bold text-slate-400 hover:text-orange-600 mb-6 transition-colors uppercase tracking-widest"
                 >
-                    <ArrowLeft size={16} className="mr-2" /> {backText}
+                    <ArrowLeft size={14} className="mr-2" /> {backText}
                 </Link>
             )}
 
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
-                <div className="flex items-center gap-6">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div className="flex items-center gap-5">
                     {icon && (
-                        <div className="w-20 h-20 bg-white border border-gray-100 rounded-[2.5rem] flex items-center justify-center shadow-sm">
-                            {React.cloneElement(icon as any, { size: 32, className: "text-orange-500" })}
+                        <div className="w-14 h-14 bg-white border border-slate-200/60 rounded-2xl flex items-center justify-center shadow-sm">
+                            {React.cloneElement(icon as any, { size: 24, className: "text-orange-500" })}
                         </div>
                     )}
                     <div>
-                        <div className="flex items-center gap-3 mb-2">
-                            <h1 className="text-3xl font-black text-gray-900 tracking-tight">{title}</h1>
+                        <div className="flex items-center gap-3 mb-1">
+                            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">{title}</h1>
                             {badge}
                         </div>
                         {description && (
-                            <p className="text-gray-400 font-medium text-sm max-w-xl line-clamp-2 italic">
+                            <p className="text-slate-500 font-medium text-xs max-w-xl line-clamp-2">
                                 {description}
                             </p>
                         )}
                     </div>
                 </div>
                 {actions && (
-                    <div className="flex gap-3">
+                    <div className="flex gap-2">
                         {actions}
                     </div>
                 )}

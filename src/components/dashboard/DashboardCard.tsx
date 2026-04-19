@@ -20,7 +20,7 @@ export default function DashboardCard({ children, className = "", animate = true
     return (
         <Component 
             {...animationProps}
-            className={`bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden ${className}`}
+            className={`bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden ${className}`}
         >
             {children}
         </Component>

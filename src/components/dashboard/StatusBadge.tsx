@@ -25,10 +25,10 @@ const statusMap: Record<string, { label: string, classes: string }> = {
 };
 
 export default function StatusBadge({ status, className = "" }: StatusBadgeProps) {
-    const config = statusMap[status.toLowerCase()] || { label: status.toUpperCase(), classes: 'bg-gray-100 text-gray-500' };
+    const config = statusMap[status.toLowerCase()] || { label: status.toUpperCase(), classes: 'bg-slate-100 text-slate-500' };
 
     return (
-        <span className={`px-3 py-1 text-[10px] font-black rounded-lg uppercase tracking-widest inline-flex items-center justify-center ${config.classes} ${className}`}>
+        <span className={`px-2.5 py-0.5 text-[10px] font-bold rounded-md uppercase tracking-wider inline-flex items-center justify-center ${config.classes} ${className}`}>
             {config.label}
         </span>
     );

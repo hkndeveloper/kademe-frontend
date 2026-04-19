@@ -22,52 +22,54 @@ const menuItems = [
 export default function AlumniLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
-  return (
+    return (
     <div className="min-h-screen bg-slate-50 flex relative z-10 w-full">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-slate-200 hidden lg:flex flex-col sticky top-0 h-screen shadow-sm">
-        <div className="p-6 border-b border-slate-100 flex items-center justify-center">
+      {/* Sidebar - Premium Corporate Dark */}
+      <aside className="w-64 bg-slate-950 border-r border-white/5 hidden lg:flex flex-col sticky top-0 h-screen">
+        <div className="p-8 mb-4">
           <Link href="/">
-            <div className="relative h-12 w-40">
+            <div className="relative h-10 w-40">
               <Image
                 src="/images/logo/logo-orange.svg"
                 alt="KADEME Logo"
                 fill
-                className="object-contain"
+                className="object-contain brightness-0 invert"
                 priority
               />
             </div>
           </Link>
         </div>
 
-        <nav className="flex-1 p-4 space-y-1.5 overflow-y-auto">
-          <div className="text-xs font-bold text-slate-400 uppercase tracking-widest px-4 mb-4 mt-2">Mezun Portalı</div>
+        <nav className="flex-1 px-4 space-y-1.5 overflow-y-auto custom-scrollbar">
+          <div className="px-4 mb-4">
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Mezun Portalı</span>
+          </div>
           {menuItems.map((item) => {
             const isActive = pathname === item.href || pathname?.startsWith(item.href + '/');
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-xl transition-all ${
+                className={`flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200 group ${
                   isActive
-                    ? "bg-slate-900 text-white shadow-md shadow-slate-900/20"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                    ? "bg-slate-700 text-white shadow-lg shadow-slate-900/20"
+                    : "text-slate-400 hover:bg-white/5 hover:text-white"
                 }`}
               >
-                <item.icon size={18} strokeWidth={isActive ? 2.5 : 2} />
+                <item.icon size={18} strokeWidth={isActive ? 2.5 : 2} className={isActive ? "text-white" : "text-slate-500 group-hover:text-slate-300"} />
                 {item.name}
               </Link>
             )
           })}
         </nav>
 
-        <div className="p-4 border-t border-slate-100">
+        <div className="p-4 mt-auto border-t border-white/5">
           <button 
             onClick={() => {
               localStorage.clear();
               window.location.href = "/login";
             }}
-            className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
+            className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-400 hover:text-red-400 hover:bg-white/5 rounded-xl transition-all"
           >
             <LogOut size={18} />
             Güvenli Çıkış
@@ -92,23 +94,39 @@ export default function AlumniLayout({ children }: { children: React.ReactNode }
             </Link>
         </header>
 
-        <div className="flex-1 p-4 md:p-8 max-w-5xl mx-auto w-full">
+        <div className="flex-1 p-6 md:p-10 max-w-6xl mx-auto w-full pb-24 lg:pb-10">
           {children}
         </div>
         
         {/* Mobile Bottom Navigation (PWA style) */}
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex items-center justify-around p-2 z-40 pb-safe">
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex items-center justify-around p-2 z-40 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
           {menuItems.map((item) => {
              const isActive = pathname === item.href;
              return (
-              <Link key={item.href} href={item.href} className={`flex flex-col items-center p-2 rounded-lg ${isActive ? 'text-slate-900' : 'text-slate-400'}`}>
+              <Link key={item.href} href={item.href} className={`flex flex-col items-center p-2 rounded-lg transition-colors ${isActive ? 'text-slate-900' : 'text-slate-400'}`}>
                 <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
-                <span className="text-[10px] font-bold mt-1 max-w-[60px] truncate text-center">{item.name}</span>
+                <span className="text-[10px] font-bold mt-1 max-w-[60px] truncate text-center uppercase tracking-tighter">{item.name}</span>
               </Link>
              )
           })}
         </div>
       </main>
+
+      <style jsx global>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.2);
+        }
+      `}</style>
     </div>
   );
 }
