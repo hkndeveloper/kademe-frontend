@@ -8,7 +8,10 @@ import { useRouter } from "next/navigation";
 import api from "@/lib/api";
 import { toast } from "sonner";
 
+import { useAuth } from "@/providers/AuthProvider";
+
 export default function LoginPage() {
+  const { login: authLogin } = useAuth();
   const [step, setStep] = useState(1); // 1: Login, 2: 2FA
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -58,9 +61,8 @@ export default function LoginPage() {
 
   const completeLogin = (data: any) => {
     const { token, roles, user } = data;
-    localStorage.setItem("kademe_token", token);
-    localStorage.setItem("user_roles", JSON.stringify(roles));
-    localStorage.setItem("user_name", user.name);
+    
+    authLogin(token, roles, user);
     
     toast.success(`Hoş geldiniz, ${user.name}!`);
 

@@ -19,7 +19,6 @@ function ApplicationForm() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    password: "",
     tc_no: "",
     phone: "",
     university: "",
@@ -62,7 +61,7 @@ function ApplicationForm() {
 
     try {
       if (isLoggedIn) {
-        // Zaten hesapları varsa sadece projeye başvuru atsın (mevcut sisteme entegrasyon)
+        // Oturum açmış kullanıcı başvurusu
         await api.post("/applications", {
           project_id: formData.project_id,
           motivation_letter: formData.motivation_letter
@@ -70,16 +69,10 @@ function ApplicationForm() {
         toast.success("Başvurunuz başarıyla sisteme eklendi!");
         router.push("/dashboard/student");
       } else {
-        // Sıfırdan yeni kayıt ve başvuru
-        const res = await api.post("/register", formData);
-        const { token, roles, user } = res.data;
-        
-        localStorage.setItem("kademe_token", token);
-        localStorage.setItem("user_roles", JSON.stringify(roles));
-        localStorage.setItem("user_name", user.name);
-
-        toast.success("Hesabınız oluşturuldu ve başvurunuz alındı!");
-        router.push("/dashboard/student");
+        // Misafir (Guest) Başvurusu - Yeni Mantık
+        await api.post("/guest-applications", formData);
+        toast.success("Başvurunuz alındı! Değerlendirme sonrası mülakat bilgisi paylaşılacaktır.");
+        router.push("/");
       }
     } catch (err: any) {
       const msg = err.response?.data?.message || "Başvuru sırasında bir hata oluştu.";
@@ -117,9 +110,6 @@ function ApplicationForm() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <InputField label="Tam İsim" icon={User} placeholder="Ahmet Yılmaz" value={formData.name} readOnly={isLoggedIn} onChange={val => setFormData({...formData, name: val})} required />
                 <InputField label="E-posta Adresi" type="email" icon={Mail} placeholder="ornek@mail.com" value={formData.email} readOnly={isLoggedIn} onChange={val => setFormData({...formData, email: val})} required />
-                {!isLoggedIn && (
-                  <InputField label="Şifre" type="password" icon={Lock} placeholder="••••••••" value={formData.password} onChange={val => setFormData({...formData, password: val})} required />
-                )}
                 <InputField label="TC Kimlik No" icon={FileText} placeholder="11 haneli" maxLength={11} value={formData.tc_no} readOnly={isLoggedIn} onChange={val => setFormData({...formData, tc_no: val})} required />
                 <InputField label="Cep Telefonu" icon={Phone} placeholder="05xx xxx xx xx" value={formData.phone} readOnly={isLoggedIn} onChange={val => setFormData({...formData, phone: val})} />
               </div>

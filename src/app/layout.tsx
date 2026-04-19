@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import ToastContainer from "@/components/Toast";
 
+import { AuthProvider } from "@/providers/AuthProvider";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const viewport: Viewport = {
@@ -31,8 +33,10 @@ export default function RootLayout({
   return (
     <html lang="tr">
       <body className={`${inter.className} relative bg-transparent text-slate-900`}>
-        <ToastContainer />
-        {children}
+        <AuthProvider>
+          <ToastContainer />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

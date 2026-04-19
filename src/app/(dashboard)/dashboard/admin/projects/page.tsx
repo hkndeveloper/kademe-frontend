@@ -7,6 +7,8 @@ import {
   Search, 
   Edit2, 
   Trash2, 
+  Archive,
+  RotateCcw,
   CheckCircle, 
   XCircle,
   MoreHorizontal,
@@ -14,7 +16,8 @@ import {
   ShieldCheck,
   Loader2,
   Bell,
-  Calendar
+  Calendar,
+  EyeOff
 } from 'lucide-react';
 import api from '@/lib/api';
 import { toast } from 'sonner';
@@ -26,6 +29,7 @@ export default function AdminProjects() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const [showArchived, setShowArchived] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [formData, setFormData] = useState({ 
     name: '', 
@@ -38,7 +42,8 @@ export default function AdminProjects() {
     sub_description: '',
     timeline: [] as any[],
     documents: [] as any[],
-    coordinator_ids: [] as number[]
+    coordinator_ids: [] as number[],
+    is_pinned: false
   });
 
   const [timelineItems, setTimelineItems] = useState([{ label: '', date: '' }]);
@@ -137,7 +142,7 @@ export default function AdminProjects() {
       name: '', description: '', location: '', capacity: 50, 
       application_deadline: '', format: 'Hibrit', period: '', 
       sub_description: '', timeline: [], documents: [],
-      coordinator_ids: []
+      coordinator_ids: [], is_pinned: false
     });
     setTimelineItems([{ label: '', date: '' }]);
     setSelectedFiles([]);
@@ -157,7 +162,8 @@ export default function AdminProjects() {
       sub_description: p.sub_description || '',
       timeline: p.timeline || [],
       documents: p.documents || [],
-      coordinator_ids: p.coordinators ? p.coordinators.map((c: any) => c.id) : []
+      coordinator_ids: p.coordinators ? p.coordinators.map((c: any) => c.id) : [],
+      is_pinned: !!p.is_pinned
     });
     setTimelineItems(p.timeline && p.timeline.length > 0 ? p.timeline : [{ label: '', date: '' }]);
     setSelectedFiles([]); // Mevcut dosyalar backend'de korunuyor, yenileri buradan ekleniyor
@@ -165,13 +171,23 @@ export default function AdminProjects() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Bu projeyi silmek istediginize emin misiniz?')) return;
+    if (!confirm('Bu projeyi arşivlemek istediğinize emin misiniz?')) return;
     try {
       await api.delete(`/projects/${id}`);
       fetchProjects();
-      toast.success('Proje silindi.');
+      toast.success('Proje arşivlendi.');
     } catch (err) {
-      toast.error('Proje silinemedi.');
+      toast.error('İşlem başarısız oldu.');
+    }
+  };
+
+  const handleRestore = async (id: number) => {
+    try {
+      await api.post(`/projects/${id}/restore`);
+      fetchProjects();
+      toast.success('Proje geri yüklendi.');
+    } catch (err) {
+      toast.error('Geri yükleme başarısız oldu.');
     }
   };
 
@@ -182,35 +198,52 @@ export default function AdminProjects() {
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-3">
              <ShieldCheck className="text-orange-500" /> Proje Yönetimi
           </h1>
-          <p className="text-sm text-gray-400 mt-1 font-medium">Tüm kurumsal projeleri buradan dinamik olarak yönetebilirsiniz.</p>
+          <p className="text-sm text-gray-400 mt-1 font-medium italic">
+            {showArchived ? 'Arşivlenmiş projeleri görüntülüyorsunuz.' : 'Tüm kurumsal projeleri buradan dinamik olarak yönetebilirsiniz.'}
+          </p>
         </div>
-        {isSuperAdmin && (
+        <div className="flex items-center gap-3">
           <button 
-            onClick={() => { resetForm(); setShowModal(true); }}
-            className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white text-xs font-bold rounded-xl hover:bg-black transition-all shadow-sm uppercase tracking-widest"
+            onClick={() => setShowArchived(!showArchived)}
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all text-xs font-bold uppercase tracking-widest ${showArchived ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/20' : 'bg-white border border-slate-100 text-slate-400 hover:bg-slate-50'}`}
           >
-            <Plus size={16} />
-            Yeni Proje Ekle
+            {showArchived ? <><CheckCircle size={16} /> Aktif Olanlar</> : <><Archive size={16} /> Arşivi Göster</>}
           </button>
-        )}
+          
+          {isSuperAdmin && !showArchived && (
+            <button 
+              onClick={() => { resetForm(); setShowModal(true); }}
+              className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white text-xs font-bold rounded-xl hover:bg-black transition-all shadow-xl shadow-slate-900/10 uppercase tracking-widest"
+            >
+              <Plus size={16} />
+              Yeni Proje Ekle
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading ? (
           [1, 2, 3].map(i => <div key={i} className="h-64 bg-gray-100 animate-pulse rounded-[2.5rem]"></div>)
-        ) : projects.map((project: any) => (
-          <motion.div layout key={project.id} className="bg-white rounded-[2.5rem] p-8 border border-gray-100 shadow-sm hover:border-orange-100 transition-all group relative overflow-hidden">
+        ) : projects.filter((p: any) => showArchived ? p.deleted_at : !p.deleted_at).map((project: any) => (
+          <motion.div layout key={project.id} className={`bg-white rounded-[2.5rem] p-8 border shadow-sm transition-all group relative overflow-hidden ${showArchived ? 'border-dashed border-slate-200 grayscale opacity-60' : 'border-gray-100 hover:border-orange-100'}`}>
             <div className="flex justify-between items-start mb-8">
-              <div className="w-12 h-12 bg-gray-900 rounded-2xl flex items-center justify-center text-white group-hover:bg-orange-500 transition-colors">
-                <FolderOpen size={24} />
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white transition-colors ${showArchived ? 'bg-slate-400' : 'bg-gray-900 group-hover:bg-orange-500'}`}>
+                {showArchived ? <EyeOff size={24} /> : <FolderOpen size={24} />}
               </div>
               <div className="flex gap-2">
-                 <button onClick={() => handleEdit(project)} className="p-2.5 bg-gray-50 text-gray-400 rounded-xl hover:bg-slate-900 hover:text-white transition-all">
-                  <Edit2 size={16} />
-                </button>
+                 {!showArchived && (
+                   <button onClick={() => handleEdit(project)} className="p-2.5 bg-gray-50 text-gray-400 rounded-xl hover:bg-slate-900 hover:text-white transition-all">
+                    <Edit2 size={16} />
+                   </button>
+                 )}
                  {isSuperAdmin && (
-                   <button onClick={() => handleDelete(project.id)} className="p-2.5 bg-gray-50 text-gray-400 rounded-xl hover:bg-red-500 hover:text-white transition-all">
-                    <Trash2 size={16} />
+                   <button 
+                    onClick={() => showArchived ? handleRestore(project.id) : handleDelete(project.id)} 
+                    className={`p-2.5 bg-gray-50 rounded-xl transition-all ${showArchived ? 'text-emerald-500 hover:bg-emerald-500 hover:text-white' : 'text-gray-400 hover:bg-red-500 hover:text-white'}`}
+                    title={showArchived ? 'Geri Yükle' : 'Arşivle'}
+                   >
+                    {showArchived ? <RotateCcw size={16} /> : <Archive size={16} />}
                    </button>
                  )}
               </div>
@@ -223,7 +256,9 @@ export default function AdminProjects() {
                ))}
             </div>
             <div className="pt-6 border-t border-gray-50 flex items-center justify-between">
-                {project.is_active ? (
+                {showArchived ? (
+                  <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest italic">Arşiv Kaydı</span>
+                ) : project.is_active ? (
                   <span className="flex items-center text-[10px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full uppercase tracking-widest">
                     <CheckCircle size={12} className="mr-1.5" /> AKTİF
                   </span>
@@ -231,6 +266,11 @@ export default function AdminProjects() {
                   <span className="flex items-center text-[10px] font-bold text-gray-400 bg-gray-50 px-3 py-1 rounded-full uppercase tracking-widest">
                     <XCircle size={12} className="mr-1.5" /> PASİF
                   </span>
+                )}
+                {project.is_pinned && (
+                   <span className="flex items-center text-[10px] font-bold text-orange-600 bg-orange-50 px-3 py-1 rounded-full uppercase tracking-widest ml-auto mr-2">
+                     ⭐ PINNED
+                   </span>
                 )}
                 <span className="text-[10px] font-bold text-gray-400">{project.location || 'Konya'}</span>
             </div>
@@ -270,6 +310,20 @@ export default function AdminProjects() {
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Dönem (Örn: 2024 Bahar)</label>
                   <input type="text" value={formData.period} onChange={(e) => setFormData({...formData, period: e.target.value})} className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 outline-none focus:ring-2 focus:ring-orange-500/10 font-bold" />
+                </div>
+
+                <div className="flex items-center justify-between p-4 bg-orange-50 rounded-2xl border border-orange-100 md:col-span-2">
+                   <div>
+                      <span className="text-[11px] font-black text-orange-900 block uppercase tracking-widest">Anasayfaya Sabitle</span>
+                      <span className="text-[9px] text-orange-700 font-medium italic leading-none">Bu proje anasayfadaki ana sliderda gözüksün mü?</span>
+                   </div>
+                   <button 
+                      type="button"
+                      onClick={() => setFormData({...formData, is_pinned: !formData.is_pinned})}
+                      className={`w-12 h-7 rounded-full transition-all relative ${formData.is_pinned ? 'bg-orange-500' : 'bg-slate-200'}`}
+                   >
+                      <div className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-all ${formData.is_pinned ? 'left-6' : 'left-1'}`} />
+                   </button>
                 </div>
 
                 {isSuperAdmin && (

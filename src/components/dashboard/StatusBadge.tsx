@@ -10,14 +10,19 @@ interface StatusBadgeProps {
 }
 
 const statusMap: Record<string, { label: string, classes: string }> = {
+    published: { label: 'YAYINLANDI', classes: 'bg-emerald-100 text-emerald-600' },
+    draft: { label: 'TASLAK', classes: 'bg-slate-100 text-slate-400' },
     active: { label: 'AKTİF', classes: 'bg-emerald-100 text-emerald-600' },
     passive: { label: 'PASİF', classes: 'bg-gray-100 text-gray-400' },
-    accepted: { label: 'KABUL EDİLDİ', classes: 'bg-blue-100 text-blue-600' },
+    accepted: { label: 'KABUL EDİLDİ', classes: 'bg-emerald-100 text-emerald-600' },
+    rejected: { label: 'REDDEDİLDİ', classes: 'bg-red-100 text-red-600' },
+    interview: { label: 'MÜLAKAT', classes: 'bg-orange-100 text-orange-600' },
     waitlisted: { label: 'YEDEK', classes: 'bg-amber-100 text-amber-600' },
     blacklisted: { label: 'KARA LİSTE', classes: 'bg-red-100 text-red-600' },
     alumni: { label: 'MEZUN', classes: 'bg-purple-100 text-purple-600' },
     failed: { label: 'ELENDİ', classes: 'bg-red-100 text-red-600' },
     attended: { label: 'KATILDI', classes: 'bg-emerald-100 text-emerald-600' },
+    pending: { label: 'İNCELEMEDE', classes: 'bg-indigo-50 text-indigo-400' },
     // Faaliyet Türleri
     event: { label: 'ETKİNLİK', classes: 'bg-indigo-100 text-indigo-600' },
     training: { label: 'EĞİTİM', classes: 'bg-cyan-100 text-cyan-600' },

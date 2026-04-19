@@ -18,44 +18,35 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
+import { Role, hasAbility } from "@/lib/permissions";
+
 const menuItems = [
-  { name: "Dashboard",       href: "/dashboard/admin",               icon: LayoutDashboard },
-  { name: "Projeler",        href: "/dashboard/admin/projects",       icon: Briefcase },
-  { name: "Katılımcılar",   href: "/dashboard/admin/participants",   icon: Users },
-  { name: "Kara Liste",     href: "/dashboard/admin/blacklist",      icon: ShieldAlert },
-  { name: "Başvurular",     href: "/dashboard/admin/applications",   icon: ClipboardCheck },
-  { name: "Duyurular",      href: "/dashboard/admin/announcements",  icon: Bell },
-  { name: "Takvim",         href: "/dashboard/admin/calendar",       icon: Calendar },
-  { name: "Koordinatörler", href: "/dashboard/admin/coordinators",   icon: ShieldCheck },
-  { name: "Oyunlaştırma",   href: "/dashboard/admin/gamification",   icon: Trophy },
-  { name: "KPD Sistemi",    href: "/dashboard/admin/kpd",            icon: ClipboardCheck },
-  { name: "Sistem Ayarları",href: "/dashboard/admin/settings",       icon: Settings },
+  { name: "Dashboard",       href: "/dashboard/admin",               icon: LayoutDashboard, ability: 'view-dashboard' },
+  { name: "Projeler",        href: "/dashboard/admin/projects",       icon: Briefcase,       ability: 'manage-projects' },
+  { name: "Katılımcılar",   href: "/dashboard/admin/participants",   icon: Users,           ability: 'manage-participants' },
+  { name: "Kara Liste",     href: "/dashboard/admin/blacklist",      icon: ShieldAlert,     ability: 'manage-blacklist' },
+  { name: "Başvurular",     href: "/dashboard/admin/applications",   icon: ClipboardCheck,   ability: 'manage-applications' },
+  { name: "Blog Yönetimi",  href: "/dashboard/admin/blog",           icon: BookOpen,        ability: 'write-blog' },
+  { name: "İşlem Logları",  href: "/dashboard/admin/logs",           icon: ClipboardList,   ability: 'view-audit-logs' },
+  { name: "Duyurular",      href: "/dashboard/admin/announcements",  icon: Bell,            ability: 'manage-announcements' },
+  { name: "Takvim",         href: "/dashboard/admin/calendar",       icon: Calendar,        ability: 'view-calendar' },
+  { name: "Koordinatörler", href: "/dashboard/admin/coordinators",   icon: ShieldCheck,     ability: 'manage-coordinators' },
+  { name: "Oyunlaştırma",   href: "/dashboard/admin/gamification",   icon: Trophy,          ability: 'manage-gamification' },
+  { name: "KPD Sistemi",    href: "/dashboard/admin/kpd",            icon: ClipboardCheck,   ability: 'manage-kpd' },
+  { name: "Sistem Ayarları",href: "/dashboard/admin/settings",       icon: Settings,        ability: 'manage-settings' },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const [isSuperAdmin, setIsSuperAdmin] = React.useState(false);
+  const [user, setUser] = React.useState<any>(null);
 
   React.useEffect(() => {
-    const roles = JSON.parse(localStorage.getItem("user_roles") || "[]");
-    setIsSuperAdmin(roles.includes("super-admin"));
+    const roles = JSON.parse(localStorage.getItem("user_roles") || "[]") as Role[];
+    const name = localStorage.getItem("user_name") || "Admin";
+    setUser({ roles, name });
   }, []);
 
-  const visibleMenuItems = menuItems.filter(item => {
-    // Üst Admin her şeyi görür
-    if (isSuperAdmin) return true;
-
-    // Koordinatörün (Şartname Madde 5.1 ve 11.16 uyarınca) göremediği menüler:
-    const forbiddenForCoordinator = [
-      "Koordinatörler",  // Diğer koordinatörleri yönetemez
-      "Sistem Ayarları", // Genel sistem ayarları üst admin yetkisindedir
-      "Oyunlaştırma",    // Global oyunlaştırma altyapısı admin içindir
-    ];
-
-    if (forbiddenForCoordinator.includes(item.name)) return false;
-
-    return true;
-  });
+  const visibleMenuItems = menuItems.filter(item => hasAbility(user, item.ability));
 
     return (
     <div className="min-h-screen bg-slate-50 flex relative z-10">

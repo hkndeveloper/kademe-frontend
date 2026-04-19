@@ -12,7 +12,9 @@ import {
   Smartphone, 
   FileText,
   AlertCircle,
-  ArrowRight
+  ArrowRight,
+  Star,
+  CheckCircle
 } from 'lucide-react';
 import api from '@/lib/api';
 import { toast } from "sonner";
@@ -97,6 +99,7 @@ export default function ApplicationsManagement() {
           >
             <option value="all">Tüm Başvurular</option>
             <option value="pending">Bekleyenler</option>
+            <option value="interview">Mülakat Aşamasındakiler</option>
             <option value="accepted">Kabul Edilenler</option>
             <option value="rejected">Reddedilenler</option>
             <option value="waitlisted">Yedek Listedekiler</option>
@@ -125,10 +128,10 @@ export default function ApplicationsManagement() {
                       <User size={24} />
                     </div>
                     <div>
-                      <h3 className="text-base font-black text-gray-900 tracking-tight mb-1">{app.user?.name}</h3>
+                      <h3 className="text-base font-black text-gray-900 tracking-tight mb-1">{app.user?.name || app.name}</h3>
                       <div className="flex flex-wrap gap-5 text-[10px] text-gray-400 font-bold uppercase tracking-[0.1em]">
-                        <span className="flex items-center gap-1.5"><Mail size={12} className="text-gray-300"/> {app.user?.email}</span>
-                        <span className="flex items-center gap-1.5"><Smartphone size={12} className="text-gray-300"/> {app.user?.participant_profile?.phone || 'Telefon Yok'}</span>
+                        <span className="flex items-center gap-1.5"><Mail size={12} className="text-gray-300"/> {app.user?.email || app.email}</span>
+                        <span className="flex items-center gap-1.5"><Smartphone size={12} className="text-gray-300"/> {app.user?.participant_profile?.phone || app.phone || 'Telefon Yok'}</span>
                       </div>
                     </div>
                   </div>
@@ -137,14 +140,14 @@ export default function ApplicationsManagement() {
                   <div className="flex flex-col items-start lg:items-center min-w-[180px]">
                     <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest mb-2 px-1">Program Adı</span>
                     <span className="px-5 py-2.5 bg-gray-900 text-white rounded-xl font-bold text-[10px] tracking-widest uppercase shadow-lg shadow-gray-900/10">
-                      {app.project?.name}
+                      {app.project?.name || "Bilinmiyor"}
                     </span>
                   </div>
 
                   {/* Durum Badge */}
                   <div className="flex flex-col items-start lg:items-center min-w-[140px]">
                     <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest mb-2 px-1">Başvuru Durumu</span>
-                    <StatusBadge status={app.status} />
+                    <StatusBadge status={app.status || 'pending'} />
                   </div>
 
                   {/* Aksiyon Butonları */}
@@ -156,12 +159,30 @@ export default function ApplicationsManagement() {
                       DETAY
                       <ArrowRight size={14} />
                     </Link>
-                    {app.status === 'pending' || app.status === 'waitlisted' ? (
+                    
+                    {app.status === 'pending' ? (
+                      <div className="flex gap-2">
+                        <button 
+                          onClick={() => handleStatusUpdate(app.id, 'interview')}
+                          className="p-4 bg-orange-50 text-orange-600 rounded-2xl hover:bg-orange-500 hover:text-white transition-all shadow-sm"
+                          title="Mülakata Çağır"
+                        >
+                          <Star size={20} />
+                        </button>
+                        <button 
+                          onClick={() => handleStatusUpdate(app.id, 'rejected')}
+                          className="p-4 bg-red-50 text-red-600 rounded-2xl hover:bg-red-600 hover:text-white transition-all shadow-sm"
+                          title="Reddet"
+                        >
+                          <X size={20} />
+                        </button>
+                      </div>
+                    ) : app.status === 'interview' ? (
                       <div className="flex gap-2">
                         <button 
                           onClick={() => handleStatusUpdate(app.id, 'accepted')}
                           className="p-4 bg-emerald-50 text-emerald-600 rounded-2xl hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
-                          title="Kabul Et"
+                          title="Onayla ve Kaydet"
                         >
                           <Check size={20} />
                         </button>

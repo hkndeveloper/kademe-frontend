@@ -9,14 +9,17 @@ import {
   UserCheck, 
   GraduationCap, 
   User,
-  Download,
-  FileBox,
-  FileText,
   Plus,
   Trash2,
   Edit2,
   ChevronRight,
   X,
+  Archive,
+  RotateCcw,
+  EyeOff,
+  Download,
+  FileBox,
+  FileText
 } from 'lucide-react';
 import api from '@/lib/api';
 import Link from 'next/link';
@@ -26,6 +29,7 @@ import StatusBadge from '@/components/dashboard/StatusBadge';
 export default function AdminParticipants() {
   const [participants, setParticipants] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showArchived, setShowArchived] = useState(false);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState({ status: '', university: '' });
   const [showModal, setShowModal] = useState(false);
@@ -121,21 +125,24 @@ export default function AdminParticipants() {
   };
 
   const handleDelete = async (id: number) => {
-    toast('Bu katılımcıyı silmek istediğinize emin misiniz?', {
-      action: {
-        label: 'Evet, Sil',
-        onClick: async () => {
-          try {
-            await api.delete(`/participants/${id}`);
-            toast.success('Katılımcı başarıyla silindi.');
-            fetchParticipants();
-          } catch {
-            toast.error('Silme işlemi başarısız.');
-          }
-        },
-      },
-      cancel: { label: 'İptal', onClick: () => {} },
-    });
+    if (!confirm('Bu katılımcıyı arşivlemek istediğinize emin misiniz?')) return;
+    try {
+      await api.delete(`/participants/${id}`);
+      toast.success('Katılımcı arşivlendi.');
+      fetchParticipants();
+    } catch {
+      toast.error('İşlem başarısız oldu.');
+    }
+  };
+
+  const handleRestore = async (id: number) => {
+    try {
+      await api.post(`/participants/${id}/restore`);
+      toast.success('Katılımcı başarıyla geri yüklendi.');
+      fetchParticipants();
+    } catch {
+      toast.error('Geri yükleme başarısız oldu.');
+    }
   };
 
   const downloadFile = async (url: string, filename: string) => {
@@ -166,10 +173,21 @@ export default function AdminParticipants() {
     <div className="max-w-6xl">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Katılımcı Yönetimi</h1>
-          <p className="text-sm text-gray-400 mt-1 font-medium">Başvuru onayları, kredi takibi ve mezuniyet süreci yönetimi.</p>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+            Katılımcı Yönetimi
+          </h1>
+          <p className="text-sm text-gray-400 mt-1 font-medium italic">
+            {showArchived ? 'Arşivdeki (silinmiş) katılımcıları görüntülüyorsunuz.' : 'Başvuru onayları, kredi takibi ve mezuniyet süreci yönetimi.'}
+          </p>
         </div>
         <div className="flex items-center gap-3">
+          <button 
+            onClick={() => setShowArchived(!showArchived)}
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all text-[11px] font-bold uppercase tracking-widest ${showArchived ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/20' : 'bg-white border border-gray-100 text-gray-400 hover:bg-gray-50'}`}
+          >
+            {showArchived ? <><CheckCircle size={16} /> Aktif Liste</> : <><Archive size={16} /> Arşivi Göster</>}
+          </button>
+          
           <div className="flex bg-white border border-gray-100 rounded-xl p-1 shadow-sm">
             <button 
               onClick={() => exportToCSV()}
@@ -185,21 +203,16 @@ export default function AdminParticipants() {
             >
               <FileText size={16} />
             </button>
-            <button 
-              onClick={() => downloadFile(`/participants/export/pdf`, `kademe_katilimcilar_${new Date().toISOString().slice(0,10)}.pdf`)}
-              className="p-2.5 text-gray-400 hover:text-red-600 transition-colors border-l border-gray-50"
-              title="PDF"
-            >
-              <FileBox size={16} />
-            </button>
           </div>
-          <button 
-            onClick={() => { resetForm(); setShowModal(true); }}
-            className="flex items-center gap-2 px-6 py-3 bg-gray-900 text-white text-[11px] font-bold rounded-xl hover:bg-black transition-all uppercase tracking-widest shadow-lg shadow-gray-900/10"
-          >
-            <Plus size={16} />
-            YENİ KATILIMCI
-          </button>
+          {!showArchived && (
+            <button 
+              onClick={() => { resetForm(); setShowModal(true); }}
+              className="flex items-center gap-2 px-6 py-3 bg-gray-900 text-white text-[11px] font-bold rounded-xl hover:bg-black transition-all uppercase tracking-widest shadow-lg shadow-gray-900/10"
+            >
+              <Plus size={16} />
+              YENİ KATILIMCI
+            </button>
+          )}
         </div>
       </div>
 
@@ -244,17 +257,17 @@ export default function AdminParticipants() {
                 <div key={i} className="bg-white rounded-3xl p-5 border border-gray-100 animate-pulse h-20"></div>
              ))
         ) : participants.length === 0 ? (
-            <div className="py-20 text-center text-gray-400 text-sm font-medium">Kriterlere uygun katılımcı bulunamadı.</div>
-        ) : participants.map((p: any) => (
+            <div className="py-20 text-center text-gray-400 text-sm font-medium">Bu görünümde katılımcı bulunamadı.</div>
+        ) : participants.filter((p: any) => showArchived ? p.deleted_at : !p.deleted_at).map((p: any) => (
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             key={p.id}
-            className="bg-white rounded-3xl p-5 border border-gray-100 shadow-sm hover:border-orange-100 transition-all flex flex-col md:flex-row items-center gap-6 group"
+            className={`bg-white rounded-3xl p-5 border shadow-sm transition-all flex flex-col md:flex-row items-center gap-6 group ${showArchived ? 'border-dashed border-gray-200 opacity-60 grayscale' : 'border-gray-100 hover:border-orange-100'}`}
           >
             <div className="flex items-center space-x-4 flex-1">
-              <div className="w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 border border-gray-50 group-hover:bg-white group-hover:border-orange-100 transition-all">
-                <User size={24} />
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-gray-400 border transition-all ${showArchived ? 'bg-gray-100' : 'bg-gray-50 border-gray-50 group-hover:bg-white group-hover:border-orange-100'}`}>
+                {showArchived ? <EyeOff size={24} /> : <User size={24} />}
               </div>
               <div>
                 <h3 className="text-sm font-bold text-gray-900 capitalize">{p.user?.name}</h3>
@@ -265,50 +278,57 @@ export default function AdminParticipants() {
               </div>
             </div>
 
-            <div className="flex items-center space-x-12 px-8 border-l border-gray-50 hidden lg:flex">
-              <div className="w-20">
-                <div className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-1">KREDİ</div>
-                <div className={`text-base font-bold ${p.credits < 75 ? 'text-red-500' : 'text-gray-900'}`}>{p.credits}</div>
+            {!showArchived && (
+              <div className="flex items-center space-x-12 px-8 border-l border-gray-50 hidden lg:flex">
+                <div className="w-20">
+                  <div className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-1">KREDİ</div>
+                  <div className={`text-base font-bold ${p.credits < 75 ? 'text-red-500' : 'text-gray-900'}`}>{p.credits}</div>
+                </div>
+                <div className="w-24">
+                  <div className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-1">DURUM</div>
+                  <StatusBadge status={p.status} />
+                </div>
+                <div className="w-24">
+                    {p.status !== 'alumni' ? (
+                      <button 
+                        onClick={() => handleMakeAlumni(p.user_id)}
+                        className="px-4 py-2 bg-gray-900 text-white text-[9px] font-bold rounded-lg uppercase tracking-widest hover:bg-orange-600 transition-colors"
+                      >
+                        Mezun Et
+                      </button>
+                    ) : (
+                      <div className="flex items-center gap-1.5 text-emerald-600">
+                          <UserCheck size={14} />
+                          <span className="text-[9px] font-bold uppercase tracking-widest text-emerald-600">ONAYLI</span>
+                      </div>
+                    )}
+                </div>
               </div>
-              <div className="w-24">
-                <div className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-1">DURUM</div>
-                <StatusBadge status={p.status} />
-              </div>
-              <div className="w-24">
-                  {p.status !== 'alumni' ? (
-                    <button 
-                      onClick={() => handleMakeAlumni(p.user_id)}
-                      className="px-4 py-2 bg-gray-900 text-white text-[9px] font-bold rounded-lg uppercase tracking-widest hover:bg-orange-600 transition-colors"
-                    >
-                      Mezun Et
-                    </button>
-                  ) : (
-                    <div className="flex items-center gap-1.5 text-emerald-600">
-                        <UserCheck size={14} />
-                        <span className="text-[9px] font-bold uppercase tracking-widest text-emerald-600">ONAYLI</span>
-                    </div>
-                  )}
-              </div>
-            </div>
+            )}
 
             <div className="flex gap-2">
-                <button 
-                  onClick={() => handleEdit(p)}
-                  className="p-3 bg-gray-50 text-gray-400 hover:text-orange-500 rounded-xl transition-all"
-                >
-                  <Edit2 size={18} />
-                </button>
-                <button 
-                  onClick={() => handleDelete(p.id)}
-                  className="p-3 bg-gray-50 text-gray-400 hover:text-red-500 rounded-xl transition-all"
-                >
-                  <Trash2 size={18} />
-                </button>
-                <Link href={`/dashboard/admin/participants/${p.id}`}>
-                  <button className="p-3 bg-gray-50 text-gray-400 hover:text-orange-500 rounded-xl transition-all">
-                    <ChevronRight size={18} />
+                {!showArchived && (
+                  <button 
+                    onClick={() => handleEdit(p)}
+                    className="p-3 bg-gray-50 text-gray-400 hover:text-orange-500 rounded-xl transition-all"
+                  >
+                    <Edit2 size={18} />
                   </button>
-                </Link>
+                )}
+                <button 
+                  onClick={() => showArchived ? handleRestore(p.id) : handleDelete(p.id)}
+                  className={`p-3 bg-gray-50 rounded-xl transition-all ${showArchived ? 'text-emerald-500 hover:bg-emerald-500 hover:text-white' : 'text-gray-400 hover:bg-red-500 hover:text-white'}`}
+                  title={showArchived ? 'Geri Yükle' : 'Arşivle'}
+                >
+                  {showArchived ? <RotateCcw size={18} /> : <Archive size={18} />}
+                </button>
+                {!showArchived && (
+                  <Link href={`/dashboard/admin/participants/${p.id}`}>
+                    <button className="p-3 bg-gray-50 text-gray-400 hover:text-orange-500 rounded-xl transition-all">
+                      <ChevronRight size={18} />
+                    </button>
+                  </Link>
+                )}
             </div>
           </motion.div>
         ))}

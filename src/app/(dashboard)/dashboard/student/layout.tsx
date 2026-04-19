@@ -15,18 +15,35 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
+import { Role, hasAbility, isInProject } from "@/lib/permissions";
+
 const menuItems = [
   { name: "Pano (Özet)", href: "/dashboard/student", icon: LayoutDashboard },
   { name: "QR Okut", href: "/dashboard/student/yoklama", icon: QrCode },
   { name: "Dijital Bohça", href: "/dashboard/student/bohca", icon: Briefcase },
-  { name: "KPD Raporlarım", href: "/dashboard/student/raporlarim", icon: FileText },
+  { name: "KPD Raporlarım", href: "/dashboard/student/raporlarim", icon: FileText, projectRequirement: 'KPD' },
   { name: "Dijital CV", href: "/dashboard/student/dijital-cv", icon: Star },
-  { name: "Ödül ve Rozetler", href: "/dashboard/student/rozetler", icon: Award },
+  { name: "Ödül ve Rozetler", href: "/dashboard/student/rozetler", icon: Award, projectRequirement: 'Gamification' },
   { name: "Sertifikalar", href: "/dashboard/student/sertifikalar", icon: Medal },
 ];
 
 export default function StudentLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [user, setUser] = React.useState<any>(null);
+
+  React.useEffect(() => {
+    // Verileri API'dan veya localStorage'dan alalım
+    const roles = JSON.parse(localStorage.getItem("user_roles") || "[]") as Role[];
+    const projects = JSON.parse(localStorage.getItem("user_projects") || "[1, 2]"); // Örnek: Kullanıcının dahil olduğu projeler
+    setUser({ roles, projects, name: localStorage.getItem("user_name") });
+  }, []);
+
+  const visibleMenuItems = menuItems.filter(item => {
+    if (!item.projectRequirement) return true;
+    // Eğer KPD veya Gamification gerekiyorsa, kullanıcının projelerinden biri bunu sağlamalı
+    // Bu şimdilik basitleştirilmiş bir kontroldür.
+    return item.projectRequirement === 'KPD' ? true : true; // TODO: Entegrasyon sonrası dinamikleştirilecek
+  });
 
     return (
     <div className="min-h-screen bg-slate-50 flex relative z-10 w-full">

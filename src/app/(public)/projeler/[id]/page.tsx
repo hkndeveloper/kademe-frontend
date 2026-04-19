@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { Calendar, Users, BookOpen, MapPin, Clock, Download, ArrowLeft, FileText } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Calendar, Users, BookOpen, MapPin, Clock, Download, ArrowLeft, FileText, Star, Trophy, Award, GraduationCap, ChevronRight, Globe } from "lucide-react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import api from "@/lib/api";
@@ -19,199 +18,214 @@ export default function ProjectDetailPage() {
       .then((res) => setProject(res.data))
       .catch(() => {});
 
-    // Fetch user context to check applications
-    api.get("/user")
-      .then((res) => setUser(res.data.user))
-      .catch(() => {})
-      .finally(() => setLoading(false));
+    // Fetch user context
+    const token = localStorage.getItem("kademe_token");
+    if (token) {
+      api.get("/user")
+        .then((res) => setUser(res.data.user))
+        .catch(() => {});
+    }
+    setLoading(false);
   }, [id]);
 
   const hasApplied = user?.applications?.find((app: any) => app.project_id === Number(id));
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white pt-28">
-        <div className="max-w-6xl mx-auto px-6 py-16">
-          <div className="h-8 w-48 bg-gray-100 rounded animate-pulse mb-4" />
-          <div className="h-4 w-96 bg-gray-100 rounded animate-pulse" />
-        </div>
-      </div>
-    );
-  }
+  // Mock "Ayın Yıldızı" (Will be dynamic in Phase 5)
+  const monthlyStar = {
+    name: "Enes Güçlü",
+    school: "Selçuk Üniversitesi",
+    department: "Bilgisayar Mühendisliği",
+    badges: ["Katılım %100", "En İyi Sunum", "Takım Lideri"],
+    image: null
+  };
 
-  if (!project) {
-    return (
-      <div className="min-h-screen bg-white pt-28 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-500 mb-4">Proje bulunamadı.</p>
-          <Link href="/projeler" className="text-sm text-orange-500 hover:underline">← Projelere dön</Link>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <div className="min-h-screen pt-40 text-center font-black text-slate-300 uppercase tracking-widest animate-pulse">Proje Yükleniyor...</div>;
+  if (!project) return <div className="min-h-screen pt-40 text-center text-slate-400 font-bold">Proje bulunamadı. <br /> <Link href="/projeler" className="text-orange-500 underline mt-4 inline-block">Geri Dön</Link></div>;
+
+  const isClosed = project.project?.application_deadline && new Date(project.project.application_deadline) < new Date();
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Header */}
-      <section className="pt-28 pb-12 border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-6">
-          <Link href="/projeler" className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition-colors mb-6">
-            <ArrowLeft size={14} /> Tüm projeler
-          </Link>
-          <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
-            <div className="flex-1">
-              <span className={`inline-flex text-xs font-medium px-2.5 py-1 rounded-full mb-4 ${
-                (project.project?.is_active ?? project.is_active) ? "text-green-600 bg-green-50" : "text-gray-500 bg-gray-100"
-              }`}>
-                {(project.project?.is_active ?? project.is_active) ? "Aktif Program" : "Arşiv"}
-              </span>
-              <h1 className="text-4xl font-bold text-gray-900 tracking-tight mb-4">{project.project?.name || project.name}</h1>
-              <p className="text-sm font-bold text-orange-600 mb-2 uppercase tracking-widest">{project.project?.sub_description || project.sub_description}</p>
-              <p className="text-base text-gray-500 leading-relaxed max-w-2xl">
-                {project.project?.description || project.description || "KADEME bünyesinde yürütülen bu program, katılımcıların profesyonel ve kişisel gelişimine odaklanan modüler bir ekosistemdir."}
-              </p>
-              <div className="flex flex-wrap gap-6 mt-6 text-sm text-gray-400 font-bold">
-                <span className="flex items-center gap-1.5"><Users size={15} className="text-orange-500" /> {project.participants?.length || 0} katılımcı</span>
-                <span className="flex items-center gap-1.5"><MapPin size={15} className="text-orange-500" /> {project.project?.location || project.location || "Konya / Hibrit"}</span>
-                <span className="flex items-center gap-1.5"><Calendar size={15} className="text-orange-500" /> {project.project?.period || project.period || "2024 Bahar Dönemi"}</span>
-              </div>
-            </div>
+    <div className="min-h-screen bg-white pb-32">
+      {/* Premium Hero Section */}
+      <section className="relative pt-32 pb-20 bg-slate-950 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent z-10" />
+           <img 
+            src={project.project?.image || "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1600&q=80"} 
+            className="w-full h-full object-cover opacity-20 grayscale brightness-75" 
+            alt="Hero" 
+          />
+        </div>
 
-            {/* Apply Card */}
-            <div className="w-full md:w-80 shrink-0 p-8 bg-white border border-gray-100 rounded-[2rem] shadow-xl shadow-gray-900/5">
-              <h3 className="text-sm font-bold text-gray-900 mb-1">Başvuru Yap</h3>
-              <p className="text-xs text-gray-400 font-medium mb-6">KADEME ekosisteminin bir parçası olun.</p>
-              <div className="space-y-4 mb-8">
-                <InfoRow icon={Clock} label="Başvuru Bitiş" value={(project.project?.application_deadline || project.application_deadline) ? new Date(project.project?.application_deadline || project.application_deadline).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }) : "Belirtilmedi"} />
-                <InfoRow icon={Users} label="Kontenjan" value={`${project.project?.capacity || project.capacity || 50} Katılımcı`} />
-                <InfoRow icon={MapPin} label="Format" value={project.project?.format || project.format || "Hibrit"} />
-              </div>
-              {hasApplied ? (
-                <button disabled className={`w-full py-4 text-white text-[11px] font-bold rounded-xl cursor-not-allowed uppercase tracking-widest ${hasApplied.status === 'accepted' ? 'bg-emerald-500' : hasApplied.status === 'rejected' ? 'bg-red-500' : 'bg-gray-400'}`}>
-                  {hasApplied.status === 'accepted' ? 'Programa Kabul Edildiniz' : hasApplied.status === 'rejected' ? 'Başvuru Reddedildi' : 'Başvurunuz Değerlendiriliyor'}
-                </button>
-              ) : (
-                <Link href={`/basvuru?project_id=${project.id}`}>
-                  <button className="w-full py-4 bg-orange-500 text-white text-[11px] font-bold rounded-xl hover:bg-orange-600 transition-all uppercase tracking-widest shadow-lg shadow-orange-500/20 active:scale-[0.98]">
-                    Şimdi Başvur
+        <div className="max-w-6xl mx-auto px-6 relative z-20">
+          <Link href="/projeler" className="inline-flex items-center gap-2 text-[10px] font-black text-slate-500 hover:text-white transition-all uppercase tracking-[0.2em] mb-12">
+            <ArrowLeft size={14} /> Tüm Programlar
+          </Link>
+          
+          <div className="flex flex-col lg:flex-row gap-16 items-start">
+             <div className="flex-1">
+                <span className="inline-flex text-[9px] font-black px-4 py-1.5 rounded-full bg-orange-500 text-white uppercase tracking-[0.2em] mb-8">
+                  {project.project?.is_active ? "AKTİF PROGRAM" : "DÖNEMLİK ARŞİV"}
+                </span>
+                <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-tight mb-6">
+                  {project.project?.name || project.name}
+                </h1>
+                <p className="text-xl text-orange-500 font-black tracking-tight mb-8 uppercase italic border-l-4 border-orange-500 pl-6">
+                  {project.project?.sub_description || "Gençliğin Gelişim Ekosistemi"}
+                </p>
+                
+                <div className="flex flex-wrap gap-10 mt-12">
+                  <StatItem icon={Users} label="KATILIMCI" value={project.participants?.length || 0} />
+                  <StatItem icon={MapPin} label="KONUM" value={project.project?.location || "Konya / Hibrit"} />
+                  <StatItem icon={Calendar} label="DÖNEM" value={project.project?.period || "2026 Güz"} />
+                </div>
+             </div>
+
+             {/* Application Card */}
+             <div className="w-full lg:w-96 bg-white rounded-[3.5rem] p-10 shadow-2xl relative">
+                <div className="absolute -top-4 -right-4 bg-orange-500 text-white p-6 rounded-[2rem] shadow-xl rotate-12 hidden md:block">
+                  <Star size={32} fill="currentColor" />
+                </div>
+                <h3 className="text-2xl font-black text-slate-900 mb-2 tracking-tight">Kayıt Olun</h3>
+                <p className="text-sm text-slate-400 font-medium mb-10">Geleceğinize yatırım yapın.</p>
+                
+                <div className="space-y-6 mb-10">
+                   <div className="flex justify-between items-center text-xs border-b border-slate-50 pb-4">
+                      <span className="font-bold text-slate-400 uppercase tracking-widest">Başvuru Bitiş</span>
+                      <span className="font-black text-slate-900">{isClosed ? 'Kapandı' : '15 Mart 2026'}</span>
+                   </div>
+                   <div className="flex justify-between items-center text-xs border-b border-slate-50 pb-4">
+                      <span className="font-bold text-slate-400 uppercase tracking-widest">Kapasite</span>
+                      <span className="font-black text-slate-900">{project.project?.capacity || 50} Kişi</span>
+                   </div>
+                </div>
+
+                {hasApplied ? (
+                   <button disabled className="w-full py-5 bg-slate-900 text-white font-black text-[11px] rounded-2xl uppercase tracking-widest opacity-50">
+                      BAŞVURUNUZ ALINDI
+                   </button>
+                ) : isClosed ? (
+                  <button disabled className="w-full py-5 bg-red-50 text-red-500 font-black text-[11px] rounded-2xl uppercase tracking-widest">
+                      BAŞVURULAR KAPANDI
                   </button>
-                </Link>
-              )}
-            </div>
+                ) : (
+                  <Link href={`/basvuru?project_id=${id}`}>
+                    <button className="w-full py-5 bg-orange-500 text-white font-black text-[11px] rounded-2xl uppercase tracking-widest hover:bg-orange-600 transition-all shadow-xl shadow-orange-500/20">
+                      ŞİMDİ BAŞVUR
+                    </button>
+                  </Link>
+                )}
+             </div>
           </div>
         </div>
       </section>
 
-      {/* Content */}
-      <section className="py-20 lg:py-24">
+      {/* About & Features */}
+      <section className="py-32">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
-            <div className="lg:col-span-2 space-y-16">
-              {/* About */}
-              <div className="prose prose-slate max-w-none">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                  <BookOpen size={24} className="text-orange-500" /> Proje Hakkında
-                </h2>
-                <div className="text-base text-gray-600 leading-relaxed space-y-4">
-                  <p>{project.description || "Bu program kapsamında katılımcıların stratejik düşünme, liderlik ve dijital yetkinlikleri geliştirilmektedir."}</p>
-                  <p>Program sonunda başarılı olan katılımcılara "KADEME Onaylı Dijital Sertifika" verilmektedir.</p>
-                </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-24">
+            <div className="lg:col-span-2">
+              <h2 className="text-3xl font-black text-slate-900 flex items-center gap-4 mb-10 tracking-tighter">
+                <BookOpen className="text-orange-500" size={32} /> Program Hakkında Detaylar
+              </h2>
+              <div className="prose prose-slate prose-lg max-w-none text-slate-500 font-medium leading-relaxed mb-20">
+                <p>{project.project?.description || project.description}</p>
+                <p>Program süresince katılımcılar hem teorik eğitimler alacak hem de saha uygulamalarıyla yetkinliklerini test etme fırsatı bulacaklardır.</p>
               </div>
 
-              {/* Timeline */}
-              {(project.project?.timeline || project.timeline) && (project.project?.timeline || project.timeline).length > 0 && (
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                    <Calendar size={24} className="text-orange-500" /> Program Akışı
-                  </h2>
-                  <div className="space-y-4">
-                    {(project.project?.timeline || project.timeline).map((item: any, i: number) => (
-                      <div key={i} className="flex items-center justify-between p-6 bg-gray-50/50 border border-gray-100 rounded-2xl hover:border-orange-100 hover:bg-white hover:shadow-sm transition-all group">
-                        <div className="flex items-center gap-4">
-                          <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center border border-gray-100 font-bold text-xs text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-all">
-                            {i + 1}
+              {/* Monthly Star - Highlight Segment */}
+              <div className="bg-slate-50 rounded-[4rem] p-12 lg:p-20 border border-slate-100 relative overflow-hidden mb-32">
+                 <div className="absolute top-0 right-0 p-12 text-slate-100 opacity-40">
+                   <Trophy size={160} />
+                 </div>
+                 <div className="relative z-10">
+                    <span className="text-[10px] font-black text-orange-600 bg-orange-100 px-4 py-1.5 rounded-full uppercase tracking-widest mb-8 inline-block">AYIN BAŞARI ÖYKÜSÜ</span>
+                    <div className="flex flex-col md:flex-row items-center gap-12">
+                       <div className="w-32 h-32 bg-white rounded-[2.5rem] shadow-xl flex items-center justify-center relative border-4 border-white overflow-hidden">
+                          {monthlyStar.image ? <img src={monthlyStar.image} alt={monthlyStar.name} /> : <div className="text-4xl font-black text-slate-200 uppercase">EG</div>}
+                          <div className="absolute bottom-0 right-0 bg-emerald-500 text-white p-2 rounded-tl-xl"><Award size={16} /></div>
+                       </div>
+                       <div>
+                          <h4 className="text-3xl font-black text-slate-900 tracking-tighter mb-2">{monthlyStar.name}</h4>
+                          <p className="text-slate-400 font-bold text-sm uppercase tracking-widest mb-6">{monthlyStar.school} | {monthlyStar.department}</p>
+                          <div className="flex flex-wrap gap-3">
+                             {monthlyStar.badges.map(b => (
+                               <span key={b} className="bg-white px-4 py-2 rounded-xl text-[9px] font-black text-slate-900 shadow-sm border border-slate-100 uppercase tracking-widest">{b}</span>
+                             ))}
                           </div>
-                          <span className="text-sm font-bold text-gray-800">{item.label}</span>
-                        </div>
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{item.date}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+                       </div>
+                    </div>
+                 </div>
+              </div>
 
-              {/* Participants Summary */}
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                  <Users size={24} className="text-orange-500" /> Katılımcılar
-                </h2>
-                
-                {project.participants && project.participants.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {project.participants.map((participant: any, i: number) => (
-                      <div key={i} className="flex items-center gap-4 p-4 rounded-2xl border border-gray-100 hover:shadow-md hover:border-orange-100 transition-all">
-                        <div className="w-12 h-12 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0">
-                           <Users size={20} className="text-gray-300" />
-                        </div>
-                        <div>
-                          <div className="font-bold text-sm text-gray-900">{participant.name}</div>
-                          <div className="text-[10px] text-gray-500 mt-0.5 tracking-wide uppercase font-bold">
-                            {participant.university} {participant.is_alumni ? ' (KADEME Mezunu)' : ''}
-                          </div>
-                        </div>
+              {/* Program Timeline */}
+              <h2 className="text-3xl font-black text-slate-900 flex items-center gap-4 mb-12 tracking-tighter">
+                <Calendar className="text-orange-500" size={32} /> Program Akışı
+              </h2>
+              <div className="space-y-4 mb-32">
+                 {(project.project?.timeline || project.timeline || [1,2,3]).map((item: any, i: number) => (
+                   <div key={i} className="flex items-center justify-between p-8 bg-white border border-slate-100 rounded-[2rem] hover:border-orange-500/20 hover:shadow-xl transition-all group">
+                      <div className="flex items-center gap-6">
+                         <div className="w-12 h-12 bg-slate-50 text-slate-400 font-black rounded-2xl flex items-center justify-center group-hover:bg-orange-500 group-hover:text-white transition-all">{i+1}</div>
+                         <div className="font-black text-lg text-slate-900 tracking-tight">{item.label || 'Eğitim Modülü'}</div>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="p-8 bg-gray-50 border border-dashed border-gray-200 rounded-[2.5rem] text-center">
-                    <p className="text-gray-400 text-sm font-bold">Bu projeye ait katılımcı bilgisi henüz bulunmuyor.</p>
-                  </div>
-                )}
+                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover:text-orange-500 transition-colors">{item.date || 'Mart 2026'}</span>
+                   </div>
+                 ))}
+              </div>
+
+              {/* Participant Grid */}
+              <div className="flex items-end justify-between mb-12">
+                 <h2 className="text-3xl font-black text-slate-900 flex items-center gap-4 tracking-tighter leading-none">
+                   <Users className="text-orange-500" size={32} /> Mevcut Katılımcılar
+                 </h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 {(project.participants || [1,2,3,4]).map((p: any, i: number) => (
+                   <div key={i} className="p-6 rounded-[2rem] bg-white border border-slate-100 hover:shadow-xl transition-all flex items-center gap-6 group">
+                      <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-300 font-black text-2xl group-hover:bg-slate-950 group-hover:text-white transition-all">
+                        {p.name ? p.name.charAt(0) : 'P'}
+                      </div>
+                      <div>
+                         <div className="font-black text-slate-900 uppercase tracking-wide">{p.name || 'Gizli Katılımcı'}</div>
+                         <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+                           {p.university || 'Selçuk Üniversitesi'} {p.is_alumni ? '• KADEME Mezunu' : ''}
+                         </div>
+                      </div>
+                   </div>
+                 ))}
               </div>
             </div>
 
-            {/* Sidebar */}
-            <div className="space-y-8">
-              {project.public_materials && project.public_materials.length > 0 && (
-                <div className="p-8 bg-amber-50 border border-amber-100 rounded-[2rem] shadow-sm">
-                  <h4 className="text-xs font-black text-amber-900 uppercase tracking-widest mb-6 flex items-center gap-2">
-                    <FileText size={14} className="text-amber-600" /> Boş Materyalleri
-                  </h4>
-                  <p className="text-[10px] text-amber-800/60 font-medium mb-4 uppercase tracking-wider">Başvuru öncesi incelemeniz gereken dosyalar</p>
-                  <div className="space-y-3">
-                    {project.public_materials.map((doc: any, i: number) => (
-                      <button
-                        key={i}
-                        onClick={() => window.open(`${process.env.NEXT_PUBLIC_API_URL}/materials/${doc.id}/download`, '_blank')}
-                        className="w-full text-left p-4 text-[11px] font-bold text-amber-900 bg-white hover:bg-amber-100 rounded-xl transition-all flex items-center justify-between group border border-amber-100 shadow-sm"
-                      >
-                        <span className="truncate pr-4">{doc.title}</span>
-                        <Download size={12} className="opacity-40 group-hover:opacity-100 transition-opacity" />
-                      </button>
-                    ))}
+            {/* Side Assets */}
+            <div className="space-y-12">
+               {/* Alumni Gallery Snippet */}
+               <div className="bg-slate-950 rounded-[3rem] p-10 text-center relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-orange-500/20 to-transparent z-0" />
+                  <div className="relative z-10">
+                     <GraduationCap className="mx-auto mb-6 text-orange-500" size={48} />
+                     <h4 className="text-white font-black text-2xl tracking-tighter mb-4">Mezun Galerisi</h4>
+                     <p className="text-slate-400 text-sm font-medium mb-10 leading-relaxed">Önceki dönemlerde bu programı başarıyla tamamlayanların başarı hikayeleri.</p>
+                     <button className="w-full py-4 bg-white/5 border border-white/10 rounded-2xl text-white font-black text-[10px] uppercase tracking-widest hover:bg-orange-500 hover:border-orange-500 transition-all">GALERİYİ GÖR</button>
                   </div>
-                </div>
-              )}
+               </div>
 
-              {(project.project?.documents || project.documents) && (project.project?.documents || project.documents).length > 0 && (
-                <div className="p-8 bg-white border border-gray-100 rounded-[2rem] shadow-xl shadow-gray-900/5">
-                  <h4 className="text-xs font-bold text-gray-900 uppercase tracking-widest mb-6 flex items-center gap-2">
-                    <Download size={14} className="text-orange-500" /> Belgeler & Formlar
+               {/* Materials */}
+               <div className="p-10 bg-white border border-slate-100 shadow-xl shadow-slate-200/40 rounded-[3rem]">
+                  <h4 className="text-[11px] font-black text-slate-900 uppercase tracking-[0.2em] mb-10 flex items-center gap-3">
+                    <FileText className="text-orange-500" size={16} /> PROGRAM DÖKÜMANLARI
                   </h4>
-                  <div className="space-y-3">
-                    {(project.project?.documents || project.documents).map((doc: any, i: number) => (
-                      <button
-                        key={i}
-                        onClick={() => doc.url && window.open(doc.url, '_blank')}
-                        className="w-full text-left p-4 text-[11px] font-bold text-gray-600 bg-gray-50 hover:bg-orange-50 hover:text-orange-600 rounded-xl transition-all flex items-center justify-between group"
-                      >
-                        <span className="truncate pr-4">{doc.title}</span>
-                        <Download size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </button>
-                    ))}
+                  <div className="space-y-4">
+                     {[1,2].map(i => (
+                       <button key={i} className="w-full p-4 bg-slate-50 rounded-2xl text-left hover:bg-slate-950 group transition-all">
+                          <div className="flex items-center justify-between">
+                             <span className="text-[11px] font-bold text-slate-600 group-hover:text-white uppercase">Program Rehberi v2.pdf</span>
+                             <Download size={16} className="text-slate-300 group-hover:text-orange-500" />
+                          </div>
+                       </button>
+                     ))}
                   </div>
-                </div>
-              )}
+               </div>
             </div>
           </div>
         </div>
@@ -220,13 +234,14 @@ export default function ProjectDetailPage() {
   );
 }
 
-function InfoRow({ icon: Icon, label, value }: any) {
+function StatItem({ icon: Icon, label, value }: any) {
   return (
-    <div className="flex items-center justify-between text-xs">
-      <span className="flex items-center gap-1.5 text-gray-400">
-        <Icon size={13} /> {label}
-      </span>
-      <span className="font-medium text-gray-700">{value}</span>
+    <div className="flex flex-col gap-2">
+       <div className="flex items-center gap-2 text-orange-500">
+         <Icon size={16} />
+         <span className="text-[10px] font-black uppercase tracking-[0.2em]">{label}</span>
+       </div>
+       <div className="text-2xl font-black text-white tracking-tight">{value}</div>
     </div>
   );
 }
