@@ -91,32 +91,32 @@ export default function ParticipantDashboard() {
         </div>
       )}
 
-      {/* Welcome Header */}
-      <div className="bg-slate-900 rounded-[3rem] p-10 text-white mb-10 relative overflow-hidden shadow-2xl shadow-slate-900/40">
+      {/* Welcome Header - Refined Corporate Light */}
+      <div className="bg-white rounded-3xl p-8 lg:p-10 border border-slate-200/60 mb-10 relative overflow-hidden shadow-sm">
         <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center">
           <div>
             <div className="flex items-center space-x-3 mb-4">
-              <span className="px-3 py-1 bg-yellow-500 text-black text-[10px] font-black rounded-lg uppercase tracking-widest">Sistem Aktif</span>
-              <span className="text-slate-500 text-[10px] font-mono tracking-widest">
+              <span className="px-3 py-1 bg-orange-50 text-orange-600 text-[10px] font-bold rounded-lg uppercase tracking-widest border border-orange-100">Sistem Aktif</span>
+              <span className="text-slate-400 text-[10px] font-medium tracking-widest">
                 {currentTime.toLocaleTimeString('tr-TR')}
               </span>
             </div>
-            <h1 className="text-4xl font-black mb-2 tracking-tight">Merhaba, {profile?.name}!</h1>
-            <p className="text-slate-400 font-medium">KADEME Dijital Yonetim Sistemi'ne hos geldiniz.</p>
+            <h1 className="text-3xl font-bold text-slate-900 mb-2 tracking-tight">Merhaba, {profile?.name}!</h1>
+            <p className="text-slate-500 font-medium text-sm">KADEME Dijital Yönetim Sistemi'ne hoş geldiniz.</p>
           </div>
-          <div className="mt-6 md:mt-0 flex items-center space-x-6">
-            <div className="text-center px-6 border-r border-slate-800">
-              <div className="text-3xl font-black text-slate-100">{profile?.participant_profile?.credits || 100}</div>
-              <div className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Mevcut Kredi</div>
+          <div className="mt-6 md:mt-0 flex items-center space-x-8">
+            <div className="text-center px-6 border-r border-slate-100">
+              <div className="text-3xl font-bold text-slate-900">{profile?.participant_profile?.credits || 100}</div>
+              <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Mevcut Kredi</div>
             </div>
             <div className="text-center px-6">
-              <div className="text-3xl font-black text-slate-100">{badges.length}</div>
-              <div className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Rozet</div>
+              <div className="text-3xl font-bold text-slate-900">{badges.length}</div>
+              <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Rozet</div>
             </div>
           </div>
         </div>
-        {/* Decorative background element */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-500/5 rounded-full -translate-y-48 translate-x-48 blur-3xl"></div>
+        {/* Subtle decorative background element */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 rounded-full -translate-y-32 translate-x-32 blur-3xl"></div>
       </div>
 
       {/* Main Grid */}
@@ -127,12 +127,12 @@ export default function ParticipantDashboard() {
           <section>
             <div className="flex items-center justify-between mb-8">
               <div>
-                <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">KADEME Canli Akis</h2>
-                <p className="text-slate-400 text-sm font-medium">Su an gerceklesen aktif kullanim alanlari.</p>
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">KADEME Canlı Akış</h2>
+                <p className="text-slate-500 text-xs font-medium">Şu an gerçekleşen aktif kullanım alanları.</p>
               </div>
-              <div className="flex items-center space-x-2 bg-emerald-50 text-emerald-600 px-4 py-2 rounded-full border border-emerald-100">
+              <div className="flex items-center space-x-2 bg-emerald-50 text-emerald-600 px-4 py-1.5 rounded-full border border-emerald-100">
                 <div className="w-2 h-2 bg-emerald-500 rounded-full animate-ping" />
-                <span className="text-[10px] font-black uppercase tracking-widest">Canli</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest">Canlı</span>
               </div>
             </div>
 
@@ -141,43 +141,41 @@ export default function ParticipantDashboard() {
                 <motion.div 
                   layout
                   key={activity.id} 
-                  className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/40 relative overflow-hidden group"
+                  className="bg-white dark:bg-slate-900 p-6 lg:p-8 rounded-2xl border border-slate-200/60 shadow-sm relative overflow-hidden group"
                 >
                   <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-4">
-                        <span className="px-3 py-1 bg-yellow-500 text-white text-[10px] font-black rounded-lg uppercase tracking-widest">{activity.type}</span>
-                        <span className="px-3 py-1 bg-slate-100 text-slate-500 text-[10px] font-black rounded-lg uppercase tracking-widest">Simdi</span>
+                        <span className="px-2.5 py-1 bg-orange-500 text-white text-[9px] font-bold rounded-md uppercase tracking-wider">{activity.type}</span>
+                        <span className="px-2.5 py-1 bg-slate-100 text-slate-500 text-[9px] font-bold rounded-md uppercase tracking-wider">ŞİMDİ</span>
                       </div>
-                      <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-3">{activity.name}</h3>
-                      <div className="flex items-center space-x-6 text-sm text-slate-400 font-bold">
-                        <span className="flex items-center"><MapPin size={16} className="mr-2 text-yellow-500" /> {activity.room_name || 'Ana Salon'}</span>
-                        <span className="flex items-center"><Clock size={16} className="mr-2 text-yellow-500" /> Bitis: {new Date(activity.end_time).toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'})}</span>
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{activity.name}</h3>
+                      <div className="flex items-center space-x-6 text-xs text-slate-500 font-semibold">
+                        <span className="flex items-center"><MapPin size={14} className="mr-2 text-orange-500" /> {activity.room_name || 'Ana Salon'}</span>
+                        <span className="flex items-center"><Clock size={14} className="mr-2 text-orange-500" /> Bitiş: {new Date(activity.end_time).toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'})}</span>
                       </div>
                     </div>
                     
                     {activity.has_attended ? (
-                      <div className="w-full md:w-auto px-10 py-5 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center space-x-3 shadow-lg shadow-emerald-500/10">
-                        <CheckCircle size={22} />
-                        <span className="font-black text-sm uppercase tracking-widest">Yoklama Verildi</span>
+                      <div className="w-full md:w-auto px-8 py-4 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center space-x-3 border border-emerald-100">
+                        <CheckCircle size={20} />
+                        <span className="font-bold text-xs uppercase tracking-widest">Yoklama Verildi</span>
                       </div>
                     ) : (
                       <Link 
                         href={`/dashboard/student/yoklama?activity=${activity.id}`}
-                        className="w-full md:w-auto px-10 py-5 bg-slate-900 text-white rounded-2xl flex items-center justify-center space-x-3 hover:bg-black transition-all shadow-xl shadow-slate-900/30 active:scale-95 group-hover:scale-105"
+                        className="w-full md:w-auto px-8 py-4 bg-slate-900 text-white rounded-xl flex items-center justify-center space-x-3 hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10 active:scale-95 group-hover:shadow-slate-900/20"
                       >
-                        <Smartphone size={22} />
-                        <span className="font-black text-sm uppercase tracking-widest">QR OKUT</span>
+                        <Smartphone size={20} />
+                        <span className="font-bold text-xs uppercase tracking-widest">QR OKUT</span>
                       </Link>
                     )}
                   </div>
-                  {/* Background Accents */}
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/5 rounded-full -translate-y-16 translate-x-16 blur-2xl" />
                 </motion.div>
               )) : (
-                <div className="py-16 text-center bg-white rounded-[2.5rem] border-2 border-dashed border-slate-100">
-                  <Clock size={48} className="mx-auto text-slate-100 mb-4" />
-                  <p className="text-slate-400 font-bold">Su an devam eden bir faaliyet bulunmuyor.</p>
+                <div className="py-12 text-center bg-white rounded-2xl border-2 border-dashed border-slate-100">
+                  <Clock size={40} className="mx-auto text-slate-200 mb-3" />
+                  <p className="text-slate-400 font-semibold text-sm">Şu an devam eden bir faaliyet bulunmuyor.</p>
                 </div>
               )}
             </div>
@@ -187,43 +185,43 @@ export default function ParticipantDashboard() {
           <section>
             <div className="flex items-center justify-between mb-8">
               <div>
-                <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">KADEME Ajandasi</h2>
-                <p className="text-slate-400 text-sm font-medium">Onumuzdeki gunlerin faaliyet plani.</p>
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">KADEME Ajandası</h2>
+                <p className="text-slate-500 text-xs font-medium">Önümüzdeki günlerin faaliyet planı.</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {upcomingActivities.length > 0 ? upcomingActivities.slice(0, 6).map((activity: any) => (
-                <div key={activity.id} className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-sm hover:border-yellow-200 transition-all">
+                <div key={activity.id} className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200/60 shadow-sm hover:border-orange-200 transition-all group">
                   <div className="flex justify-between items-start mb-6">
-                    <div className="w-12 h-12 bg-slate-50 rounded-2xl flex flex-col items-center justify-center text-slate-400 font-black">
-                      <span className="text-[10px] leading-none uppercase">
+                    <div className="w-12 h-12 bg-slate-50 rounded-xl flex flex-col items-center justify-center text-slate-400 font-bold">
+                      <span className="text-[9px] leading-none uppercase">
                         {new Date(activity.start_time).toLocaleDateString('tr-TR', {month: 'short'})}
                       </span>
                       <span className="text-lg leading-tight">
                         {new Date(activity.start_time).getDate()}
                       </span>
                     </div>
-                    <span className="px-3 py-1 bg-slate-50 text-slate-400 text-[9px] font-black rounded-lg uppercase tracking-widest">YAKLASAN</span>
+                    <span className="px-2.5 py-1 bg-slate-50 text-slate-400 text-[9px] font-bold rounded-md uppercase tracking-widest border border-slate-100">YAKLAŞAN</span>
                   </div>
-                  <h3 className="font-black text-slate-900 dark:text-white mb-2 leading-tight">{activity.name}</h3>
+                  <h3 className="font-bold text-slate-900 dark:text-white mb-2 leading-tight group-hover:text-orange-600 transition-colors">{activity.name}</h3>
                   <div className="flex flex-col space-y-2 mb-6">
-                    <div className="flex items-center text-xs font-bold text-slate-400">
+                    <div className="flex items-center text-xs font-semibold text-slate-400">
                       <MapPin size={14} className="mr-2 text-slate-200" />
                       {activity.project?.name || 'KADEME'}
                     </div>
-                    <div className="flex items-center text-xs font-bold text-slate-400">
+                    <div className="flex items-center text-xs font-semibold text-slate-400">
                       <Clock size={14} className="mr-2 text-slate-200" />
-                      Baslangic: {new Date(activity.start_time).toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'})}
+                      Başlangıç: {new Date(activity.start_time).toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'})}
                     </div>
                   </div>
-                  <div className="w-full py-3 bg-slate-50 text-slate-300 text-[10px] font-black rounded-xl text-center uppercase tracking-widest border border-slate-100">
-                     Hunuz Baslamadi
+                  <div className="w-full py-2.5 bg-slate-50 text-slate-300 text-[9px] font-bold rounded-lg text-center uppercase tracking-widest border border-slate-100 group-hover:bg-orange-50 group-hover:text-orange-400 group-hover:border-orange-100 transition-all">
+                     Henüz Başlamadı
                   </div>
                 </div>
               )) : (
                 <div className="col-span-2 py-10 text-center text-slate-300 italic font-medium">
-                  Kayitli programlarinizda yaklasan etkinlik bulunamadi.
+                  Kayıtlı programlarınızda yaklaşan etkinlik bulunamadı.
                 </div>
               )}
             </div>
@@ -247,33 +245,33 @@ export default function ParticipantDashboard() {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* User Profile Summary */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 p-8 shadow-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/60 p-6 shadow-sm">
             <div className="flex items-center space-x-4 mb-6">
-              <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400">
-                <User size={32} />
+              <div className="w-14 h-14 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400">
+                <User size={28} />
               </div>
               <div>
                 <h3 className="font-bold text-slate-900 dark:text-white">{profile?.name}</h3>
-                <p className="text-sm text-slate-500">{profile?.participant_profile?.university || 'Üniversite Belirtilmemiş'}</p>
+                <p className="text-xs text-slate-500 font-medium">{profile?.participant_profile?.university || 'Üniversite Belirtilmemiş'}</p>
               </div>
             </div>
-            <div className="space-y-4 pt-4 border-t border-slate-50 dark:border-slate-800">
+            <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
               <ProfileInfoItem 
                 icon={CheckCircle} 
                 label="Durum" 
                 value={profile?.participant_profile?.status === 'active' ? 'Aktif Katılımcı' : (profile?.participant_profile?.status || 'Bilinmiyor')} 
-                color="text-emerald-500" 
+                color="text-emerald-600" 
               />
               <ProfileInfoItem 
                 icon={CreditCard} 
                 label="Kredi Durumu" 
                 value={profile?.participant_profile?.credits < 75 ? 'Riskli Seviye' : 'Yeterli (Güvenli)'} 
-                color={profile?.participant_profile?.credits < 75 ? 'text-red-500' : 'text-blue-500'} 
+                color={profile?.participant_profile?.credits < 75 ? 'text-red-600' : 'text-blue-600'} 
               />
             </div>
-            <Link href="/dashboard/student/dijital-cv" className="w-full mt-8 py-4 bg-slate-900 text-white rounded-2xl font-bold flex items-center justify-center group">
+            <Link href="/dashboard/student/dijital-cv" className="w-full mt-8 py-3.5 bg-slate-950 text-white rounded-xl text-xs font-bold flex items-center justify-center group uppercase tracking-widest transition-all hover:bg-slate-800">
               Profilimi Düzenle
-              <ExternalLink size={18} className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <ExternalLink size={16} className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
             </Link>
           </div>
 

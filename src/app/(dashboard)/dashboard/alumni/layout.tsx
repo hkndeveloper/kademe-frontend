@@ -44,15 +44,13 @@ export default function AlumniLayout({ children }: { children: React.ReactNode }
           <div className="px-4 mb-4">
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Mezun Portalı</span>
           </div>
-          {menuItems.map((item) => {
-            const isActive = pathname === item.href || pathname?.startsWith(item.href + '/');
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 className={`flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200 group ${
                   isActive
-                    ? "bg-slate-700 text-white shadow-lg shadow-slate-900/20"
+                    ? "bg-orange-500 text-white shadow-lg shadow-orange-500/20"
                     : "text-slate-400 hover:bg-white/5 hover:text-white"
                 }`}
               >

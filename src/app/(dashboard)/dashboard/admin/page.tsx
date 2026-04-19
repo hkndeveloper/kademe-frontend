@@ -84,7 +84,7 @@ export default function AdminDashboard() {
           icon={TrendingUp} 
           label="Bekleyen Başvuru" 
           value={stats.pendingApplications} 
-          variant="dark"
+          className="border-orange-200/50 bg-orange-50/30"
         />
       </div>
 
@@ -106,13 +106,13 @@ export default function AdminDashboard() {
               Tümünü İncele
             </Link>
           </div>
-          <div className="p-6">
+          <div className="p-4">
             {loading ? (
-              <div className="py-20 text-center text-xs text-gray-400 animate-pulse font-medium italic">Veriler yükleniyor...</div>
+              <div className="py-20 text-center text-xs text-slate-400 animate-pulse font-medium italic">Veriler yükleniyor...</div>
             ) : projects.length === 0 ? (
-              <div className="py-20 text-center text-xs text-gray-300 italic">Yönetilecek aktif proje bulunmuyor.</div>
+              <div className="py-20 text-center text-xs text-slate-300 italic">Yönetilecek aktif proje bulunmuyor.</div>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-1">
                 {projects.slice(0, 4).map((project) => {
                   const analytics = analyticsData?.occupancy_rates?.find((rate: any) => rate.project_name === project.name);
                   const occupancy = analytics ? analytics.occupancy_rate : 0;
@@ -121,23 +121,23 @@ export default function AdminDashboard() {
                     <Link
                       key={project.id}
                       href={`/dashboard/admin/projects/${project.id}`}
-                      className="flex items-center justify-between p-6 rounded-[2rem] hover:bg-gray-50 transition-all group"
+                      className="flex items-center justify-between p-5 rounded-2xl hover:bg-slate-50 transition-all group border border-transparent hover:border-slate-100"
                     >
-                      <div className="flex items-center gap-6">
-                        <div className="w-12 h-12 bg-white border border-gray-100 rounded-2xl flex items-center justify-center group-hover:bg-orange-500 group-hover:border-transparent transition-all shadow-sm">
-                          <ActivityIcon size={20} className="text-gray-400 group-hover:text-white transition-colors" />
+                      <div className="flex items-center gap-5">
+                        <div className="w-10 h-10 bg-white border border-slate-200/60 rounded-xl flex items-center justify-center group-hover:bg-orange-500 group-hover:border-transparent transition-all shadow-sm">
+                          <ActivityIcon size={18} className="text-slate-400 group-hover:text-white transition-colors" />
                         </div>
                         <div>
-                          <p className="text-sm font-bold text-gray-800 group-hover:text-gray-900">{project.name}</p>
-                          <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">{project.project_code || "KDM-2024"}</p>
+                          <p className="text-sm font-bold text-slate-800 group-hover:text-slate-900">{project.name}</p>
+                          <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">{project.project_code || "KDM-2024"}</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-8">
+                      <div className="flex items-center gap-6">
                         <div className="text-right hidden sm:block">
-                          <div className="text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-1">Kontenjan</div>
-                          <div className="text-xs font-black text-gray-900 uppercase">Doluluk %{occupancy}</div>
+                          <div className="text-[9px] font-bold text-slate-300 uppercase tracking-widest mb-1">Kontenjan</div>
+                          <div className="text-xs font-bold text-slate-900 uppercase">Doluluk %{occupancy}</div>
                         </div>
-                        <ChevronRight size={18} className="text-gray-200 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" />
+                        <ChevronRight size={18} className="text-slate-200 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" />
                       </div>
                     </Link>
                   );
@@ -148,20 +148,20 @@ export default function AdminDashboard() {
         </DashboardCard>
 
         <div className="space-y-8">
-          <div className="bg-gray-900 rounded-[2.5rem] p-10 text-white shadow-2xl relative overflow-hidden group">
-            <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
-              <Bell size={28} className="text-white" />
+          <div className="bg-white border border-orange-200/50 rounded-2xl p-8 shadow-sm relative overflow-hidden group">
+            <div className="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center mb-6 border border-orange-100 group-hover:scale-110 transition-transform">
+              <Bell size={24} className="text-orange-500" />
             </div>
-            <h3 className="text-xl font-black mb-3">Hızlı Duyuru</h3>
-            <p className="text-sm text-gray-400 mb-10 leading-relaxed font-medium">
+            <h3 className="text-lg font-bold text-slate-900 mb-2">Hızlı Duyuru</h3>
+            <p className="text-xs text-slate-500 mb-8 leading-relaxed font-medium">
               Tüm aktif katılımcılara tek tıkla önemli duyuru gönderin.
             </p>
             <Link href="/dashboard/admin/announcements">
-              <button className="w-full py-4 bg-white text-gray-900 text-xs font-extrabold rounded-2xl hover:bg-orange-500 hover:text-white transition-all uppercase tracking-[0.2em] shadow-lg">
+              <button className="w-full py-3.5 bg-slate-950 text-white text-[10px] font-bold rounded-xl hover:bg-slate-800 transition-all uppercase tracking-[0.2em] shadow-md active:scale-95">
                 Yönetimi Başlat
               </button>
             </Link>
-            <Bell size={180} className="absolute -bottom-12 -right-12 text-white/5 rotate-12" />
+            <Bell size={120} className="absolute -bottom-8 -right-8 text-orange-500/5 rotate-12" />
           </div>
 
           <DashboardCard className="p-10">
