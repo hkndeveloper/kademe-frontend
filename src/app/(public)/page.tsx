@@ -133,7 +133,7 @@ export default function Home() {
             >
                <div className="relative aspect-square w-full max-w-[600px] mx-auto rounded-[4rem] overflow-hidden group shadow-[0_50px_100px_rgba(0,0,0,0.5)]">
                   <div className="absolute inset-0 bg-gradient-to-tr from-orange-500/20 via-transparent to-purple-500/20 z-10 pointer-events-none" />
-                  {currentSlider?.image_path ? (
+                  {currentSlider?.image_path && (
                     <Image 
                       src={getStorageUrl(currentSlider.image_path)} 
                       fill
@@ -141,10 +141,6 @@ export default function Home() {
                       alt={currentSlider.title}
                       priority
                     />
-                  ) : (
-                    <div className="w-full h-full bg-slate-900 flex items-center justify-center">
-                       <Rocket size={100} className="text-slate-800" />
-                    </div>
                   )}
                </div>
                {/* Background Glow */}
