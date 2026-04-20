@@ -53,8 +53,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [user, setUser] = React.useState<any>(null);
 
   React.useEffect(() => {
-    const roles = JSON.parse(localStorage.getItem("user_roles") || "[]") as Role[];
-    const name = localStorage.getItem("user_name") || "Admin";
+    let roles: Role[] = [];
+    let name = "Admin";
+    try {
+      roles = JSON.parse(localStorage.getItem("user_roles") || "[]") as Role[];
+      name = localStorage.getItem("user_name") || "Admin";
+    } catch (e) {
+      console.error("Auth state parse error", e);
+    }
     setUser({ roles, name });
   }, []);
 

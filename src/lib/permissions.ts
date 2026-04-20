@@ -15,10 +15,10 @@ export interface User {
 }
 
 export const hasAbility = (user: User | null, ability: string): boolean => {
-  if (!user) return false;
+  if (!user || !user.roles) return false;
   
   // Super Admin bypasses all checks
-  if (user.roles.includes('super-admin')) return true;
+  if (Array.isArray(user.roles) && user.roles.includes('super-admin')) return true;
 
   // Check specific permissions array
   if (user.permissions?.includes(ability)) return true;

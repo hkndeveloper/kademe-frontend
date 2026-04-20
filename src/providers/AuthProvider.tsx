@@ -62,7 +62,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const hasRole = (role: Role) => {
-    return user?.roles.includes(role) || false;
+    return (user?.roles && Array.isArray(user.roles)) ? user.roles.includes(role) : false;
   };
 
   const value = {
