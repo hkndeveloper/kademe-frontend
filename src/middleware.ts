@@ -4,7 +4,12 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const token = request.cookies.get('kademe_token')?.value;
   const rolesJson = request.cookies.get('user_roles')?.value;
-  const roles = rolesJson ? JSON.parse(rolesJson) : [];
+  let roles = [];
+  try {
+    roles = rolesJson ? JSON.parse(decodeURIComponent(rolesJson)) : [];
+  } catch (e) {
+    console.error("Middleware roles parse error", e);
+  }
   
   const { pathname } = request.nextUrl;
 
