@@ -18,7 +18,9 @@ import {
   BookOpen,
   ClipboardList,
   ShieldCheck as ShieldCheckIcon,
-  Users as UsersIcon
+  Users as UsersIcon,
+  Layout,
+  Camera
 } from "lucide-react";
 import Image from "next/image";
 
