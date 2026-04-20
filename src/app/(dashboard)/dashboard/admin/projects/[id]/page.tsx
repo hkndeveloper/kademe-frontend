@@ -103,7 +103,13 @@ export default function ProjectDashboard() {
       toast.success("Proje bilgileri güncellendi.");
       fetchData();
     } catch (err: any) {
-      const errorMsg = err.response?.data?.message || 'Proje güncellenemedi.';
+      let errorMsg = err.response?.data?.message || 'Proje güncellenemedi.';
+      if (err.response?.data?.errors) {
+        const errors = err.response.data.errors;
+        const firstField = Object.keys(errors)[0];
+        const msg = (errors[firstField] as string[])[0];
+        errorMsg = `${msg}`; // "Doğrulama hatası" yerine direkt hatayı göster (Örn: Kontenjan sayı olmalıdır)
+      }
       toast.error(errorMsg);
       console.error("Update error:", err.response?.data);
     }

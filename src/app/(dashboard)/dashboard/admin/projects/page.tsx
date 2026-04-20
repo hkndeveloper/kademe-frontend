@@ -131,7 +131,13 @@ export default function AdminProjects() {
       fetchProjects();
       toast.success('Proje başarıyla kaydedildi.');
     } catch (err: any) {
-      const errorMsg = err.response?.data?.message || 'Giriş yapılan verileri kontrol edin.';
+      let errorMsg = err.response?.data?.message || 'Giriş yapılan verileri kontrol edin.';
+      if (err.response?.data?.errors) {
+        const errors = err.response.data.errors;
+        const firstField = Object.keys(errors)[0];
+        const msg = (errors[firstField] as string[])[0];
+        errorMsg = msg;
+      }
       toast.error(errorMsg);
       console.error('Proje kayıt hatası:', err.response?.data);
     } finally {
