@@ -77,7 +77,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-700 ${scrolled ? "neuros-glass-light py-4 shadow-xl border-b border-black/5" : "bg-transparent py-8"}`}>
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-700 ${scrolled ? "neuros-glass-light py-4 shadow-xl border-b border-black/5" : "bg-gradient-to-b from-black/40 to-transparent py-8"}`}>
       <div className="max-w-7xl mx-auto px-10">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center group">
@@ -144,7 +144,7 @@ export default function Navbar() {
             {auth.token ? (
               <div className={`flex items-center p-2 rounded-full transition-all duration-500 ${scrolled ? "bg-slate-50 border border-slate-100" : "bg-white/10 backdrop-blur-md border border-white/10"}`}>
                 <Link href={getDashboardHref()}>
-                  <button className={`px-6 py-3 text-[9px] font-black uppercase tracking-widest rounded-full transition-all ${scrolled ? "text-slate-950 hover:bg-white" : "text-white hover:bg-white/10"}`}>
+                  <button className={`px-6 py-3 text-[9px] font-black uppercase tracking-widest rounded-full transition-all ${scrolled ? "text-slate-950 hover:bg-white" : "text-white bg-white/10 hover:bg-white/20"}`}>
                     PANEL
                   </button>
                 </Link>

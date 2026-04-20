@@ -77,6 +77,9 @@ export default function Home() {
   return (    <div className="bg-white">
       {/* Neuros Hero Section - DARK TECH */}
       <section className="relative min-h-[90vh] lg:h-screen flex items-center overflow-hidden neuros-mesh pt-20">
+        {/* Navbar Visibility Overlay */}
+        <div className="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-black/60 to-transparent z-20 pointer-events-none" />
+        
         <div className="absolute inset-0 z-0 opacity-30">
           <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-orange-600/20 blur-[120px] rounded-full" />
           <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-600/10 blur-[120px] rounded-full" />
@@ -143,18 +146,6 @@ export default function Home() {
                        <Rocket size={100} className="text-slate-800" />
                     </div>
                   )}
-                  {/* Floating Glass UI Elements */}
-                  <div className="absolute bottom-8 left-8 right-8 neuros-glass p-8 rounded-3xl z-20 translate-y-4 group-hover:translate-y-0 transition-transform duration-700">
-                     <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-orange-500 rounded-2xl flex items-center justify-center text-white shrink-0">
-                           <Sparkles size={24} />
-                        </div>
-                        <div>
-                           <p className="text-[10px] font-black text-orange-500 uppercase tracking-widest mb-1">PROJE ODAKLI</p>
-                           <p className="text-white text-sm font-bold leading-tight">Yapay Zeka ve Teknoloji Akademisi</p>
-                        </div>
-                     </div>
-                  </div>
                </div>
                {/* Background Glow */}
                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-orange-600/30 blur-[150px] -z-10 rounded-full" />
