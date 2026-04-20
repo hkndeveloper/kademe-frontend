@@ -19,7 +19,8 @@ import {
   EyeOff,
   Download,
   FileBox,
-  FileText
+  FileText,
+  CheckCircle
 } from 'lucide-react';
 import api from '@/lib/api';
 import Link from 'next/link';

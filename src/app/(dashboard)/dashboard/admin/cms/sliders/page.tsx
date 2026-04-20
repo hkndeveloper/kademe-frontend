@@ -4,15 +4,14 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Plus, 
-  Layout, 
+  Layers, 
   Edit2, 
   Trash2, 
   Save, 
   X, 
   Image as ImageIcon,
   CheckCircle2,
-  ExternalLink,
-  Layers
+  ExternalLink
 } from 'lucide-react';
 import api from '@/lib/api';
 import { toast } from 'sonner';

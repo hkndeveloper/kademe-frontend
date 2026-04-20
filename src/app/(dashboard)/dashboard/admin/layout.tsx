@@ -19,7 +19,7 @@ import {
   ClipboardList,
   ShieldCheck as ShieldCheckIcon,
   Users as UsersIcon,
-  Layout,
+  Layers,
   Camera
 } from "lucide-react";
 import Image from "next/image";
@@ -42,7 +42,7 @@ const menuItems = [
   { name: "KPD Sistemi",    href: "/dashboard/admin/kpd",            icon: ClipboardCheck,   ability: 'manage-kpd' },
   { name: "Sistem Ayarları",href: "/dashboard/admin/settings",       icon: Settings,        ability: 'manage-settings' },
   { name: "Yetki Matrisi",  href: "/dashboard/admin/permissions",    icon: ShieldAlert,     ability: 'manage-permissions' },
-  { name: "Slider Yönetimi", href: "/dashboard/admin/cms/sliders",icon: Layout,          ability: 'manage-settings' },
+  { name: "Slider Yönetimi", href: "/dashboard/admin/cms/sliders",icon: Layers,          ability: 'manage-settings' },
   { name: "Instagram Akışı", href: "/dashboard/admin/cms/instagram",icon: Camera,          ability: 'manage-settings' },
   { name: "SSS Yönetimi",   href: "/dashboard/admin/cms/faqs",      icon: BookOpen,        ability: 'manage-settings' },
   { name: "Kullanıcılar",   href: "/dashboard/admin/users",          icon: Users,           ability: 'manage-users' },

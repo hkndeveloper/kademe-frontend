@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Plus, 
-  Instagram, 
+  Camera, 
   Edit2, 
   Trash2, 
   Save, 
@@ -144,7 +144,7 @@ export default function InstagramManagementPage() {
              </div>
              <div className="p-6">
                 <div className="flex items-center gap-2 text-slate-400 mb-3">
-                   <Instagram size={14} />
+                   <Camera size={14} />
                    <span className="text-[10px] font-black uppercase tracking-widest">Sıra: {post.order_priority}</span>
                 </div>
                 <h3 className="font-bold text-slate-900 text-sm line-clamp-1">{post.caption || 'Açıklama yok'}</h3>
