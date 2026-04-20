@@ -15,8 +15,15 @@ export default function DashboardRedirect() {
       const rolesCookie = document.cookie.split('; ').find(row => row.startsWith('user_roles='))?.split('=')[1];
       if (rolesCookie) {
         try {
-          roles = JSON.parse(decodeURIComponent(rolesCookie));
-        } catch (e) {}
+          const decoded = decodeURIComponent(rolesCookie);
+          roles = JSON.parse(decoded.startsWith('%') ? decodeURIComponent(decoded) : decoded);
+        } catch (e) {
+          try {
+            roles = JSON.parse(decodeURIComponent(rolesCookie));
+          } catch (e2) {
+            roles = [decodeURIComponent(rolesCookie).replace(/["']/g, '')];
+          }
+        }
       }
     }
 

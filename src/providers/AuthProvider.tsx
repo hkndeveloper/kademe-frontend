@@ -49,7 +49,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const savedUser = localStorage.getItem("user_data");
 
         if (token && savedUser) {
-          setUser(JSON.parse(savedUser));
+          const parsedUser = JSON.parse(savedUser);
+          setUser(parsedUser);
+          
+          // Çerezleri tazele (Middleware senkronizasyonu için kritik)
+          if (parsedUser.roles) {
+            Cookies.set("user_roles", JSON.stringify(parsedUser.roles), { expires: 7, sameSite: "lax", path: "/" });
+          }
+          if (token) {
+            Cookies.set("kademe_token", token, { expires: 7, sameSite: "lax", path: "/" });
+          }
         }
       } catch (error) {
         console.error("Auth initialization error:", error);
