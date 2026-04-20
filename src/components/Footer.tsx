@@ -119,7 +119,7 @@ export default function Footer() {
               <Link href="#" className="text-[9px] font-black text-slate-600 hover:text-white transition-colors uppercase tracking-widest">KVKK AYDINLATMA</Link>
               <Link href="#" className="text-[9px] font-black text-slate-600 hover:text-white transition-colors uppercase tracking-widest">ÇEREZ POLİTİKASI</Link>
               <div className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center grayscale opacity-50">
-                 <Image src="/images/logo/icon-only.png" alt="KADEME" width={20} height={20} />
+                 <Image src="/images/logo/logo-orange.svg" alt="KADEME" width={20} height={20} />
               </div>
            </div>
         </div>
