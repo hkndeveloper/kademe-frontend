@@ -78,8 +78,8 @@ export default function ProjectEditModal({ isOpen, onClose, onUpdate, project, s
                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Maksimum Kontenjan</label>
                <input 
                 type="number"
-                value={project.max_participants || 0} 
-                onChange={e => setProject({...project, max_participants: parseInt(e.target.value)})}
+                value={project.capacity || 0} 
+                onChange={e => setProject({...project, capacity: parseInt(e.target.value)})}
                 className="w-full bg-gray-50 p-4 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-orange-500/10 transition-all font-medium" 
               />
             </div>

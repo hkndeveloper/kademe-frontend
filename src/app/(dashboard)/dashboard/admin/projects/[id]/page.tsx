@@ -82,12 +82,30 @@ export default function ProjectDashboard() {
   const handleUpdateProject = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await api.put(`/projects/${id}`, project);
+      // Sadece backend'in beklediği alanları gönderelim
+      const updateData = {
+        name: project.name,
+        description: project.description,
+        sub_description: project.sub_description,
+        project_code: project.project_code,
+        capacity: project.capacity,
+        location: project.location,
+        format: project.format,
+        period: project.period,
+        is_active: project.is_active,
+        is_pinned: project.is_pinned,
+        application_deadline: project.application_deadline,
+        timeline: project.timeline,
+      };
+
+      await api.put(`/projects/${id}`, updateData);
       setIsProjectModalOpen(false);
       toast.success("Proje bilgileri güncellendi.");
       fetchData();
-    } catch (err) {
-      toast.error('Proje güncellenemedi.');
+    } catch (err: any) {
+      const errorMsg = err.response?.data?.message || 'Proje güncellenemedi.';
+      toast.error(errorMsg);
+      console.error("Update error:", err.response?.data);
     }
   };
 

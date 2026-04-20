@@ -25,12 +25,23 @@ export const hasAbility = (user: User | null, ability: string): boolean => {
 
   // Role-based defaults (if permissions array isn't enough)
   switch (ability) {
+    case 'view-dashboard':
+    case 'manage-projects':
+    case 'manage-participants':
     case 'manage-applications':
-      return user.roles.includes('coordinator');
+    case 'view-calendar':
+    case 'manage-kpd':
+      return user.roles.includes('coordinator') || user.roles.includes('super-admin');
     case 'view-audit-logs':
-      return user.roles.includes('super-admin');
+    case 'manage-coordinators':
+    case 'manage-settings':
+    case 'manage-permissions':
+    case 'manage-users':
+    case 'manage-blacklist':
+    case 'manage-announcements':
+    case 'manage-gamification':
     case 'write-blog':
-      return user.roles.includes('super-admin'); // Personnel deferred, so only admin for now
+      return user.roles.includes('super-admin');
     default:
       return false;
   }
