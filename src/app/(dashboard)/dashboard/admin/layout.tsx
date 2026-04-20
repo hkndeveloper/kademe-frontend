@@ -25,6 +25,7 @@ import {
 import Image from "next/image";
 
 import { Role, hasAbility } from "@/lib/permissions";
+import { logout } from "@/lib/auth-utils";
 
 const menuItems = [
   { name: "Dashboard",       href: "/dashboard/admin",               icon: LayoutDashboard, ability: 'view-dashboard' },
