@@ -77,11 +77,11 @@ export default function Navbar() {
   };
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-700 ${scrolled ? "neuros-glass-light py-4 shadow-xl border-b border-black/5" : "bg-gradient-to-b from-black/40 to-transparent py-8"}`}>
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-700 ${scrolled ? "neuros-glass-light py-4 shadow-xl border-b border-black/5" : "bg-gradient-to-b from-black/50 to-transparent py-6"}`}>
       <div className="max-w-7xl mx-auto px-10">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center group">
-            <div className={`relative h-10 w-44 transition-all duration-500 group-hover:scale-105 ${!scrolled ? "brightness-0 invert h-12 w-48" : ""}`}>
+            <div className={`relative h-10 w-44 transition-all duration-500 group-hover:scale-105 ${!scrolled ? "brightness-0 invert h-11 w-48" : ""}`}>
               <Image
                 src="/images/logo/logo-orange.svg"
                 alt="KADEME Logo"
