@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Send, Instagram, Twitter, Facebook, Youtube, Mail, MapPin, Smartphone } from "lucide-react";
+import { Send, Camera, Share2, Video, Mail, MapPin, Smartphone } from "lucide-react";
 import Image from "next/image";
 import api from "@/lib/api";
 
@@ -38,9 +38,9 @@ export default function Footer() {
               Gençliğin vizyoner gelişim ekosistemi. Diplomasi, teknoloji ve toplumsal fayda odaklı yeni nesil akademi.
             </p>
             <div className="flex gap-4">
-               <SocialIcon icon={<Instagram size={18} />} href="https://instagram.com/kademe_online" />
-               <SocialIcon icon={<Twitter size={18} />} href="#" />
-               <SocialIcon icon={<Youtube size={18} />} href="#" />
+               <SocialIcon icon={<Camera size={18} />} href="https://instagram.com/kademe_online" />
+               <SocialIcon icon={<Share2 size={18} />} href="#" />
+               <SocialIcon icon={<Video size={18} />} href="#" />
             </div>
           </div>
 

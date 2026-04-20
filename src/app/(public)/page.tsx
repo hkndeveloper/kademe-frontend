@@ -8,7 +8,8 @@ import {
   Camera,
   Star,
   Layers,
-  HelpCircle
+  HelpCircle,
+  MapPin
 } from "lucide-react";
 import Link from "next/link";
 import api from "@/lib/api";

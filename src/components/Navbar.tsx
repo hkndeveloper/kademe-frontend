@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X, ChevronDown, Rocket, Sparkles } from "lucide-react";
+import { Menu, X, ChevronDown, Rocket, Sparkles, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import api from "@/lib/api";
 
