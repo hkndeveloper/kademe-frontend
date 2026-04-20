@@ -55,7 +55,15 @@ export default function Home() {
   };
 
   const currentSlider = data.sliders?.[currentSlide];
-  const storageUrl = process.env.NEXT_PUBLIC_STORAGE_URL;
+  const storageUrl = process.env.NEXT_PUBLIC_STORAGE_URL || "https://kademe-backend-production.up.railway.app/storage";
+
+  const getStorageUrl = (path: string) => {
+    if (!path) return "";
+    if (path.startsWith("http")) return path;
+    const cleanPath = path.startsWith("/") ? path.substring(1) : path;
+    const cleanUrl = storageUrl.endsWith("/") ? storageUrl : `${storageUrl}/`;
+    return `${cleanUrl}${cleanPath}`;
+  };
 
   if (loading) {
      return <div className="min-h-screen flex items-center justify-center bg-white font-black text-slate-950 uppercase tracking-widest animate-pulse italic">KADEME Yükleniyor...</div>;
@@ -78,7 +86,7 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-r from-white via-white/40 to-transparent z-10" />
               {currentSlider.image_path && (
                 <Image 
-                  src={`${storageUrl}/${currentSlider.image_path}`} 
+                  src={getStorageUrl(currentSlider.image_path)} 
                   fill
                   className="w-full h-full object-cover opacity-60 scale-105 animate-slow-zoom"
                   alt={currentSlider.title}
@@ -269,7 +277,7 @@ export default function Home() {
                 className="group relative aspect-square rounded-[3.5rem] overflow-hidden bg-slate-100 shadow-2xl shadow-slate-900/5"
               >
                 {post.image_path && (
-                   <Image src={`${storageUrl}/${post.image_path}`} fill className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110" alt={post.caption || 'Instagram'} />
+                   <Image src={getStorageUrl(post.image_path)} fill className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110" alt={post.caption || 'Instagram'} />
                 )}
                 <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-10 text-center backdrop-blur-sm">
                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center text-slate-950 mb-6 scale-50 group-hover:scale-100 transition-transform duration-500">

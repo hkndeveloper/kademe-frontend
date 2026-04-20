@@ -8,7 +8,17 @@ export default function DashboardRedirect() {
 
   useEffect(() => {
     const rolesJson = localStorage.getItem('user_roles');
-    const roles = rolesJson ? JSON.parse(rolesJson) : [];
+    let roles = rolesJson ? JSON.parse(rolesJson) : [];
+
+    // LocalStorage boşsa çerezden bak (Middleware ile senkronizasyon için)
+    if (roles.length === 0) {
+      const rolesCookie = document.cookie.split('; ').find(row => row.startsWith('user_roles='))?.split('=')[1];
+      if (rolesCookie) {
+        try {
+          roles = JSON.parse(decodeURIComponent(rolesCookie));
+        } catch (e) {}
+      }
+    }
 
     if (roles.includes('super-admin') || roles.includes('coordinator')) {
       router.push('/dashboard/admin');
@@ -17,6 +27,8 @@ export default function DashboardRedirect() {
     } else if (roles.includes('student') || roles.length > 0) {
       router.push('/dashboard/student');
     } else {
+      // Eğer hiç rol yoksa ama token varsa, bekleyelim veya profil çekelim. 
+      // Şimdilik login'e yönlendiriyoruz (en güvenlisi).
       router.push('/login');
     }
   }, [router]);

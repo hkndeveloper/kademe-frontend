@@ -37,8 +37,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("kademe_token", token);
     localStorage.setItem("user_roles", JSON.stringify(roles));
     localStorage.setItem("user_data", JSON.stringify({ ...userData, roles }));
-    Cookies.set("kademe_token", token, { expires: 7, sameSite: "lax" });
-    Cookies.set("user_roles", JSON.stringify(roles), { expires: 7, sameSite: "lax" });
+    Cookies.set("kademe_token", token, { expires: 7, sameSite: "lax", path: "/" });
+    Cookies.set("user_roles", JSON.stringify(roles), { expires: 7, sameSite: "lax", path: "/" });
     setUser({ ...userData, roles });
   };
 
