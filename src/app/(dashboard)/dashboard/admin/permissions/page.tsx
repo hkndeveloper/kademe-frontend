@@ -16,16 +16,20 @@ import api from '@/lib/api';
 import { toast } from 'sonner';
 
 export default function PermissionsMatrix() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<any>({ roles: [], permissions: [] });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
 
   const fetchData = async () => {
     try {
       const res = await api.get('/admin/roles-permissions');
-      setData(res.data);
+      if (res.data) {
+        setData(res.data);
+      }
     } catch (err) {
       toast.error("Yetki verileri alınamadı.");
+      // Ensure data is not null to prevent mapping errors
+      if (!data) setData({ roles: [], permissions: [] });
     } finally {
       setLoading(false);
     }
