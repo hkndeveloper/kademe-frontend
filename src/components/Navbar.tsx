@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, ChevronDown, Rocket, Sparkles, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import api from "@/lib/api";
+import { logout } from "@/lib/auth-utils";
 
 const navLinks = [
   { name: "Anasayfa", href: "/" },
@@ -66,11 +67,7 @@ export default function Navbar() {
   const auth = mounted ? readAuth() : { token: null, roles: [] };
 
   const handleLogout = () => {
-    localStorage.removeItem("kademe_token");
-    localStorage.removeItem("user_roles");
-    localStorage.removeItem("user_name");
-    setAuthVersion((value) => value + 1);
-    router.push("/");
+    logout();
   };
 
   const getDashboardHref = () => {
