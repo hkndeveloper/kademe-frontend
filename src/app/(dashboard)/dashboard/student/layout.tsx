@@ -11,7 +11,8 @@ import {
   Star,
   Award,
   Medal,
-  LogOut
+  LogOut,
+  MessageCircle
 } from "lucide-react";
 import Image from "next/image";
 
@@ -25,6 +26,7 @@ const menuItems = [
   { name: "Dijital CV", href: "/dashboard/student/dijital-cv", icon: Star },
   { name: "Ödül ve Rozetler", href: "/dashboard/student/rozetler", icon: Award, projectRequirement: 'Gamification' },
   { name: "Sertifikalar", href: "/dashboard/student/sertifikalar", icon: Medal },
+  { name: "Yardım & Destek", href: "/dashboard/student/destek", icon: MessageCircle },
 ];
 
 export default function StudentLayout({ children }: { children: React.ReactNode }) {

@@ -14,7 +14,11 @@ import {
   ShieldAlert,
   Settings,
   LogOut,
-  Trophy
+  Trophy,
+  BookOpen,
+  ClipboardList,
+  ShieldCheck as ShieldCheckIcon,
+  Users as UsersIcon
 } from "lucide-react";
 import Image from "next/image";
 
@@ -32,8 +36,11 @@ const menuItems = [
   { name: "Takvim",         href: "/dashboard/admin/calendar",       icon: Calendar,        ability: 'view-calendar' },
   { name: "Koordinatörler", href: "/dashboard/admin/coordinators",   icon: ShieldCheck,     ability: 'manage-coordinators' },
   { name: "Oyunlaştırma",   href: "/dashboard/admin/gamification",   icon: Trophy,          ability: 'manage-gamification' },
+  { name: "Destek Merkezi", href: "/dashboard/admin/support",        icon: BookOpen,        ability: 'manage-support' },
   { name: "KPD Sistemi",    href: "/dashboard/admin/kpd",            icon: ClipboardCheck,   ability: 'manage-kpd' },
   { name: "Sistem Ayarları",href: "/dashboard/admin/settings",       icon: Settings,        ability: 'manage-settings' },
+  { name: "Yetki Matrisi",  href: "/dashboard/admin/permissions",    icon: ShieldAlert,     ability: 'manage-permissions' },
+  { name: "Kullanıcılar",   href: "/dashboard/admin/users",          icon: Users,           ability: 'manage-users' },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
