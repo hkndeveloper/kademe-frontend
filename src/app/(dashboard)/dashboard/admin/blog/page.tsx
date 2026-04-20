@@ -78,8 +78,10 @@ export default function BlogManagement() {
     }
   };
 
-  const filteredBlogs = blogs.filter((blog: any) => {
-    const matchesSearch = blog.title?.toLowerCase().includes(search.toLowerCase());
+  const filteredBlogs = (blogs || []).filter((blog: any) => {
+    const authorName = typeof blog.author === 'object' ? blog.author?.name : blog.author;
+    const matchesSearch = (blog.title?.toLowerCase().includes(search.toLowerCase()) || false) || 
+                          (authorName?.toLowerCase().includes(search.toLowerCase()) || false);
     const matchesCategory = category === 'all' || blog.category === category;
     return matchesSearch && matchesCategory;
   });
@@ -181,7 +183,7 @@ export default function BlogManagement() {
                   </h3>
                   {viewType === 'list' && (
                     <div className="flex items-center gap-4 mt-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                       <span className="flex items-center gap-1.5"><User size={12} className="text-slate-300" /> {blog.author}</span>
+                       <span className="flex items-center gap-1.5"><User size={12} className="text-slate-300" /> {typeof blog.author === 'object' ? blog.author?.name : blog.author}</span>
                     </div>
                   )}
                 </div>

@@ -52,7 +52,8 @@ export default function AuditLogs() {
 
   const filteredLogs = logs.filter(log => {
     const s = search.toLowerCase();
-    const searchMatch = log.user?.toLowerCase().includes(s) || log.target?.toLowerCase().includes(s);
+    const userName = typeof log.user === 'object' ? log.user?.name : log.user;
+    const searchMatch = (userName?.toLowerCase().includes(s) || false) || (log.target?.toLowerCase().includes(s) || false);
     const actionMatch = actionFilter === 'all' || log.action === actionFilter;
     return searchMatch && actionMatch;
   });
@@ -142,7 +143,9 @@ export default function AuditLogs() {
                       <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center text-slate-400">
                          <User size={14} />
                       </div>
-                      <span className="text-xs font-black text-slate-900 uppercase tracking-wide">{log.user}</span>
+                      <span className="text-xs font-black text-slate-900 uppercase tracking-wide">
+                        {typeof log.user === 'object' ? log.user?.name : log.user}
+                      </span>
                    </div>
                 </td>
                 <td className="px-8 py-6">
