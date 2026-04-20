@@ -124,16 +124,16 @@ export default function Home() {
               </div>
             </motion.div>
 
-            <motion.div
-               initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
-               whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-               transition={{ duration: 1.5, ease: "easeOut" }}
-               viewport={{ once: true }}
-               className="relative hidden lg:block"
-            >
-               <div className="relative aspect-square w-full max-w-[600px] mx-auto rounded-[4rem] overflow-hidden group shadow-[0_50px_100px_rgba(0,0,0,0.5)]">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-orange-500/20 via-transparent to-purple-500/20 z-10 pointer-events-none" />
-                  {currentSlider?.image_path && (
+            {currentSlider?.image_path && (
+              <motion.div
+                 initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+                 whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+                 transition={{ duration: 1.5, ease: "easeOut" }}
+                 viewport={{ once: true }}
+                 className="relative hidden lg:block"
+              >
+                 <div className="relative aspect-square w-full max-w-[600px] mx-auto rounded-[4rem] overflow-hidden group shadow-[0_50px_100px_rgba(0,0,0,0.5)]">
+                    <div className="absolute inset-0 bg-gradient-to-tr from-orange-500/20 via-transparent to-purple-500/20 z-10 pointer-events-none" />
                     <Image 
                       src={getStorageUrl(currentSlider.image_path)} 
                       fill
@@ -141,18 +141,12 @@ export default function Home() {
                       alt={currentSlider.title}
                       priority
                     />
-                  )}
-               </div>
-               {/* Background Glow */}
-               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-orange-600/30 blur-[150px] -z-10 rounded-full" />
-            </motion.div>
+                 </div>
+                 {/* Background Glow */}
+                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-orange-600/30 blur-[150px] -z-10 rounded-full" />
+              </motion.div>
+            )}
           </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-4 opacity-40">
-           <span className="text-[9px] font-black text-white uppercase tracking-[0.4em] origin-center -rotate-90 mb-10">KEŞFET</span>
-           <div className="w-px h-20 bg-gradient-to-b from-white to-transparent" />
         </div>
       </section>
 
