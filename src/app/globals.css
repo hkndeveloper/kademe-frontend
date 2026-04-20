@@ -17,3 +17,54 @@ body {
 ::-webkit-scrollbar-track { background: #f9fafb; }
 ::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
+
+/* NEUROS DESIGN TOKENS */
+:root {
+  --neuros-dark: #0A0A0A;
+  --neuros-gray: #1A1A1A;
+  --neuros-accent: #FF5722;
+  --neuros-accent-glow: rgba(255, 87, 34, 0.5);
+  --neuros-border: rgba(255, 255, 255, 0.08);
+}
+
+.neuros-glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--neuros-border);
+}
+
+.neuros-glass-light {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.neuros-mesh {
+  background-color: var(--neuros-dark);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(255, 87, 34, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(103, 58, 183, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(33, 150, 243, 0.1) 0px, transparent 50%);
+}
+
+.neuros-heading {
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+.neuros-pill {
+  border-radius: 9999px;
+  padding: 1rem 2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.neuros-glow-hover:hover {
+  box-shadow: 0 0 30px var(--neuros-accent-glow);
+}

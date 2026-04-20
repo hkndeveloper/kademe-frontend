@@ -77,11 +77,11 @@ export default function Navbar() {
   };
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${scrolled ? "bg-white/80 backdrop-blur-xl shadow-2xl shadow-slate-900/5 py-4" : "bg-white py-6"}`}>
-      <div className="max-w-7xl mx-auto px-6">
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-700 ${scrolled ? "neuros-glass-light py-4 shadow-xl border-b border-black/5" : "bg-transparent py-8"}`}>
+      <div className="max-w-7xl mx-auto px-10">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center group">
-            <div className="relative h-10 w-44 transition-transform group-hover:scale-105">
+            <div className={`relative h-10 w-44 transition-all duration-500 group-hover:scale-105 ${!scrolled ? "brightness-0 invert h-12 w-48" : ""}`}>
               <Image
                 src="/images/logo/logo-orange.svg"
                 alt="KADEME Logo"
@@ -92,7 +92,7 @@ export default function Navbar() {
             </div>
           </Link>
 
-          <div className="hidden lg:flex items-center gap-10">
+          <div className="hidden lg:flex items-center gap-12">
             {navLinks.map((link) => {
               const hasDropdown = link.isDynamic && projects.length > 0;
               const isActive = pathname === link.href;
@@ -101,8 +101,8 @@ export default function Navbar() {
                 <div key={link.name} className="relative group">
                   <Link
                     href={link.href}
-                    className={`flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] transition-all ${
-                      isActive ? "text-orange-500" : "text-slate-400 hover:text-slate-900"
+                    className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] transition-all relative after:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:w-0 after:h-[2px] after:bg-orange-500 after:transition-all hover:after:w-full ${
+                      isActive ? "text-orange-500 after:w-full" : (!scrolled ? "text-white hover:text-orange-200" : "text-slate-500 hover:text-slate-950")
                     }`}
                   >
                     {link.name}
@@ -110,23 +110,27 @@ export default function Navbar() {
                   </Link>
 
                   {hasDropdown && (
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 pt-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform scale-95 group-hover:scale-100">
-                      <div className="bg-white rounded-[2rem] shadow-3xl border border-slate-50 p-4 min-w-[300px]">
-                        <div className="px-5 py-3 mb-2 border-b border-slate-50">
-                           <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest">Aktif Programlar</span>
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 pt-8 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 transform translate-y-2 group-hover:translate-y-0">
+                      <div className="bg-white rounded-[2.5rem] shadow-[0_30px_100px_rgba(0,0,0,0.1)] border border-slate-50 p-6 min-w-[320px] overflow-hidden">
+                        <div className="px-5 py-3 mb-4 border-b border-slate-50">
+                           <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest block">Stratejik Programlar</span>
                         </div>
-                        {projects.slice(0, 5).map((p) => (
-                          <Link
-                            key={p.id}
-                            href={`/projeler/${p.id}`}
-                            className="flex items-center gap-4 px-5 py-4 text-[10px] font-black text-slate-500 hover:text-orange-500 hover:bg-slate-50 rounded-2xl transition-all uppercase tracking-widest group/item"
-                          >
-                            <Rocket size={14} className="text-slate-200 group-hover/item:text-orange-500 transition-colors" />
-                            {p.name}
-                          </Link>
-                        ))}
-                        <Link href="/projeler" className="flex items-center justify-center gap-2 px-5 py-4 mt-2 bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest rounded-2xl hover:bg-orange-500 transition-all">
-                           TÜMÜNÜ GÖR <ChevronRight size={12} />
+                        <div className="grid gap-2">
+                          {projects.slice(0, 5).map((p) => (
+                            <Link
+                              key={p.id}
+                              href={`/projeler/${p.id}`}
+                              className="flex items-center gap-4 px-6 py-5 text-[10px] font-black text-slate-500 hover:text-orange-500 hover:bg-slate-50 rounded-2xl transition-all uppercase tracking-widest group/item border border-transparent hover:border-orange-500/10"
+                            >
+                              <div className="w-8 h-8 rounded-xl bg-slate-50 flex items-center justify-center group-hover/item:bg-orange-500 group-hover/item:text-white transition-all">
+                                <Rocket size={14} />
+                              </div>
+                              {p.name}
+                            </Link>
+                          ))}
+                        </div>
+                        <Link href="/projeler" className="flex items-center justify-center gap-3 px-5 py-5 mt-4 bg-slate-950 text-white text-[9px] font-black uppercase tracking-widest rounded-2xl hover:bg-orange-500 transition-all shadow-xl shadow-slate-950/20">
+                           TÜMÜNÜ KEŞFET <ChevronRight size={14} />
                         </Link>
                       </div>
                     </div>
@@ -136,38 +140,38 @@ export default function Navbar() {
             })}
           </div>
 
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-6">
             {auth.token ? (
-              <div className="flex items-center bg-slate-50 p-1.5 rounded-2xl">
+              <div className={`flex items-center p-2 rounded-full transition-all duration-500 ${scrolled ? "bg-slate-50 border border-slate-100" : "bg-white/10 backdrop-blur-md border border-white/10"}`}>
                 <Link href={getDashboardHref()}>
-                  <button className="px-6 py-2.5 text-[10px] font-black text-slate-950 uppercase tracking-widest hover:bg-white rounded-xl transition-all shadow-sm">
-                    KULLANICI PANELİ
+                  <button className={`px-6 py-3 text-[9px] font-black uppercase tracking-widest rounded-full transition-all ${scrolled ? "text-slate-950 hover:bg-white" : "text-white hover:bg-white/10"}`}>
+                    PANEL
                   </button>
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="px-6 py-2.5 text-[10px] font-black bg-slate-950 text-white rounded-xl hover:bg-red-600 transition-all shadow-xl shadow-slate-950/20 uppercase tracking-widest"
+                  className="neuros-pill neuros-glow-hover px-8 py-3 text-[9px] font-black bg-slate-950 text-white hover:bg-red-600 transition-all shadow-xl shadow-slate-950/40"
                 >
-                  ÇIKIŞ
+                  GÜVENLİ ÇIKIŞ
                 </button>
               </div>
             ) : (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-6">
                 <Link href="/login">
-                  <button className="px-8 py-3 text-[10px] font-black text-slate-400 hover:text-slate-950 transition-colors uppercase tracking-widest">
-                    Giriş
+                  <button className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all ${scrolled ? "text-slate-400 hover:text-slate-950" : "text-white/70 hover:text-white"}`}>
+                    GİRİŞ
                   </button>
                 </Link>
                 <Link href="/basvuru">
-                  <button className="px-8 py-3.5 text-[10px] font-black bg-orange-500 text-white rounded-2xl hover:bg-slate-950 transition-all shadow-xl shadow-orange-500/20 uppercase tracking-widest group flex items-center gap-2">
-                    BAŞVURU YAP <Sparkles size={14} className="group-hover:animate-spin" />
+                  <button className="neuros-pill neuros-glow-hover bg-orange-500 text-white shadow-[0_10px_30px_rgba(249,115,22,0.3)] flex items-center gap-3 text-[10px]">
+                    BAŞVURU <Sparkles size={16} className="group-hover:animate-pulse" />
                   </button>
                 </Link>
               </div>
             )}
           </div>
 
-          <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden w-12 h-12 bg-slate-50 text-slate-950 rounded-2xl flex items-center justify-center shadow-sm">
+          <button onClick={() => setIsOpen(!isOpen)} className={`lg:hidden w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${scrolled ? "bg-slate-950 text-white" : "bg-white text-slate-950"}`}>
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
@@ -177,36 +181,43 @@ export default function Navbar() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-white border-t border-slate-50 px-8 py-10 space-y-4"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="lg:hidden absolute top-full left-0 w-full bg-white border-t border-slate-50 px-10 py-12 space-y-6 shadow-2xl"
           >
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className={`block py-4 text-sm font-black uppercase tracking-widest ${
+                className={`block text-lg font-black uppercase tracking-widest ${
                    pathname === link.href ? "text-orange-500" : "text-slate-950"
                 }`}
               >
                 {link.name}
               </Link>
             ))}
-            <div className="pt-8 border-t border-slate-100 mt-8 flex flex-col gap-4">
+            <div className="pt-10 border-t border-slate-100 flex flex-col gap-4">
               {auth.token ? (
                   <Link href={getDashboardHref()} onClick={() => setIsOpen(false)} className="w-full">
-                    <button className="w-full py-5 bg-slate-950 text-white text-xs font-black rounded-2xl uppercase tracking-widest">
-                      PANELİM
+                    <button className="w-full py-6 bg-slate-950 text-white text-[10px] font-black rounded-2xl uppercase tracking-widest shadow-xl">
+                      DASHBOARD
                     </button>
                   </Link>
               ) : (
-                <Link href="/login" onClick={() => setIsOpen(false)} className="w-full">
-                  <button className="w-full py-5 bg-slate-950 text-white text-xs font-black rounded-2xl uppercase tracking-widest">
-                    GİRİŞ YAP
-                  </button>
-                </Link>
+                <>
+                  <Link href="/login" onClick={() => setIsOpen(false)} className="w-full">
+                    <button className="w-full py-6 border-2 border-slate-950 text-slate-950 text-[10px] font-black rounded-2xl uppercase tracking-widest">
+                      GİRİŞ YAP
+                    </button>
+                  </Link>
+                  <Link href="/basvuru" onClick={() => setIsOpen(false)} className="w-full">
+                    <button className="w-full py-6 bg-orange-500 text-white text-[10px] font-black rounded-2xl uppercase tracking-widest shadow-xl shadow-orange-500/20">
+                      HEMEN BAŞVUR
+                    </button>
+                  </Link>
+                </>
               )}
             </div>
           </motion.div>
