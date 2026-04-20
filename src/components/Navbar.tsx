@@ -4,20 +4,21 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, Rocket, Sparkles } from "lucide-react";
 import Image from "next/image";
 import api from "@/lib/api";
 
 const navLinks = [
   { name: "Anasayfa", href: "/" },
-  { name: "Hakkimizda", href: "/hakkimizda" },
+  { name: "Hakkımızda", href: "/hakkimizda" },
   {
-    name: "Faaliyetler",
+    name: "Projeler",
     href: "/projeler",
-    submenu: [], // Dinamik olarak asagida dolacak
+    isDynamic: true
   },
+  { name: "Faaliyetler", href: "/faaliyetler" },
   { name: "SSS", href: "/sss" },
-  { name: "Iletisim", href: "/iletisim" },
+  { name: "İletişim", href: "/iletisim" },
 ];
 
 function readAuth() {
@@ -35,18 +36,21 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [projects, setProjects] = useState<any[]>([]);
-  const [, setAuthVersion] = useState(0);
+  const [authVersion, setAuthVersion] = useState(0);
   const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
-    const handleScroll = () => setScrolled(window.scrollY > 10);
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     const handleStorage = () => setAuthVersion((value) => value + 1);
 
     // Dinamik projeleri çek
-    api.get('/projects')
-      .then((res: any) => setProjects(res.data.filter((p: any) => p.is_active)))
+    api.get('/public-home')
+      .then((res: any) => {
+          // Public home endpointinden veya direkt projects'ten aktif olanları alabiliriz
+          setProjects(res.data.pinned_projects || []);
+      })
       .catch((err: any) => console.error("Projeler yuklenemedi:", err));
 
     window.addEventListener("scroll", handleScroll);
@@ -76,11 +80,11 @@ export default function Navbar() {
   };
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-sm shadow-sm border-b border-gray-100" : "bg-white"}`}>
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="flex items-center justify-between h-20">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="relative h-10 w-44">
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${scrolled ? "bg-white/80 backdrop-blur-xl shadow-2xl shadow-slate-900/5 py-4" : "bg-white py-6"}`}>
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex items-center justify-between">
+          <Link href="/" className="flex items-center group">
+            <div className="relative h-10 w-44 transition-transform group-hover:scale-105">
               <Image
                 src="/images/logo/logo-orange.svg"
                 alt="KADEME Logo"
@@ -91,37 +95,42 @@ export default function Navbar() {
             </div>
           </Link>
 
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-10">
             {navLinks.map((link) => {
-              const isFaaliyetler = link.name === "Faaliyetler";
-              const currentSubmenu = isFaaliyetler 
-                ? projects.map(p => ({ name: p.name, href: `/projeler/${p.id}` }))
-                : link.submenu;
+              const hasDropdown = link.isDynamic && projects.length > 0;
+              const isActive = pathname === link.href;
 
               return (
                 <div key={link.name} className="relative group">
                   <Link
                     href={link.href}
-                    className={`flex items-center gap-1 text-sm font-medium transition-colors ${
-                      pathname === link.href ? "text-slate-900" : "text-gray-600 hover:text-gray-900"
+                    className={`flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] transition-all ${
+                      isActive ? "text-orange-500" : "text-slate-400 hover:text-slate-900"
                     }`}
                   >
                     {link.name}
-                    {currentSubmenu && currentSubmenu.length > 0 && <ChevronDown size={14} className="opacity-50 group-hover:rotate-180 transition-transform duration-200" />}
+                    {hasDropdown && <ChevronDown size={14} className="opacity-40 group-hover:rotate-180 transition-transform duration-300" />}
                   </Link>
 
-                  {currentSubmenu && currentSubmenu.length > 0 && (
-                    <div className="absolute top-full left-0 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                      <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-2 min-w-[240px]">
-                        {currentSubmenu.map((sub) => (
+                  {hasDropdown && (
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 pt-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform scale-95 group-hover:scale-100">
+                      <div className="bg-white rounded-[2rem] shadow-3xl border border-slate-50 p-4 min-w-[300px]">
+                        <div className="px-5 py-3 mb-2 border-b border-slate-50">
+                           <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest">Aktif Programlar</span>
+                        </div>
+                        {projects.slice(0, 5).map((p) => (
                           <Link
-                            key={sub.name}
-                            href={sub.href}
-                            className="block px-4 py-2.5 text-sm font-medium text-gray-600 hover:text-slate-900 hover:bg-gray-50 rounded-xl transition-all"
+                            key={p.id}
+                            href={`/projeler/${p.id}`}
+                            className="flex items-center gap-4 px-5 py-4 text-[10px] font-black text-slate-500 hover:text-orange-500 hover:bg-slate-50 rounded-2xl transition-all uppercase tracking-widest group/item"
                           >
-                            {sub.name}
+                            <Rocket size={14} className="text-slate-200 group-hover/item:text-orange-500 transition-colors" />
+                            {p.name}
                           </Link>
                         ))}
+                        <Link href="/projeler" className="flex items-center justify-center gap-2 px-5 py-4 mt-2 bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest rounded-2xl hover:bg-orange-500 transition-all">
+                           TÜMÜNÜ GÖR <ChevronRight size={12} />
+                        </Link>
                       </div>
                     </div>
                   )}
@@ -130,83 +139,75 @@ export default function Navbar() {
             })}
           </div>
 
-          <div className="hidden lg:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-4">
             {auth.token ? (
-              <>
+              <div className="flex items-center bg-slate-50 p-1.5 rounded-2xl">
                 <Link href={getDashboardHref()}>
-                  <button className="px-5 py-2 text-sm font-semibold text-gray-700 hover:text-slate-900 transition-colors">
-                    Panelim
+                  <button className="px-6 py-2.5 text-[10px] font-black text-slate-950 uppercase tracking-widest hover:bg-white rounded-xl transition-all shadow-sm">
+                    KULLANICI PANELİ
                   </button>
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="px-5 py-2 text-sm font-semibold bg-slate-900 text-white rounded-lg hover:bg-black transition-colors shadow-sm"
+                  className="px-6 py-2.5 text-[10px] font-black bg-slate-950 text-white rounded-xl hover:bg-red-600 transition-all shadow-xl shadow-slate-950/20 uppercase tracking-widest"
                 >
-                  Cikis Yap
+                  ÇIKIŞ
                 </button>
-              </>
+              </div>
             ) : (
-              <>
+              <div className="flex items-center gap-3">
                 <Link href="/login">
-                  <button className="px-5 py-2 text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors">
-                    Giris Yap
+                  <button className="px-8 py-3 text-[10px] font-black text-slate-400 hover:text-slate-950 transition-colors uppercase tracking-widest">
+                    Giriş
                   </button>
                 </Link>
                 <Link href="/basvuru">
-                  <button className="px-5 py-2 text-sm font-semibold bg-slate-900 text-white rounded-lg hover:bg-black transition-colors shadow-sm">
-                    Basvuru Yap
+                  <button className="px-8 py-3.5 text-[10px] font-black bg-orange-500 text-white rounded-2xl hover:bg-slate-950 transition-all shadow-xl shadow-orange-500/20 uppercase tracking-widest group flex items-center gap-2">
+                    BAŞVURU YAP <Sparkles size={14} className="group-hover:animate-spin" />
                   </button>
                 </Link>
-              </>
+              </div>
             )}
           </div>
 
-          <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden text-gray-600 hover:text-gray-900">
-            {isOpen ? <X size={22} /> : <Menu size={22} />}
+          <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden w-12 h-12 bg-slate-50 text-slate-950 rounded-2xl flex items-center justify-center shadow-sm">
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
 
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            className="lg:hidden bg-white border-t border-gray-100 px-6 py-4 space-y-1"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="lg:hidden bg-white border-t border-slate-50 px-8 py-10 space-y-4"
           >
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="block py-2.5 text-sm font-medium text-gray-700 hover:text-slate-900 transition-colors"
+                className={`block py-4 text-sm font-black uppercase tracking-widest ${
+                   pathname === link.href ? "text-orange-500" : "text-slate-950"
+                }`}
               >
                 {link.name}
               </Link>
             ))}
-            <div className="pt-3 border-t border-gray-100 mt-3">
+            <div className="pt-8 border-t border-slate-100 mt-8 flex flex-col gap-4">
               {auth.token ? (
-                <div className="flex flex-col gap-2">
-                  <Link href={getDashboardHref()} onClick={() => setIsOpen(false)}>
-                    <button className="w-full py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-lg">
-                      Panelim
+                  <Link href={getDashboardHref()} onClick={() => setIsOpen(false)} className="w-full">
+                    <button className="w-full py-5 bg-slate-950 text-white text-xs font-black rounded-2xl uppercase tracking-widest">
+                      PANELİM
                     </button>
                   </Link>
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      setIsOpen(false);
-                    }}
-                    className="w-full py-2.5 bg-gray-100 text-gray-600 text-sm font-semibold rounded-lg"
-                  >
-                    Cikis Yap
-                  </button>
-                </div>
               ) : (
-                <Link href="/login" onClick={() => setIsOpen(false)}>
-                  <button className="w-full py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-lg">
-                    Giris Yap
+                <Link href="/login" onClick={() => setIsOpen(false)} className="w-full">
+                  <button className="w-full py-5 bg-slate-950 text-white text-xs font-black rounded-2xl uppercase tracking-widest">
+                    GİRİŞ YAP
                   </button>
                 </Link>
               )}
@@ -217,5 +218,3 @@ export default function Navbar() {
     </nav>
   );
 }
-
-

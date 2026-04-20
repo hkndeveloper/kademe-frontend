@@ -1,60 +1,53 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, HelpCircle, MessageCircle } from 'lucide-react';
-
-const faqs = [
-  {
-    question: "KADEME projelerine nasıl başvurabilirim?",
-    answer: "Anasayfada yer alan 'Faaliyetlerimiz' bölümünden ilgili projeyi seçerek detay sayfasındaki başvuru formunu doldurabilirsiniz. Başvurunuz kabul edildiğinde otomatik olarak katılımcı profiline dönüştürüleceksiniz."
-  },
-  {
-    question: "Kredi sistemi nasıl çalışıyor?",
-    answer: "Her dönem başında 100 kredi ile başlarsınız. Katılmadığınız her program için sistem otomatik olarak kredi düşümü yapar. Krediniz 75'in altına düştüğünde uyarı SMS'i alırsınız."
-  },
-  {
-    question: "Konum bazlı yoklama nedir?",
-    answer: "Yoklama sistemi QR kod ve GPS doğrulaması ile çalışır. Sadece koordinatları belirlenmiş faaliyet alanında (örn: 100m yarıçapı) QR kodu okutarak yoklama verebilirsiniz."
-  },
-  {
-    question: "Mezuniyet şartları nelerdir?",
-    answer: "Her projenin kendine has katılım oranı ve kredi eşiği vardır. Genel olarak kredinizin 75 üzerinde olması ve faaliyetlerin %80'ine katılmış olmanız mezuniyet / sertifika için yeterlidir."
-  },
-  {
-    question: "Dijital CV nedir?",
-    answer: "Otomatik olarak projelerinizdeki başarılarınızı, aldığınız rozetleri ve sertifikaları KADEME onaylı bir formatta sunan dijital bir profildir. İş başvurularınızda doğrudan referans olarak kullanabilirsiniz."
-  }
-];
+import api from '@/lib/api';
 
 export default function FAQPage() {
+  const [faqs, setFaqs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api.get('/faqs')
+      .then(res => setFaqs(res.data))
+      .catch(err => console.error("FAQ Fetch error:", err))
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
-    <div className="max-w-4xl mx-auto px-6 py-24 bg-white mt-20">
-      <div className="text-center mb-16">
-        <div className="w-14 h-14 bg-gray-50 border border-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-          <HelpCircle className="text-orange-500" size={28} />
+    <div className="max-w-4xl mx-auto px-6 py-32 bg-white mt-10">
+      <div className="text-center mb-24">
+        <div className="w-16 h-16 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-xl">
+          <HelpCircle className="text-orange-500" size={32} />
         </div>
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 tracking-tight">Sık Sorulan Sorular</h1>
-        <p className="text-gray-500 text-sm md:text-base font-medium">Platform ve projelerimiz hakkında merak ettiğiniz her şey.</p>
+        <h1 className="text-4xl md:text-6xl font-black text-slate-950 mb-6 tracking-tighter uppercase italic">Sık Sorulan <span className="text-slate-300">Sorular</span></h1>
+        <p className="text-slate-400 text-sm md:text-base font-bold uppercase tracking-[0.3em]">Platform ve projelerimiz hakkında merak ettikleriniz.</p>
       </div>
 
       <div className="space-y-4">
-        {faqs.map((faq, index) => (
-          <FAQItem key={index} faq={faq} />
-        ))}
+        {loading ? (
+           <div className="py-20 text-center animate-pulse text-slate-300 font-black uppercase tracking-widest italic">Yükleniyor...</div>
+        ) : faqs.length > 0 ? faqs.map((faq, index) => (
+          <FAQItem key={faq.id || index} faq={faq} />
+        )) : (
+          <div className="py-20 text-center text-slate-300 font-bold italic">Kayıtlı soru bulunmuyor.</div>
+        )}
       </div>
 
-      <div className="mt-20 p-8 md:p-12 rounded-3xl bg-gray-50 border border-gray-100 text-center relative overflow-hidden">
+      <div className="mt-28 p-12 md:p-16 rounded-[4rem] bg-slate-950 text-center relative overflow-hidden shadow-3xl">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
         <div className="relative z-10">
-          <MessageCircle className="mx-auto mb-6 text-orange-500" size={40} />
-          <h2 className="text-2xl font-bold mb-3 text-gray-900">Başka bir sorunuz mu var?</h2>
-          <p className="text-gray-500 mb-8 max-w-md mx-auto text-sm font-medium leading-relaxed">
+          <MessageCircle className="mx-auto mb-8 text-orange-500" size={48} />
+          <h2 className="text-3xl font-black mb-4 text-white uppercase tracking-tighter italic">Başka bir sorunuz mu var?</h2>
+          <p className="text-slate-400 mb-10 max-w-md mx-auto text-sm font-medium leading-relaxed italic">
             Sorunuza burada cevap bulamadıysanız bize iletişim formundan veya destek hattımızdan ulaşabilirsiniz.
           </p>
           <Link href="/iletisim">
-            <button className="px-8 py-3 bg-orange-500 text-white font-bold text-sm rounded-xl hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20">
-              Bize Ulaşın
+            <button className="px-10 py-4 bg-orange-500 text-white font-black text-xs rounded-2xl hover:bg-orange-600 transition-all shadow-2xl shadow-orange-500/20 uppercase tracking-widest">
+              BİZE ULAŞIN
             </button>
           </Link>
         </div>
@@ -67,17 +60,17 @@ function FAQItem({ faq }: any) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="border border-gray-100 rounded-2xl bg-white overflow-hidden hover:border-orange-100 transition-colors">
+    <div className={`border border-slate-100 rounded-[2rem] bg-white overflow-hidden transition-all duration-500 ${isOpen ? 'ring-4 ring-slate-100 shadow-2xl' : 'hover:border-slate-300'}`}>
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full p-6 md:p-8 flex justify-between items-center text-left"
+        className="w-full p-8 md:p-10 flex justify-between items-center text-left"
       >
-        <span className="text-base md:text-lg font-bold text-gray-900 pr-4">{faq.question}</span>
+        <span className="text-lg md:text-xl font-black text-slate-950 pr-4 uppercase tracking-tight italic">{faq.question}</span>
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
-          className="text-gray-300"
+          className={`transition-colors ${isOpen ? 'text-orange-500' : 'text-slate-300'}`}
         >
-          <ChevronDown size={20} />
+          <ChevronDown size={24} />
         </motion.div>
       </button>
       <AnimatePresence>
@@ -87,7 +80,7 @@ function FAQItem({ faq }: any) {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
           >
-            <div className="px-6 md:px-8 pb-8 text-gray-500 text-sm md:text-base leading-relaxed border-t border-gray-50 pt-6">
+            <div className="px-8 md:px-10 pb-10 text-slate-500 text-sm md:text-lg font-medium leading-relaxed border-t border-slate-50 pt-8 italic">
               {faq.answer}
             </div>
           </motion.div>
