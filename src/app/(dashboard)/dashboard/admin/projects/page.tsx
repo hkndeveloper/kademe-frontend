@@ -103,7 +103,9 @@ export default function AdminProjects() {
         if (key === 'coordinator_ids') {
           formData.coordinator_ids.forEach(id => form.append('coordinator_ids[]', String(id)));
         } else if (key !== 'timeline' && key !== 'documents') {
-          form.append(key, (formData as any)[key]);
+          let value = (formData as any)[key];
+          if (key === 'is_pinned') value = value ? 1 : 0;
+          form.append(key, value);
         }
       });
 
