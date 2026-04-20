@@ -58,13 +58,13 @@ export default function Home() {
   const storageUrl = process.env.NEXT_PUBLIC_STORAGE_URL;
 
   if (loading) {
-     return <div className="min-h-screen flex items-center justify-center bg-slate-950 font-black text-slate-300 uppercase tracking-widest animate-pulse italic">KADEME Yükleniyor...</div>;
+     return <div className="min-h-screen flex items-center justify-center bg-white font-black text-slate-950 uppercase tracking-widest animate-pulse italic">KADEME Yükleniyor...</div>;
   }
 
   return (
     <div className="bg-white">
       {/* Dynamic Hero Slider */}
-      <section className="relative h-screen min-h-[700px] flex items-center overflow-hidden bg-slate-950">
+      <section className="relative h-screen min-h-[700px] flex items-center overflow-hidden bg-white">
         <AnimatePresence mode="wait">
           {data.sliders?.length > 0 ? (
             <motion.div 
@@ -75,7 +75,7 @@ export default function Home() {
                transition={{ duration: 1 }}
                className="absolute inset-0"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/40 to-transparent z-10" />
+              <div className="absolute inset-0 bg-gradient-to-r from-white via-white/40 to-transparent z-10" />
               {currentSlider.image_path && (
                 <Image 
                   src={`${storageUrl}/${currentSlider.image_path}`} 
@@ -97,16 +97,16 @@ export default function Home() {
                       <span className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse"></span>
                       ÖNE ÇIKAN DUYURU
                     </span>
-                    <h1 className="text-6xl md:text-9xl font-black text-white tracking-tighter leading-[0.85] mb-8 uppercase italic">
+                    <h1 className="text-6xl md:text-9xl font-black text-slate-950 tracking-tighter leading-[0.85] mb-8 uppercase italic">
                        {currentSlider.title}
                     </h1>
-                    <p className="text-xl text-slate-300 leading-relaxed mb-12 max-w-xl font-medium line-clamp-3">
+                    <p className="text-xl text-slate-600 leading-relaxed mb-12 max-w-xl font-medium line-clamp-3">
                        {currentSlider.subtitle}
                     </p>
                     {currentSlider.link_url && (
                       <div className="flex flex-wrap gap-4">
                         <Link href={currentSlider.link_url}>
-                          <button className="flex items-center gap-3 px-10 py-5 bg-white text-slate-950 text-[11px] font-black rounded-2xl hover:bg-orange-500 hover:text-white transition-all shadow-2xl uppercase tracking-[0.2em] group">
+                          <button className="flex items-center gap-3 px-10 py-5 bg-slate-950 text-white text-[11px] font-black rounded-2xl hover:bg-orange-500 hover:text-white transition-all shadow-2xl uppercase tracking-[0.2em] group">
                             ŞİMDİ İNCELE
                             <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
                           </button>
@@ -119,7 +119,7 @@ export default function Home() {
           ) : (
             <div className="max-w-6xl mx-auto px-6 relative z-20 w-full">
               <span className="text-[10px] font-black text-orange-500 uppercase tracking-widest bg-orange-500/10 px-4 py-2 rounded-full mb-8 inline-block">Hoş Geldiniz</span>
-              <h1 className="text-6xl md:text-8xl font-black text-white tracking-tighter leading-[0.85] uppercase mb-8 italic">KADEME <br/><span className="text-orange-500 underline decoration-white/20">Gelecek Burada.</span></h1>
+              <h1 className="text-6xl md:text-8xl font-black text-slate-950 tracking-tighter leading-[0.85] uppercase mb-8 italic">KADEME <br/><span className="text-orange-500 underline decoration-slate-200">Gelecek Burada.</span></h1>
             </div>
           )}
         </AnimatePresence>
@@ -131,7 +131,7 @@ export default function Home() {
                 <button 
                   key={i} 
                   onClick={() => setCurrentSlide(i)}
-                  className={`w-1.5 transition-all duration-500 ${currentSlide === i ? 'h-16 bg-orange-500 ring-4 ring-orange-500/20' : 'h-6 bg-white/20 hover:bg-white/40'}`} 
+                  className={`w-1.5 transition-all duration-500 ${currentSlide === i ? 'h-16 bg-orange-500 ring-4 ring-orange-500/20' : 'h-6 bg-slate-200 hover:bg-slate-300'}`} 
                 />
              ))}
           </div>
