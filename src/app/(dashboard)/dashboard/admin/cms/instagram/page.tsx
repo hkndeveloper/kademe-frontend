@@ -29,7 +29,7 @@ export default function InstagramManagementPage() {
   const fetchPosts = async () => {
     try {
       const res = await api.get('/admin/instagram-posts');
-      setPosts(res.data);
+      setPosts(res.data.data || res.data);
     } catch (err) {
       toast.error("Gönderiler yüklenemedi.");
     } finally {

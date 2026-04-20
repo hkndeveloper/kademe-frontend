@@ -38,7 +38,7 @@ export default function BlogManagement() {
     setLoading(true);
     try {
       const res = await api.get('/blogs');
-      setBlogs(res.data);
+      setBlogs(res.data.data || res.data);
     } catch (err) {
       // Mock data for initial development if API is not fully ready
       setBlogs([

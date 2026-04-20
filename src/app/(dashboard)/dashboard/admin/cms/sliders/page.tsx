@@ -28,7 +28,7 @@ export default function SliderManagementPage() {
   const fetchSliders = async () => {
     try {
       const res = await api.get('/admin/sliders');
-      setSliders(res.data);
+      setSliders(res.data.data || res.data);
     } catch (err) {
       toast.error("Slider verileri yüklenemedi.");
     } finally {

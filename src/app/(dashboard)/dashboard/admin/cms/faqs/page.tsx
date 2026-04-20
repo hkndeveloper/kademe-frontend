@@ -25,7 +25,7 @@ export default function FaqManagementPage() {
   const fetchFaqs = async () => {
     try {
       const res = await api.get('/admin/faqs');
-      setFaqs(res.data);
+      setFaqs(res.data.data || res.data);
     } catch (err) {
       toast.error("SSS verileri yüklenemedi.");
     } finally {

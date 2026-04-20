@@ -32,7 +32,7 @@ export default function AuditLogs() {
     setLoading(true);
     try {
       const res = await api.get('/admin/audit-logs');
-      setLogs(res.data);
+      setLogs(res.data.data || res.data);
     } catch (err) {
       // Mock data for Phase 4 Demonstration
       setLogs([
