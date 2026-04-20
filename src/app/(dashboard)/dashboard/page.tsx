@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { handleDashboardRedirect } from '@/lib/auth-utils';
 
 export default function DashboardRedirect() {
   const router = useRouter();
@@ -10,7 +11,7 @@ export default function DashboardRedirect() {
     const rolesJson = localStorage.getItem('user_roles');
     let roles = rolesJson ? JSON.parse(rolesJson) : [];
 
-    // LocalStorage boşsa çerezden bak (Middleware ile senkronizasyon için)
+    // LocalStorage boşsa çerezden bak
     if (roles.length === 0) {
       const rolesCookie = document.cookie.split('; ').find(row => row.startsWith('user_roles='))?.split('=')[1];
       if (rolesCookie) {
@@ -27,17 +28,7 @@ export default function DashboardRedirect() {
       }
     }
 
-    if (roles.includes('super-admin') || roles.includes('coordinator')) {
-      router.push('/dashboard/admin');
-    } else if (roles.includes('alumni')) {
-      router.push('/dashboard/alumni');
-    } else if (roles.includes('student') || roles.length > 0) {
-      router.push('/dashboard/student');
-    } else {
-      // Eğer hiç rol yoksa ama token varsa, bekleyelim veya profil çekelim. 
-      // Şimdilik login'e yönlendiriyoruz (en güvenlisi).
-      router.push('/login');
-    }
+    handleDashboardRedirect(router, roles);
   }, [router]);
 
   return <div className="p-10 text-center">Yönlendiriliyorsunuz...</div>;

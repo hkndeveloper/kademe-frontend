@@ -21,3 +21,40 @@ export const checkRoleAccess = (userRoles: Role[], requiredRoles: Role[]) => {
   if (userRoles.includes("super-admin")) return true;
   return requiredRoles.some(role => userRoles.includes(role));
 };
+
+export const handleDashboardRedirect = (router: any, roles: Role[]) => {
+  const token = document.cookie.split('; ').find(row => row.startsWith('kademe_token='))?.split('=')[1];
+    
+  if (!token) {
+    router.push('/login');
+    return;
+  }
+
+  if (roles.includes('super-admin') || roles.includes('coordinator')) {
+    router.push('/dashboard/admin');
+  } else if (roles.includes('alumni')) {
+    router.push('/dashboard/alumni');
+  } else if (roles.includes('student') || roles.length > 0) {
+    router.push('/dashboard/student');
+  } else {
+    router.push('/login');
+  }
+};
+
+export const logout = () => {
+  // 1. Clear LocalStorage
+  if (typeof window !== "undefined") {
+    localStorage.clear();
+    sessionStorage.clear();
+  }
+  
+  // 2. Clear Cookies
+  removeCookie('kademe_token');
+  removeCookie('user_roles');
+  removeCookie('user_id');
+  
+  // 3. Force redirect to login
+  if (typeof window !== "undefined") {
+    window.location.href = "/login";
+  }
+};

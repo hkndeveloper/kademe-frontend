@@ -14,6 +14,7 @@ import {
   LogOut,
   MessageCircle
 } from "lucide-react";
+import { logout } from "@/lib/auth-utils";
 import Image from "next/image";
 
 import { Role, hasAbility, isInProject } from "@/lib/permissions";
@@ -90,10 +91,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
 
         <div className="p-4 mt-auto border-t border-white/5">
           <button 
-            onClick={() => {
-              localStorage.clear();
-              window.location.href = "/login";
-            }}
+            onClick={logout}
             className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-400 hover:text-red-400 hover:bg-white/5 rounded-xl transition-all"
           >
             <LogOut size={18} />
